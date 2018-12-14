@@ -1,0 +1,30 @@
+GET B       #a
+GET C       #b
+SUB D D     #w
+SUB E E     #i
+JZERO C 26
+COPY F B
+SUB F C
+JZERO F 11  #exit_iterator_calculation
+ADD C C
+INC E
+JUMP 5
+INC D
+DEC E
+HALF C
+SUB B C
+JZERO E 27    #exit
+ADD D D
+HALF C
+DEC E
+COPY F B
+INC F
+SUB F C
+JZERO F 15
+INC D
+SUB B C
+JUMP 15
+SUB B B
+PUT D       #w
+PUT B       #a
+HALT 

@@ -1,0 +1,21 @@
+GET B
+GET C
+JZERO B 18  #jump to EXIT_LOOP_ONLY_ZERO if 0 in B
+JZERO C 18  #jump to EXIT_LOOP_ONLY_ZERO if 0 in C
+COPY D C    #comparee B and C
+SUB D B
+JZERO D 10  #C is smaller than B
+COPY D C    #swap B and C
+COPY C B
+COPY B D
+SUB D D     #Reset result register
+JODD C 16   #MAIN_LOOP, jump to ADD_TO_REGISTER if C is odd
+ADD B B     #SHIFTS, shift values
+HALF C
+JZERO C 19  #jump to EXIT_LOOP if 0 in C
+JUMP 11     #jump to MAIN_LOOP
+ADD D B     #ADD_TO_REGISTER, add B to D
+JUMP 12     #jump to SHIFTS
+SUB D D     #EXIT_LOOP_ONLY_ZERO
+PUT D       #EXIT_LOOP
+HALT
