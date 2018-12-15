@@ -63,7 +63,14 @@ commands: commands command {}
 ;
 command: identifier ASSIGN expression SEMICOLON 
     {
-        driver.threeAddressCode.addNewCode("ASSIGN", $1.name);
+        if ($3.name.empty())
+        {
+            driver.threeAddressCode.addNewCode("CONST", $1.name, std::to_string($3.value));
+        }
+        else
+        {
+            driver.threeAddressCode.addNewCode("ASSIGN", $1.name, $3.name);
+        }
     }
     | IF condition THEN commands ELSE commands ENDIF {}
     | IF condition THEN commands ENDIF {}
@@ -110,18 +117,19 @@ expression: value
     }
     | value ADDITION value 
         {
-            std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized($1.name);
-            if (!str.empty())
-            {
-                std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-                return 1;
-            }
-            str = driver.symbolTable.checkVariableExistsAndIsInitialized($3.name);
-            if (!str.empty())
-            {
-                std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-                return 1;
-            }                     
+            // std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized($1.name);
+            // if (!str.empty())
+            // {
+            //     std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            //     return 1;
+            // }
+            // str = driver.symbolTable.checkVariableExistsAndIsInitialized($3.name);
+            // if (!str.empty())
+            // {
+            //     std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            //     return 1;
+            // }
+            // driver.threeAddressCode.loadLocalParameters($1);                   
         }
     | value SUBTRACTION value {}
     | value MULTIPLICATION value {}

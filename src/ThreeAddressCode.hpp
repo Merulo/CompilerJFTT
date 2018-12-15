@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 struct Line
 {
@@ -41,13 +42,26 @@ class ThreeAddressCode
         _loadedThree = three;
     }
 
-    void print()
+    void print(const std::string& fileName = "")
     {
-        std::cerr<<"ThreeAddressCode:"<<std::endl;
-        for(auto l : _lines)
+        if (fileName.empty())
         {
-            std::cerr<<l.name<<": "<<l.one<<" "<<l.two<<" "<<l.three<<std::endl;
+            std::cerr<<"ThreeAddressCode:"<<std::endl;
+            for(auto l : _lines)
+            {
+                std::cerr<<l.name<<": "<<l.one<<" "<<l.two<<" "<<l.three<<std::endl;
+            }
         }
+        else
+        {
+            std::ofstream output(fileName);
+            output<<"ThreeAddressCode:"<<std::endl;
+            for(auto l : _lines)
+            {
+                output<<l.name<<": "<<l.one<<" "<<l.two<<" "<<l.three<<std::endl;
+            }
+        }
+
     }
 
     private:

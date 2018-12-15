@@ -1,8 +1,8 @@
 DECLARE
   a; b;
 IN
-  b := 3;
   READ a;
+  READ b;
   WRITE a;
   WRITE b;
 END

@@ -12,6 +12,16 @@ int main(int argc, char** argv)
     yyin = fopen(argv[1], "r");
     yyparse();
 
+    for(int i = 0; i < argc; i++)
+    {
+        std::string str = argv[i];
+        if (str == "-TAC")
+        {
+            driver.threeAddressCode.print(argv[i+1]);
+        }
+    }
+
+    // driver.symbolTable.print()
     driver.threeAddressCode.print();
 
 

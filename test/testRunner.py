@@ -16,6 +16,7 @@ class COLORS:
 
 # list all files in . directory
 onlyDirectories = [f for f in os.listdir(".") if os.path.isdir(os.path.join(".", f))]
+onlyDirectories.sort()
 
 # filter only .input files
 regex = re.compile(r".py")
@@ -28,6 +29,8 @@ for directory in onlyDirectories:
 	files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
 	files = [i for i in files if regex.search(i)]
 	os.chdir(path)
+	sys.stdout.write(COLORS.OK_BLUE)
+	print("Directory: ", path, COLORS.END)
 	for file in files:
 		cmd = ['python', file]
 		process = subprocess.Popen(cmd, stdout=subprocess.PIPE)

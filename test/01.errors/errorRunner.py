@@ -18,7 +18,7 @@ class COLORS:
 onlyfiles = [f for f in os.listdir(".") if os.path.isfile(os.path.join(".", f))]
 
 # filter only .input files
-regex = re.compile(r".imp")
+regex = re.compile(r"\.imp")
 filtered = [i for i in onlyfiles if regex.search(i)]
 
 # sort tests
@@ -34,14 +34,15 @@ for i in filtered:
 	# somefile.target
 	target = i.replace("imp", "target")
 	fOut = open(result, "w")
+	fNull = open(os.devnull, 'w')
 	testCounter += 1
 	
-	print("Testing: ", i, COLORS.END)
+	print("\tTesting: ", i, COLORS.END)
 	# assuming main is in the same directory
 	# ./main.exe
 	cmd = ['./main.exe', i, "dummyArgument"]
 	# redirect stdout to somefile.result
-	process = subprocess.Popen(cmd, stdout=fOut)
+	process = subprocess.Popen(cmd, stdout=fOut, stderr=fNull)
 	process.wait()
 	
 	# print what you are testing
@@ -49,10 +50,10 @@ for i in filtered:
 		# keep result file for reference
 		# os.remove(result)
 		sys.stdout.write(COLORS.FAIL)
-		print("Test: ", i, " failed", COLORS.END)
+		print("\tTest: ", i, " failed", COLORS.END)
 	else:									# files are the same
 		testPassed += 1
 		sys.stdout.write(COLORS.OK_GREEN)
-		print("Test: ", i, " passed", COLORS.END)
+		print("\tTest: ", i, " passed", COLORS.END)
 		# remove result file, test passed
 		os.remove(result)
