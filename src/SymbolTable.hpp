@@ -31,36 +31,18 @@ struct Iterator
 class SymbolTable
 {
     public:
-    void print()
-    {
-        std::cerr<<"Variables:" <<std::endl;
-        for(auto v : _variables)
-        {
-            std::cerr<<v.first<<" ";
-            if (v.second.isInitialized)
-            {
-                std::cerr<<"is initialized ";
-            }
-            else
-            {
-                std::cerr<<"is not initialized ";
-            }
-            std::cerr<<std::endl;
-        }
-        std::cerr<<"Tables:" <<std::endl;
-        for(auto t : _tables)
-        {
-            std::cerr<<t.first<<std::endl;
-        }
-    }
-
-    std::string addVariable(const std::string& name);
     std::string addTable(const std::string& name, ull beginIndex, ull endIndex);
+    std::string addVariable(const std::string& name);
+    
+
     std::string checkVariableExists(const std::string& name);
     std::string checkVariableExistsAndIsInitialized(const std::string& name);
     std::string checkVariableIsTable(const std::string& name);
     std::string checkVariableIsVariable(const std::string& name);
+    void setInitialized(const std::string& name);
 
+    void print();
+    
     private:
     bool isNameTaken(const std::string& name);
     std::map<std::string, Variable> _variables;

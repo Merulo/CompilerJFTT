@@ -1,5 +1,28 @@
 #include "SymbolTable.hpp"
 
+void SymbolTable::print()
+{
+    std::cerr<<"Variables:" <<std::endl;
+    for(auto v : _variables)
+    {
+        std::cerr<<v.first<<" ";
+        if (v.second.isInitialized)
+        {
+            std::cerr<<"is initialized ";
+        }
+        else
+        {
+            std::cerr<<"is not initialized ";
+        }
+        std::cerr<<std::endl;
+    }
+    std::cerr<<"Tables:" <<std::endl;
+    for(auto t : _tables)
+    {
+        std::cerr<<t.first<<std::endl;
+    }
+}
+
 std::string SymbolTable::addVariable(const std::string& name)
 {
     if (isNameTaken(name))
@@ -74,6 +97,13 @@ std::string SymbolTable::checkVariableExistsAndIsInitialized(const std::string& 
     return "";
 }
 
+void SymbolTable::setInitialized(const std::string& name)
+{
+    if (_variables.find(name) != _variables.end())
+    {
+        _variables[name].isInitialized = true;
+    }
+}
 
 
 

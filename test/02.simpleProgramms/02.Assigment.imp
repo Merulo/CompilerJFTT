@@ -1,0 +1,7 @@
+DECLARE
+  a; b; c;
+IN
+  a := 1;
+  b := 2;
+  c := 3;
+END

@@ -5,70 +5,30 @@
 #include <vector>
 #include <fstream>
 
+typedef const std::string & cStrRef;
+
 struct Line
 {
     std::string name;
     std::string one;
     std::string two;
-    std::string three;
 };
 
 class ThreeAddressCode
 {
     public:
-    void addNewCode(const std::string& name, const std::string& one = "", const std::string& two = "", const std::string& three = "")
-    {
-        Line line;
-        line.name = name;
-        line.one = one;
-        line.two = two;
-        line.three = three;
-        if (two.empty())
-        {
-            line.two = _loadedTwo;
-            _loadedTwo = "";
-        }
-        if (three.empty())
-        {
-            line.three = _loadedThree;
-            _loadedThree = "";
-        }
-        _lines.push_back(line);
-    }
+    void addNewCode(cStrRef name, cStrRef one = "", cStrRef two = "");
+    void addAssignCode(cStrRef name);
+    void loadLocalParameters(cStrRef name, cStrRef two = "", cStrRef three = "");
 
-    void loadLocalParameters(const std::string& two = "", const std::string& three = "")
-    {
-        _loadedTwo = two;
-        _loadedThree = three;
-    }
-
-    void print(const std::string& fileName = "")
-    {
-        if (fileName.empty())
-        {
-            std::cerr<<"ThreeAddressCode:"<<std::endl;
-            for(auto l : _lines)
-            {
-                std::cerr<<l.name<<": "<<l.one<<" "<<l.two<<" "<<l.three<<std::endl;
-            }
-        }
-        else
-        {
-            std::ofstream output(fileName);
-            output<<"ThreeAddressCode:"<<std::endl;
-            for(auto l : _lines)
-            {
-                output<<l.name<<": "<<l.one<<" "<<l.two<<" "<<l.three<<std::endl;
-            }
-        }
-
-    }
-
+    void print(cStrRef fileName = "");
     private:
+    void handleAssign(cStrRef name, cStrRef first, cStrRef second);
+    void reset();
+
     std::vector<Line> _lines;
-    std::string _loadedTwo;
-    std::string _loadedThree;
+    std::string _operation;
+    std::string _firstExtraParameter;
+    std::string _secondExtraParameter;
 
-
-    
 };

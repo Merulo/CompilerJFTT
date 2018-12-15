@@ -16,6 +16,15 @@ int yyerror(char*);
 int yyerror(const char*);
 Driver driver;
 
+void checkForErrors(const std::string& str)
+{
+    if (!str.empty())
+    {
+        std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+        exit(1);
+    }
+}
+
 %}
 //programm
 %token DECLARE IN END
@@ -40,21 +49,11 @@ program: DECLARE declarations IN commands END {}
 ;
 declarations: declarations PIDIDENTIFIER SEMICOLON 
     {
-        std::string str = driver.symbolTable.addVariable($2.name);
-        if (!str.empty())
-        {
-            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            return 1;
-        }
+        checkForErrors(driver.symbolTable.addVariable($2.name));
     }
     | declarations PIDIDENTIFIER LEFT_BRACKET NUMBER TABLE_RANGE NUMBER RIGHT_BRACKET SEMICOLON
     {
-        std::string str = driver.symbolTable.addTable($2.name, $4.value, $6.value);
-        if (!str.empty())
-        {
-            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            return 1;
-        }        
+        checkForErrors(driver.symbolTable.addTable($2.name, $4.value, $6.value));
     }
     |
 ;
@@ -63,13 +62,14 @@ commands: commands command {}
 ;
 command: identifier ASSIGN expression SEMICOLON 
     {
+        driver.symbolTable.setInitialized($1.name);
         if ($3.name.empty())
         {
             driver.threeAddressCode.addNewCode("CONST", $1.name, std::to_string($3.value));
         }
         else
         {
-            driver.threeAddressCode.addNewCode("ASSIGN", $1.name, $3.name);
+            driver.threeAddressCode.addAssignCode($1.name);
         }
     }
     | IF condition THEN commands ELSE commands ENDIF {}
@@ -80,22 +80,12 @@ command: identifier ASSIGN expression SEMICOLON
     | FOR PIDIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
     | READ identifier SEMICOLON 
     {
-        std::string str = driver.symbolTable.checkVariableExists($2.name);
-        if (!str.empty())
-        {
-            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            return 1;
-        }
+        checkForErrors(driver.symbolTable.checkVariableExists($2.name));
         driver.threeAddressCode.addNewCode("READ", $2.name);
     }
     | WRITE value SEMICOLON
     {
-        std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized($1.name);
-        if (!str.empty())
-        {
-            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            return 1;
-        }
+        checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
         driver.threeAddressCode.addNewCode("WRITE", $2.name);
     }
 ;
@@ -103,12 +93,7 @@ expression: value
     {
         if (!$1.name.empty())
         {
-            std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized($1.name);
-            if (!str.empty())
-            {
-                std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-                return 1;
-            }
+            checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
         }
         else
         {
@@ -117,19 +102,9 @@ expression: value
     }
     | value ADDITION value 
         {
-            // std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized($1.name);
-            // if (!str.empty())
-            // {
-            //     std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            //     return 1;
-            // }
-            // str = driver.symbolTable.checkVariableExistsAndIsInitialized($3.name);
-            // if (!str.empty())
-            // {
-            //     std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            //     return 1;
-            // }
-            // driver.threeAddressCode.loadLocalParameters($1);                   
+            checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
+            checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($3.name));
+            driver.threeAddressCode.loadLocalParameters("ADD", $1.name, $3.name);                
         }
     | value SUBTRACTION value {}
     | value MULTIPLICATION value {}
@@ -148,30 +123,15 @@ value: NUMBER {}
 ;
 identifier: PIDIDENTIFIER 
     {
-        std::string str = driver.symbolTable.checkVariableIsVariable($1.name);
-        if (!str.empty())
-        {
-            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            return 1;
-        }     
+        checkForErrors(driver.symbolTable.checkVariableIsVariable($1.name));   
     }
     | PIDIDENTIFIER LEFT_BRACKET PIDIDENTIFIER RIGHT_BRACKET 
     {
-        std::string str = driver.symbolTable.checkVariableIsTable($1.name);
-        if (!str.empty())
-        {
-            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            return 1;
-        }       
+        checkForErrors(driver.symbolTable.checkVariableIsTable($1.name));     
     }
     | PIDIDENTIFIER LEFT_BRACKET NUMBER RIGHT_BRACKET 
     {
-        std::string str = driver.symbolTable.checkVariableIsTable($1.name);
-        if (!str.empty())
-        {
-            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            return 1;
-        }     
+        checkForErrors(driver.symbolTable.checkVariableIsTable($1.name));   
     }
 ;
 %%
