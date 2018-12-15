@@ -18,53 +18,22 @@ Driver driver;
 
 %}
 //programm
-%token DECLARE
-%token IN
-%token END
+%token DECLARE IN END
 
 //declarations
-%token LEFT_BRACKET
-%token RIGHT_BRACKET
-%token TABLE_RANGE
-%token NUMBER
-%token PIDIDENTIFIER
+%token LEFT_BRACKET RIGHT_BRACKET TABLE_RANGE NUMBER PIDIDENTIFIER
 
 //commands
-%token ASSIGN
-%token IF
-%token THEN
-%token ELSE
-%token ENDIF
-%token WHILE
-%token DO
-%token ENDWHILE
-%token ENDDO
-%token FOR
-%token FROM
-%token TO
-%token ENDFOR
-%token DOWNTO
-%token READ
-%token WRITE
+%token ASSIGN IF THEN ELSE ENDIF WHILE DO ENDWHILE ENDDO FOR FROM TO ENDFOR DOWNTO READ WRITE
 
 //expression
-%token ADDITION
-%token SUBTRACTION
-%token MULTIPLICATION
-%token DIVISION
-%token MODULO
+%token ADDITION SUBTRACTION MULTIPLICATION DIVISION MODULO
 
 //condition
-%token EQUAL
-%token NOT_EQUAL
-%token LESS
-%token MORE
-%token LESS_EQUAL
-%token MORE_EQUAL
+%token EQUAL NOT_EQUAL LESS MORE LESS_EQUAL MORE_EQUAL
 
 //rest
-%token SEMICOLON
-%token ERROR
+%token SEMICOLON ERROR
 
 %%
 program: DECLARE declarations IN commands END {}
@@ -92,7 +61,10 @@ declarations: declarations PIDIDENTIFIER SEMICOLON
 commands: commands command {}
     | command {}
 ;
-command: identifier ASSIGN expression SEMICOLON {}
+command: identifier ASSIGN expression SEMICOLON 
+    {
+        driver.threeAddressCode.addNewCode("ASSIGN", $1.name);
+    }
     | IF condition THEN commands ELSE commands ENDIF {}
     | IF condition THEN commands ENDIF {}
     | WHILE condition DO commands ENDWHILE {}
@@ -106,7 +78,8 @@ command: identifier ASSIGN expression SEMICOLON {}
         {
             std::cout << "Error at line " << yylineno << ": " << str << std::endl;
             return 1;
-        }  
+        }
+        driver.threeAddressCode.addNewCode("READ", $2.name);
     }
     | WRITE value SEMICOLON
     {
@@ -116,15 +89,23 @@ command: identifier ASSIGN expression SEMICOLON {}
             std::cout << "Error at line " << yylineno << ": " << str << std::endl;
             return 1;
         }
+        driver.threeAddressCode.addNewCode("WRITE", $2.name);
     }
 ;
 expression: value 
     {
-        std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized($1.name);
-        if (!str.empty())
+        if (!$1.name.empty())
         {
-            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-            return 1;
+            std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized($1.name);
+            if (!str.empty())
+            {
+                std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+                return 1;
+            }
+        }
+        else
+        {
+            driver.threeAddressCode.loadLocalParameters(std::to_string($1.value));
         }
     }
     | value ADDITION value 

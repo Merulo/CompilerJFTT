@@ -35,6 +35,7 @@ start:
 main.exe: $(MAIN) $(OBJECTS)
 	$(LD) $(LD_FLAGS) $(OBJECTS) $(MAIN) -o $@
 	cp main.exe test/errors/main.exe
+	cp main.exe test/simpleProgramms/main.exe
 
 $(BINARY_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(dir $@)
 	@mkdir -p $(dir $@)

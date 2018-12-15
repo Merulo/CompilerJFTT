@@ -1,0 +1,8 @@
+DECLARE
+  a; b;
+IN
+  b := 3;
+  READ a;
+  WRITE a;
+  WRITE b;
+END
