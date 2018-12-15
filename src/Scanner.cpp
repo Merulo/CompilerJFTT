@@ -855,7 +855,7 @@ YY_RULE_SETUP
 #line 21 "src/scanner.l"
 {
                 Data d;
-                d.val = atoll(yytext);
+                d.value = atoll(yytext);
                 yylval = d;
                 return T_NUMBER;
             }
@@ -1023,30 +1023,35 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 68 "src/scanner.l"
+#line 69 "src/scanner.l"
 { BEGIN(COMMENT); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 69 "src/scanner.l"
+#line 70 "src/scanner.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 70 "src/scanner.l"
+#line 71 "src/scanner.l"
 ;
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 72 "src/scanner.l"
-{ return T_ERROR; };
+#line 73 "src/scanner.l"
+{ 
+                Data d;
+                d.name = yytext;
+                yylval = d;
+                return T_ERROR; 
+            };
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 74 "src/scanner.l"
+#line 80 "src/scanner.l"
 ECHO;
 	YY_BREAK
-#line 1050 "src/Scanner.cpp"
+#line 1055 "src/Scanner.cpp"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 	yyterminate();
@@ -2023,7 +2028,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 74 "src/scanner.l"
+#line 80 "src/scanner.l"
 
 
 

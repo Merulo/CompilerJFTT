@@ -1,6 +1,6 @@
 [ Błąd w linii 3: druga deklaracja a ]
 DECLARE
-  a; b; a;
+  a; a; b(11:10);
 IN
   READ a;
   b := a;

@@ -2,7 +2,12 @@
 
 #include <string>
 
-struct Data {
-    long long val;
+struct Data 
+{
+    Data()
+    {
+        value = 0;
+    }
+    unsigned long long value;
     std::string name;
 };

@@ -20,7 +20,7 @@ END         { return T_END; }
 \:          { return T_TABLE_RANGE; }
 [0-9]+      {
                 Data d;
-                d.val = atoll(yytext);
+                d.value = atoll(yytext);
                 yylval = d;
                 return T_NUMBER;
             }
@@ -65,11 +65,17 @@ WRITE       { return T_WRITE; }
 
 [ \t]       ;
 \n          ;
+
 \[          { BEGIN(COMMENT); }
 <COMMENT>\] { BEGIN(INITIAL); }
 <COMMENT>.  ;
 
-.           { return T_ERROR; };
+.           { 
+                Data d;
+                d.name = yytext;
+                yylval = d;
+                return T_ERROR; 
+            };
 
 %%
 

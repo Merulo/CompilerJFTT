@@ -1,7 +1,7 @@
 [ Błąd w linii 6: użycie niezainicjowanej zmiennej a ]
 DECLARE
-  a; b;
+  a; bbbbb;
 IN
-  READ b;
-  b := a;
+  READ bbbbb;
+  bbbbb := a;
 END

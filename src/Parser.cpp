@@ -64,18 +64,20 @@
 /* Copy the first part of user declarations.  */
 #line 6 "src/parser.y" /* yacc.c:339  */
 
-#include "SymbolTable.hpp"
+#include "Driver.hpp"
 #include "Utilities.hpp"
 #define YYSTYPE Data
 #include <iostream>
+
 extern FILE *yyin;
 extern int yylineno;  // z lex-a
 int yylex();
 int yyerror(char*);
 int yyerror(const char*);
+Driver driver;
 
 
-#line 79 "src/Parser.cpp" /* yacc.c:339  */
+#line 81 "src/Parser.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -166,7 +168,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 170 "src/Parser.cpp" /* yacc.c:358  */
+#line 172 "src/Parser.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -467,10 +469,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    68,    68,    70,    71,    72,    74,    75,    77,    78,
-      79,    80,    81,    82,    83,    84,    85,    87,    88,    89,
-      90,    91,    92,    94,    95,    96,    97,    98,    99,   101,
-     102,   104,   105,   106
+       0,    70,    70,    72,    81,    90,    92,    93,    95,    96,
+      97,    98,    99,   100,   101,   102,   111,   121,   130,   145,
+     146,   147,   148,   150,   151,   152,   153,   154,   155,   157,
+     158,   160,   169,   178
 };
 #endif
 
@@ -1318,193 +1320,262 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 68 "src/parser.y" /* yacc.c:1646  */
+#line 70 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1324 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1326 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 70 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1330 "src/Parser.cpp" /* yacc.c:1646  */
+#line 73 "src/parser.y" /* yacc.c:1646  */
+    {
+        std::string str = driver.symbolTable.addVariable((yyvsp[-1]).name);
+        if (!str.empty())
+        {
+            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            return 1;
+        }
+    }
+#line 1339 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 71 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1336 "src/Parser.cpp" /* yacc.c:1646  */
+#line 82 "src/parser.y" /* yacc.c:1646  */
+    {
+        std::string str = driver.symbolTable.addTable((yyvsp[-6]).name, (yyvsp[-4]).value, (yyvsp[-2]).value);
+        if (!str.empty())
+        {
+            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            return 1;
+        }        
+    }
+#line 1352 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 74 "src/parser.y" /* yacc.c:1646  */
+#line 92 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1342 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1358 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 75 "src/parser.y" /* yacc.c:1646  */
+#line 93 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1348 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1364 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 77 "src/parser.y" /* yacc.c:1646  */
+#line 95 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1354 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1370 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 78 "src/parser.y" /* yacc.c:1646  */
+#line 96 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1360 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1376 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 79 "src/parser.y" /* yacc.c:1646  */
+#line 97 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1366 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1382 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 80 "src/parser.y" /* yacc.c:1646  */
+#line 98 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1372 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1388 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 81 "src/parser.y" /* yacc.c:1646  */
+#line 99 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1378 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1394 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 82 "src/parser.y" /* yacc.c:1646  */
+#line 100 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1384 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1400 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 83 "src/parser.y" /* yacc.c:1646  */
+#line 101 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1390 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1406 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 84 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1396 "src/Parser.cpp" /* yacc.c:1646  */
+#line 103 "src/parser.y" /* yacc.c:1646  */
+    {
+        std::string str = driver.symbolTable.checkVariableExists((yyvsp[-1]).name);
+        if (!str.empty())
+        {
+            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            return 1;
+        }  
+    }
+#line 1419 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 85 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1402 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 17:
-#line 87 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1408 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 18:
-#line 88 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1414 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 19:
-#line 89 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1420 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 20:
-#line 90 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1426 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 21:
-#line 91 "src/parser.y" /* yacc.c:1646  */
-    {}
+#line 112 "src/parser.y" /* yacc.c:1646  */
+    {
+        std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized((yyvsp[-2]).name);
+        if (!str.empty())
+        {
+            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            return 1;
+        }
+    }
 #line 1432 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 92 "src/parser.y" /* yacc.c:1646  */
+  case 17:
+#line 122 "src/parser.y" /* yacc.c:1646  */
+    {
+        std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized((yyvsp[0]).name);
+        if (!str.empty())
+        {
+            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            return 1;
+        }
+    }
+#line 1445 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 18:
+#line 131 "src/parser.y" /* yacc.c:1646  */
+    {
+            std::string str = driver.symbolTable.checkVariableExistsAndIsInitialized((yyvsp[-2]).name);
+            if (!str.empty())
+            {
+                std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+                return 1;
+            }
+            str = driver.symbolTable.checkVariableExistsAndIsInitialized((yyvsp[0]).name);
+            if (!str.empty())
+            {
+                std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+                return 1;
+            }                     
+        }
+#line 1464 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 19:
+#line 145 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1438 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1470 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 146 "src/parser.y" /* yacc.c:1646  */
+    {}
+#line 1476 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 147 "src/parser.y" /* yacc.c:1646  */
+    {}
+#line 1482 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 148 "src/parser.y" /* yacc.c:1646  */
+    {}
+#line 1488 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 94 "src/parser.y" /* yacc.c:1646  */
+#line 150 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1444 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1494 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 95 "src/parser.y" /* yacc.c:1646  */
+#line 151 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1450 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1500 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 96 "src/parser.y" /* yacc.c:1646  */
+#line 152 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1456 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1506 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 97 "src/parser.y" /* yacc.c:1646  */
+#line 153 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1462 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1512 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 98 "src/parser.y" /* yacc.c:1646  */
+#line 154 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1468 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1518 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 99 "src/parser.y" /* yacc.c:1646  */
+#line 155 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1474 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1524 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 101 "src/parser.y" /* yacc.c:1646  */
+#line 157 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1480 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1530 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 102 "src/parser.y" /* yacc.c:1646  */
+#line 158 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1486 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1536 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 104 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1492 "src/Parser.cpp" /* yacc.c:1646  */
+#line 161 "src/parser.y" /* yacc.c:1646  */
+    {
+        std::string str = driver.symbolTable.checkVariableIsVariable((yyvsp[0]).name);
+        if (!str.empty())
+        {
+            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            return 1;
+        }     
+    }
+#line 1549 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 105 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1498 "src/Parser.cpp" /* yacc.c:1646  */
+#line 170 "src/parser.y" /* yacc.c:1646  */
+    {
+        std::string str = driver.symbolTable.checkVariableIsTable((yyvsp[-3]).name);
+        if (!str.empty())
+        {
+            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            return 1;
+        }       
+    }
+#line 1562 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 106 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1504 "src/Parser.cpp" /* yacc.c:1646  */
+#line 179 "src/parser.y" /* yacc.c:1646  */
+    {
+        std::string str = driver.symbolTable.checkVariableIsTable((yyvsp[-3]).name);
+        if (!str.empty())
+        {
+            std::cout << "Error at line " << yylineno << ": " << str << std::endl;
+            return 1;
+        }     
+    }
+#line 1575 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1508 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1579 "src/Parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1732,18 +1803,18 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 108 "src/parser.y" /* yacc.c:1906  */
+#line 188 "src/parser.y" /* yacc.c:1906  */
 
 
 int yyerror(char *s)
 {
-    std::cerr << "Linia " << yylineno << ": " << s << std::endl;
+    std::cout << "Line: " << yylineno << ": " << s << std::endl;
     return 1;
 }
 
 int yyerror(const char *s)
 {
-    std::cerr << "Linia " << yylineno << ": " << s << std::endl;
+    std::cout << "Line: " << yylineno << ": " << s << std::endl;
     return 1;
 }
 
