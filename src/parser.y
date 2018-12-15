@@ -4,138 +4,119 @@
 %define api.token.prefix {T_} 
 
 %{
+#include "SymbolTable.hpp"
+#include "Utilities.hpp"
+#define YYSTYPE Data
 #include <iostream>
-#include <string>
-#include <math.h>
-
-#include "Logger.hpp"
-
-extern int yylex();
-extern int yylineno;
-
-std::string reversePolishNotation;
-std::string errorMessage;
-
-int yyerror(std::string str)
-{
-    std::cout<<str<<" at line: "<<yylineno<<std::endl;
-    return 0;
-}
+extern FILE *yyin;
+extern int yylineno;  // z lex-a
+int yylex();
+int yyerror(char*);
+int yyerror(const char*);
 
 %}
-%token NUMBER
+//programm
+%token DECLARE
+%token IN
+%token END
+
+//declarations
 %token LEFT_BRACKET
 %token RIGHT_BRACKET
-%token END
+%token TABLE_RANGE
+%token NUMBER
+%token PIDIDENTIFIER
+
+//commands
+%token ASSIGN
+%token IF
+%token THEN
+%token ELSE
+%token ENDIF
+%token WHILE
+%token DO
+%token ENDWHILE
+%token ENDDO
+%token FOR
+%token FROM
+%token TO
+%token ENDFOR
+%token DOWNTO
+%token READ
+%token WRITE
+
+//expression
+%token ADDITION
+%token SUBTRACTION
+%token MULTIPLICATION
+%token DIVISION
+%token MODULO
+
+//condition
+%token EQUAL
+%token NOT_EQUAL
+%token LESS
+%token MORE
+%token LESS_EQUAL
+%token MORE_EQUAL
+
+//rest
+%token SEMICOLON
 %token ERROR
 
-%left ADDITION SUBTRACTION
-%left MODULO MULTIPLICATION DIVISION
-%precedence NEG
-%right POWER
-
-
 %%
-input:
-    | input line
+program: DECLARE declarations IN commands END {}
 ;
-
-line: exp END
-    { 
-        if (errorMessage.empty())
-        {
-            reversePolishNotation.pop_back();
-            std::cout<<reversePolishNotation<<std::endl;
-            std::cout<<"Wynik: "<<$$<<std::endl;
-        }
-        else
-        {
-            std::cout<<errorMessage<<std::endl;
-            errorMessage= "";
-        }
-        reversePolishNotation.clear();
-    }
-    | error END
-    { 
-        reversePolishNotation.clear();
-    }
+declarations: declarations PIDIDENTIFIER SEMICOLON {}
+    | declarations PIDIDENTIFIER LEFT_BRACKET NUMBER TABLE_RANGE NUMBER RIGHT_BRACKET SEMICOLON {}
+    |
 ;
-
-exp:
-    NUMBER
-    {
-        $$ = $1;
-        reversePolishNotation += (std::to_string($1) + ' ');
-    }
-    | exp ADDITION exp
-    {
-        $$ = $1 + $3;
-        reversePolishNotation += "+ ";
-    }
-    | exp SUBTRACTION exp
-    {
-        reversePolishNotation += "- ";
-        $$ = $1 - $3;
-    }
-    | exp MULTIPLICATION exp
-    {
-        reversePolishNotation += "* ";
-        $$ = $1 * $3;
-    }
-    | exp DIVISION exp
-    {
-        if ($3 == 0)
-        {
-            errorMessage = "ERROR: DIVISION BY 0";
-        }
-        else
-        {
-            $$ = (int)floor((float) $1 / $3);
-            reversePolishNotation += "/ ";
-        }
-    }
-    | exp POWER exp
-    {
-        reversePolishNotation += "^ ";        
-        $$ = pow($1, $3);
-    }
-    | LEFT_BRACKET exp RIGHT_BRACKET
-    {
-        $$ = $2;
-    }
-    | SUBTRACTION exp %prec NEG
-    {
-        $$ = -$2;
-        size_t position = reversePolishNotation.find_last_of(' ', reversePolishNotation.length());
-        reversePolishNotation.insert(position, "~");
-    }
-    | exp MODULO exp
-    {
-        reversePolishNotation += "% "; 
-        if ($3 == 0)
-        {
-            errorMessage = "ERROR: MODULO BY 0";
-        }
-        else if ($1 < 0)
-        {
-            int x = $1 % $3;
-            if ($3 > 0)
-            {
-                x = abs(x);
-                $$ = abs($3) - x;
-            }
-            else
-            {
-                $$ = x;
-            }
-        }
-        else
-        {
-            $$ = $1 % $3;
-        }
-    }
+commands: commands command {}
+    | command {}
 ;
-
-
-
+command: identifier ASSIGN expression SEMICOLON {}
+    | IF condition THEN commands ELSE commands ENDIF {}
+    | IF condition THEN commands ENDIF {}
+    | WHILE condition DO commands ENDWHILE {}
+    | DO commands WHILE condition ENDDO {}
+    | FOR PIDIDENTIFIER FROM value TO value DO commands ENDFOR {}
+    | FOR PIDIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
+    | READ identifier SEMICOLON {}
+    | WRITE value SEMICOLON {}
+;
+expression: value {}
+    | value ADDITION value {}
+    | value SUBTRACTION value {}
+    | value MULTIPLICATION value {}
+    | value DIVISION value {}
+    | value MODULO value {}
+;
+condition: value EQUAL value {}
+    | value NOT_EQUAL value {}
+    | value LESS value {}
+    | value MORE value {}
+    | value LESS_EQUAL value {}
+    | value MORE_EQUAL value {}
+;
+value: NUMBER {}
+    | identifier {}
+;
+identifier: PIDIDENTIFIER {}
+    | PIDIDENTIFIER LEFT_BRACKET PIDIDENTIFIER RIGHT_BRACKET {}
+    | PIDIDENTIFIER LEFT_BRACKET NUMBER RIGHT_BRACKET {}
+;
 %%
+
+int yyerror(char *s)
+{
+    std::cerr << "Linia " << yylineno << ": " << s << std::endl;
+    return 1;
+}
+
+int yyerror(const char *s)
+{
+    std::cerr << "Linia " << yylineno << ": " << s << std::endl;
+    return 1;
+}
+
+

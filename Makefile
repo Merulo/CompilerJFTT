@@ -19,7 +19,7 @@ BINARY_DIR = bin
 
 MAIN = $(SOURCE_DIR)/Main.cpp
 
-ALL_SOURCES = $(shell find $(SOURCE_DIR) -type f -name *.cpp)
+ALL_SOURCES = $(shell find $(SOURCE_DIR) -type f -name *.cpp ! -iname Parser.cpp ! -iname Scanner.cpp)
 SOURCES = $(filter-out $(MAIN), $(ALL_SOURCES))
 
 OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
@@ -29,8 +29,8 @@ all: start main.exe
 .PHONY : main.exe
 
 start:
-	bison -o $(SOURCE_DIR)/Parser.cpp -d $(SOURCE_DIR)/parser.y
-	flex -o $(SOURCE_DIR)/scanner.c $(SOURCE_DIR)/scanner.l
+	flex -o $(SOURCE_DIR)/Scanner.cpp $(SOURCE_DIR)/scanner.l
+	bison -d -o $(SOURCE_DIR)/Parser.cpp $(SOURCE_DIR)/parser.y
 
 main.exe: $(MAIN) $(OBJECTS)
 	$(LD) $(LD_FLAGS) $(OBJECTS) $(MAIN) -o $@
