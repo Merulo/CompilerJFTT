@@ -55,4 +55,4 @@ for i in filtered:
 		sys.stdout.write(COLORS.OK_GREEN)
 		print("\tTest: ", i, " passed", COLORS.END)
 		# remove result file, test passed
-		# os.remove(result)
+		os.remove(result)

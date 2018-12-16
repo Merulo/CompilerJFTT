@@ -11,7 +11,7 @@ void ThreeAddressCode::addNewCode(cStrRef name, cStrRef one, cStrRef two)
 
 void ThreeAddressCode::addAssignCode(cStrRef name)
 {
-    // std::cout<<name<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
+    std::cerr<<name<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
     if (_operation.empty())
     {
         Line line;
@@ -19,6 +19,14 @@ void ThreeAddressCode::addAssignCode(cStrRef name)
         line.one = name;
         line.two = _firstExtraParameter;
         _lines.push_back(line);
+    }
+    else if (_operation == "COPY")
+    {
+        Line line;
+        line.name = "COPY";
+        line.one = name;
+        line.two = _firstExtraParameter;
+        _lines.push_back(line);        
     }
     else if (_firstExtraParameter == name)
     {

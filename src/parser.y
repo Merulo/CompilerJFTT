@@ -87,6 +87,7 @@ expression: value
         if (!$1.name.empty())
         {
             checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
+            driver.threeAddressCode.setOperation("COPY");
             driver.threeAddressCode.setFirstExtraParameter($1.name);
         }
         else
