@@ -17,12 +17,12 @@ int main(int argc, char** argv)
         std::string str = argv[i];
         if (str == "-TAC")
         {
-            driver.threeAddressCode.print(argv[i+1]);
+            d.TAC.print(argv[i+1]);
         }
     }
 
-    // driver.symbolTable.print()
-    driver.threeAddressCode.print();
+    // d.ST.print()
+    d.TAC.print();
 
 
     return 0;

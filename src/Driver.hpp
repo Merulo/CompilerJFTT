@@ -6,8 +6,8 @@
 class Driver
 {
     public:
-    SymbolTable symbolTable;
-    ThreeAddressCode threeAddressCode;
+    SymbolTable ST;
+    ThreeAddressCode TAC;
 
     void test()
     {

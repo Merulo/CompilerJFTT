@@ -14,7 +14,7 @@ extern int yylineno;  // z lex-a
 int yylex();
 int yyerror(char*);
 int yyerror(const char*);
-Driver driver;
+Driver d;
 
 void checkForErrors(const std::string& str)
 {
@@ -49,11 +49,11 @@ program: DECLARE declarations IN commands END {}
 ;
 declarations: declarations PIDIDENTIFIER SEMICOLON 
     {
-        checkForErrors(driver.symbolTable.addVariable($2.name));
+        checkForErrors(d.ST.addVariable($2.name));
     }
     | declarations PIDIDENTIFIER LEFT_BRACKET NUMBER TABLE_RANGE NUMBER RIGHT_BRACKET SEMICOLON
     {
-        checkForErrors(driver.symbolTable.addTable($2.name, $4.value, $6.value));
+        checkForErrors(d.ST.addTable($2.name, $4.value, $6.value));
     }
     |
 ;
@@ -62,8 +62,8 @@ commands: commands command {}
 ;
 command: identifier ASSIGN expression SEMICOLON 
     {
-        driver.symbolTable.setInitialized($1.name);
-        driver.threeAddressCode.addAssignCode($1.name);
+        d.ST.setInitialized($1.name);
+        d.TAC.addAssignCode($1.name);
     }
     | IF condition THEN commands ELSE commands ENDIF {}
     | IF condition THEN commands ENDIF {}
@@ -73,52 +73,52 @@ command: identifier ASSIGN expression SEMICOLON
     | FOR PIDIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
     | READ identifier SEMICOLON 
     {
-        checkForErrors(driver.symbolTable.checkVariableExists($2.name));
-        driver.threeAddressCode.addNewCode("READ", $2.name);
+        checkForErrors(d.ST.checkVariableExists($2.name));
+        d.TAC.addNewCode("READ", $2.name);
     }
     | WRITE value SEMICOLON
     {
-        checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
-        driver.threeAddressCode.addNewCode("WRITE", $2.name);
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized($1.name));
+        d.TAC.addNewCode("WRITE", $2.name);
     }
 ;
 expression: value 
     {
         if (!$1.name.empty())
         {
-            checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
-            driver.threeAddressCode.setOperation("COPY");
-            driver.threeAddressCode.setFirstExtraParameter($1.name);
+            checkForErrors(d.ST.checkVariableExistsAndIsInitialized($1.name));
+            d.TAC.setOperation("COPY");
+            d.TAC.setFirstExtraParameter($1.name);
         }
         else
         {
-            driver.threeAddressCode.setFirstExtraParameter(std::to_string($1.value));
+            d.TAC.setFirstExtraParameter(std::to_string($1.value));
         }
     }
     | value ADDITION value 
         {
-            driver.threeAddressCode.setOperation("ADD");
+            d.TAC.setOperation("ADD");
             if (!$1.name.empty())
             {
-                checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
-                driver.threeAddressCode.setFirstExtraParameter($1.name);
+                checkForErrors(d.ST.checkVariableExistsAndIsInitialized($1.name));
+                d.TAC.setFirstExtraParameter($1.name);
             }
             else
             {
-                std::string reg = driver.threeAddressCode.getRegister();
-                driver.threeAddressCode.addNewCode("CONST", reg , std::to_string($1.value));
-                driver.threeAddressCode.setFirstExtraParameter(reg);
+                std::string reg = d.TAC.getRegister();
+                d.TAC.addNewCode("CONST", reg , std::to_string($1.value));
+                d.TAC.setFirstExtraParameter(reg);
             }
             if (!$3.name.empty())
             {
-                checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($3.name));
-                driver.threeAddressCode.setSecondExtraParameter($3.name);
+                checkForErrors(d.ST.checkVariableExistsAndIsInitialized($3.name));
+                d.TAC.setSecondExtraParameter($3.name);
             }
             else
             {
-                std::string reg = driver.threeAddressCode.getRegister();
-                driver.threeAddressCode.addNewCode("CONST", reg , std::to_string($3.value));
-                driver.threeAddressCode.setSecondExtraParameter(reg);
+                std::string reg = d.TAC.getRegister();
+                d.TAC.addNewCode("CONST", reg , std::to_string($3.value));
+                d.TAC.setSecondExtraParameter(reg);
             }            
         }
     | value SUBTRACTION value {}
@@ -138,15 +138,15 @@ value: NUMBER {}
 ;
 identifier: PIDIDENTIFIER 
     {
-        checkForErrors(driver.symbolTable.checkVariableIsVariable($1.name));   
+        checkForErrors(d.ST.checkVariableIsVariable($1.name));   
     }
     | PIDIDENTIFIER LEFT_BRACKET PIDIDENTIFIER RIGHT_BRACKET 
     {
-        checkForErrors(driver.symbolTable.checkVariableIsTable($1.name));     
+        checkForErrors(d.ST.checkVariableIsTable($1.name));     
     }
     | PIDIDENTIFIER LEFT_BRACKET NUMBER RIGHT_BRACKET 
     {
-        checkForErrors(driver.symbolTable.checkVariableIsTable($1.name));   
+        checkForErrors(d.ST.checkVariableIsTable($1.name));   
     }
 ;
 %%

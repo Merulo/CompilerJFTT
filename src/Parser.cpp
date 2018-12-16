@@ -74,7 +74,7 @@ extern int yylineno;  // z lex-a
 int yylex();
 int yyerror(char*);
 int yyerror(const char*);
-Driver driver;
+Driver d;
 
 void checkForErrors(const std::string& str)
 {
@@ -1337,7 +1337,7 @@ yyreduce:
   case 3:
 #line 51 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(driver.symbolTable.addVariable((yyvsp[-1]).name));
+        checkForErrors(d.ST.addVariable((yyvsp[-1]).name));
     }
 #line 1343 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1345,7 +1345,7 @@ yyreduce:
   case 4:
 #line 55 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(driver.symbolTable.addTable((yyvsp[-6]).name, (yyvsp[-4]).value, (yyvsp[-2]).value));
+        checkForErrors(d.ST.addTable((yyvsp[-6]).name, (yyvsp[-4]).value, (yyvsp[-2]).value));
     }
 #line 1351 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1365,8 +1365,8 @@ yyreduce:
   case 8:
 #line 64 "src/parser.y" /* yacc.c:1646  */
     {
-        driver.symbolTable.setInitialized((yyvsp[-3]).name);
-        driver.threeAddressCode.addAssignCode((yyvsp[-3]).name);
+        d.ST.setInitialized((yyvsp[-3]).name);
+        d.TAC.addAssignCode((yyvsp[-3]).name);
     }
 #line 1372 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1410,8 +1410,8 @@ yyreduce:
   case 15:
 #line 75 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(driver.symbolTable.checkVariableExists((yyvsp[-1]).name));
-        driver.threeAddressCode.addNewCode("READ", (yyvsp[-1]).name);
+        checkForErrors(d.ST.checkVariableExists((yyvsp[-1]).name));
+        d.TAC.addNewCode("READ", (yyvsp[-1]).name);
     }
 #line 1417 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1419,8 +1419,8 @@ yyreduce:
   case 16:
 #line 80 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized((yyvsp[-2]).name));
-        driver.threeAddressCode.addNewCode("WRITE", (yyvsp[-1]).name);
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[-2]).name));
+        d.TAC.addNewCode("WRITE", (yyvsp[-1]).name);
     }
 #line 1426 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1430,13 +1430,13 @@ yyreduce:
     {
         if (!(yyvsp[0]).name.empty())
         {
-            checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized((yyvsp[0]).name));
-            driver.threeAddressCode.setOperation("COPY");
-            driver.threeAddressCode.setFirstExtraParameter((yyvsp[0]).name);
+            checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[0]).name));
+            d.TAC.setOperation("COPY");
+            d.TAC.setFirstExtraParameter((yyvsp[0]).name);
         }
         else
         {
-            driver.threeAddressCode.setFirstExtraParameter(std::to_string((yyvsp[0]).value));
+            d.TAC.setFirstExtraParameter(std::to_string((yyvsp[0]).value));
         }
     }
 #line 1443 "src/Parser.cpp" /* yacc.c:1646  */
@@ -1445,28 +1445,28 @@ yyreduce:
   case 18:
 #line 99 "src/parser.y" /* yacc.c:1646  */
     {
-            driver.threeAddressCode.setOperation("ADD");
+            d.TAC.setOperation("ADD");
             if (!(yyvsp[-2]).name.empty())
             {
-                checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized((yyvsp[-2]).name));
-                driver.threeAddressCode.setFirstExtraParameter((yyvsp[-2]).name);
+                checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[-2]).name));
+                d.TAC.setFirstExtraParameter((yyvsp[-2]).name);
             }
             else
             {
-                std::string reg = driver.threeAddressCode.getRegister();
-                driver.threeAddressCode.addNewCode("CONST", reg , std::to_string((yyvsp[-2]).value));
-                driver.threeAddressCode.setFirstExtraParameter(reg);
+                std::string reg = d.TAC.getRegister();
+                d.TAC.addNewCode("CONST", reg , std::to_string((yyvsp[-2]).value));
+                d.TAC.setFirstExtraParameter(reg);
             }
             if (!(yyvsp[0]).name.empty())
             {
-                checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized((yyvsp[0]).name));
-                driver.threeAddressCode.setSecondExtraParameter((yyvsp[0]).name);
+                checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[0]).name));
+                d.TAC.setSecondExtraParameter((yyvsp[0]).name);
             }
             else
             {
-                std::string reg = driver.threeAddressCode.getRegister();
-                driver.threeAddressCode.addNewCode("CONST", reg , std::to_string((yyvsp[0]).value));
-                driver.threeAddressCode.setSecondExtraParameter(reg);
+                std::string reg = d.TAC.getRegister();
+                d.TAC.addNewCode("CONST", reg , std::to_string((yyvsp[0]).value));
+                d.TAC.setSecondExtraParameter(reg);
             }            
         }
 #line 1473 "src/Parser.cpp" /* yacc.c:1646  */
@@ -1547,7 +1547,7 @@ yyreduce:
   case 31:
 #line 140 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(driver.symbolTable.checkVariableIsVariable((yyvsp[0]).name));   
+        checkForErrors(d.ST.checkVariableIsVariable((yyvsp[0]).name));   
     }
 #line 1553 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1555,7 +1555,7 @@ yyreduce:
   case 32:
 #line 144 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(driver.symbolTable.checkVariableIsTable((yyvsp[-3]).name));     
+        checkForErrors(d.ST.checkVariableIsTable((yyvsp[-3]).name));     
     }
 #line 1561 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1563,7 +1563,7 @@ yyreduce:
   case 33:
 #line 148 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(driver.symbolTable.checkVariableIsTable((yyvsp[-3]).name));   
+        checkForErrors(d.ST.checkVariableIsTable((yyvsp[-3]).name));   
     }
 #line 1569 "src/Parser.cpp" /* yacc.c:1646  */
     break;
