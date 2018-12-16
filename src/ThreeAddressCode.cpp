@@ -11,7 +11,16 @@ void ThreeAddressCode::addNewCode(cStrRef name, cStrRef one, cStrRef two)
 
 void ThreeAddressCode::addAssignCode(cStrRef name)
 {
-    if (_firstExtraParameter == name)
+    // std::cout<<name<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
+    if (_operation.empty())
+    {
+        Line line;
+        line.name = "CONST";
+        line.one = name;
+        line.two = _firstExtraParameter;
+        _lines.push_back(line);
+    }
+    else if (_firstExtraParameter == name)
     {
         handleAssign(_operation, name, _secondExtraParameter);
     }
@@ -31,10 +40,16 @@ void ThreeAddressCode::addAssignCode(cStrRef name)
     reset();
 }
 
-void ThreeAddressCode::loadLocalParameters(cStrRef name, cStrRef first, cStrRef second)
+void ThreeAddressCode::setOperation(cStrRef operation)
 {
-    _operation = name;
+    _operation = operation;
+}
+void ThreeAddressCode::setFirstExtraParameter(cStrRef first)
+{
     _firstExtraParameter = first;
+}
+void ThreeAddressCode::setSecondExtraParameter(cStrRef second)
+{
     _secondExtraParameter = second;
 }
 

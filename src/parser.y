@@ -63,14 +63,7 @@ commands: commands command {}
 command: identifier ASSIGN expression SEMICOLON 
     {
         driver.symbolTable.setInitialized($1.name);
-        if ($3.name.empty())
-        {
-            driver.threeAddressCode.addNewCode("CONST", $1.name, std::to_string($3.value));
-        }
-        else
-        {
-            driver.threeAddressCode.addAssignCode($1.name);
-        }
+        driver.threeAddressCode.addAssignCode($1.name);
     }
     | IF condition THEN commands ELSE commands ENDIF {}
     | IF condition THEN commands ENDIF {}
@@ -94,17 +87,38 @@ expression: value
         if (!$1.name.empty())
         {
             checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
+            driver.threeAddressCode.setFirstExtraParameter($1.name);
         }
         else
         {
-            driver.threeAddressCode.loadLocalParameters(std::to_string($1.value));
+            driver.threeAddressCode.setFirstExtraParameter(std::to_string($1.value));
         }
     }
     | value ADDITION value 
         {
-            checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
-            checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($3.name));
-            driver.threeAddressCode.loadLocalParameters("ADD", $1.name, $3.name);                
+            driver.threeAddressCode.setOperation("ADD");
+            if (!$1.name.empty())
+            {
+                checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($1.name));
+                driver.threeAddressCode.setFirstExtraParameter($1.name);
+            }
+            else
+            {
+                std::string reg = driver.threeAddressCode.getRegister();
+                driver.threeAddressCode.addNewCode("CONST", reg , std::to_string($1.value));
+                driver.threeAddressCode.setFirstExtraParameter(reg);
+            }
+            if (!$3.name.empty())
+            {
+                checkForErrors(driver.symbolTable.checkVariableExistsAndIsInitialized($3.name));
+                driver.threeAddressCode.setSecondExtraParameter($3.name);
+            }
+            else
+            {
+                std::string reg = driver.threeAddressCode.getRegister();
+                driver.threeAddressCode.addNewCode("CONST", reg , std::to_string($3.value));
+                driver.threeAddressCode.setSecondExtraParameter(reg);
+            }            
         }
     | value SUBTRACTION value {}
     | value MULTIPLICATION value {}

@@ -1,0 +1,6 @@
+ThreeAddressCode:
+CONST: a 1 
+CONST: b 2 
+CONST: c 3 
+COPY: a b 
+ADD: a c 

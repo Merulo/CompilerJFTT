@@ -19,13 +19,23 @@ class ThreeAddressCode
     public:
     void addNewCode(cStrRef name, cStrRef one = "", cStrRef two = "");
     void addAssignCode(cStrRef name);
-    void loadLocalParameters(cStrRef name, cStrRef two = "", cStrRef three = "");
+    void setOperation(cStrRef operation);
+    void setFirstExtraParameter(cStrRef first);
+    void setSecondExtraParameter(cStrRef second);
+    
+    std::string getRegister()
+    {
+        std::string result = "register_" + std::to_string(_registerCount);
+        _registerCount++;
+        return result;
+    }
 
     void print(cStrRef fileName = "");
     private:
     void handleAssign(cStrRef name, cStrRef first, cStrRef second);
     void reset();
 
+    int _registerCount = 0;
     std::vector<Line> _lines;
     std::string _operation;
     std::string _firstExtraParameter;

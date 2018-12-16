@@ -41,11 +41,11 @@ for i in filtered:
 	# ./main.exe
 	cmd = ['./main.exe', i, "dummyArgument", "-TAC", result]
 	# redirect stdout to somefile.result
-	process = subprocess.Popen(cmd, stderr=fNull)
+	process = subprocess.Popen(cmd, stdout=fNull, stderr=fNull)
 	process.wait()
 	
 	# print what you are testing
-	if (not filecmp.cmp(result, target)): 	# files are not the same
+	if (not os.path.isfile(result) or not filecmp.cmp(result, target)): 	# files are not the same
 		# keep result file for reference
 		# os.remove(result)
 		sys.stdout.write(COLORS.FAIL)
@@ -55,4 +55,4 @@ for i in filtered:
 		sys.stdout.write(COLORS.OK_GREEN)
 		print("\tTest: ", i, " passed", COLORS.END)
 		# remove result file, test passed
-		os.remove(result)
+		# os.remove(result)
