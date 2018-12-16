@@ -80,8 +80,15 @@ void ThreeAddressCode::print(cStrRef fileName)
             output<<l.name<<": "<<l.one<<" "<<l.two<<" "<<std::endl;
         }
     }
-
 }
+
+std::string ThreeAddressCode::getRegister()
+{
+    std::string result = "register_" + std::to_string(_registerCount);
+    _registerCount++;
+    return result;
+}
+
 
 void ThreeAddressCode::handleAssign(cStrRef name, cStrRef first, cStrRef second)
 {

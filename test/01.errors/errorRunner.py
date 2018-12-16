@@ -46,7 +46,7 @@ for i in filtered:
 	process.wait()
 	
 	# print what you are testing
-	if (not filecmp.cmp(result, target)): 	# files are not the same
+	if (not os.path.isfile(result) or not filecmp.cmp(result, target)): 	# files are not the same
 		# keep result file for reference
 		# os.remove(result)
 		sys.stdout.write(COLORS.FAIL)

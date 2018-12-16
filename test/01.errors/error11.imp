@@ -1,0 +1,6 @@
+DECLARE
+  a; b; c;
+IN
+  b := 10;
+  a := b + c;
+END

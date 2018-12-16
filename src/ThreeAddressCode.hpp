@@ -23,12 +23,7 @@ class ThreeAddressCode
     void setFirstExtraParameter(cStrRef first);
     void setSecondExtraParameter(cStrRef second);
     
-    std::string getRegister()
-    {
-        std::string result = "register_" + std::to_string(_registerCount);
-        _registerCount++;
-        return result;
-    }
+    std::string getRegister();
 
     void print(cStrRef fileName = "");
     private:

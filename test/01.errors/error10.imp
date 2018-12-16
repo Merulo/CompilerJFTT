@@ -1,0 +1,5 @@
+DECLARE
+  a; b; c;
+IN
+  a := b + c;
+END
