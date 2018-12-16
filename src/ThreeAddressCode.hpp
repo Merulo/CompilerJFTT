@@ -9,7 +9,7 @@ typedef const std::string & cStrRef;
 
 struct Line
 {
-    std::string name;
+    std::string operation;
     std::string one;
     std::string two;
 };
@@ -17,18 +17,17 @@ struct Line
 class ThreeAddressCode
 {
     public:
-    void addNewCode(cStrRef name, cStrRef one = "", cStrRef two = "");
-    void addAssignCode(cStrRef name);
+    void addNewCode(cStrRef operation, cStrRef one = "", cStrRef two = "");
+    void handleMathOperation(cStrRef resultName);
     void setOperation(cStrRef operation);
     void setFirstExtraParameter(cStrRef first);
     void setSecondExtraParameter(cStrRef second);
-    
     std::string getRegister();
 
     void print(cStrRef fileName = "");
     private:
-    void handleAssign(cStrRef name, cStrRef first, cStrRef second);
     void reset();
+    void handleNonCommutativeOperation(cStrRef resultName);
 
     int _registerCount = 0;
     std::vector<Line> _lines;

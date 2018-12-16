@@ -1,49 +1,47 @@
 #include "ThreeAddressCode.hpp"
 
-void ThreeAddressCode::addNewCode(cStrRef name, cStrRef one, cStrRef two)
+void ThreeAddressCode::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 {
     Line line;
-    line.name = name;
+    line.operation = operation;
     line.one = one;
     line.two = two;
     _lines.push_back(line);
 }
 
-void ThreeAddressCode::addAssignCode(cStrRef name)
+void ThreeAddressCode::handleMathOperation(cStrRef resultName)
 {
-    std::cerr<<name<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
+    std::cerr<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
     if (_operation.empty())
     {
-        Line line;
-        line.name = "CONST";
-        line.one = name;
-        line.two = _firstExtraParameter;
-        _lines.push_back(line);
+        addNewCode("CONST", resultName, _firstExtraParameter);
     }
     else if (_operation == "COPY")
     {
-        Line line;
-        line.name = "COPY";
-        line.one = name;
-        line.two = _firstExtraParameter;
-        _lines.push_back(line);        
+        addNewCode("COPY", resultName, _firstExtraParameter);      
     }
-    else if (_firstExtraParameter == name)
+    else if (_secondExtraParameter == resultName)
     {
-        handleAssign(_operation, name, _secondExtraParameter);
+        if (_operation == "ADD")
+        {
+            addNewCode(_operation, resultName, _firstExtraParameter);
+        }
+        else if (_operation == "SUB")
+        {
+            handleNonCommutativeOperation(resultName);
+        }
     }
-    else if (_secondExtraParameter == name)
+    else
     {
-        handleAssign(_operation, name, _firstExtraParameter);
-    }
-    else 
-    {
-        Line line;
-        line.name = "COPY";
-        line.one = name;
-        line.two = _firstExtraParameter;
-        _lines.push_back(line);
-        handleAssign(_operation, name, _secondExtraParameter);
+        if (_firstExtraParameter == resultName)
+        {
+            addNewCode(_operation, resultName, _secondExtraParameter);
+        }
+        else
+        {
+            addNewCode("COPY", resultName, _firstExtraParameter);
+            addNewCode(_operation, resultName, _secondExtraParameter);
+        }  
     }
     reset();
 }
@@ -68,7 +66,7 @@ void ThreeAddressCode::print(cStrRef fileName)
         std::cerr<<"ThreeAddressCode:"<<std::endl;
         for(auto l : _lines)
         {
-            std::cerr<<l.name<<": "<<l.one<<" "<<l.two<<" "<<std::endl;
+            std::cerr<<l.operation<<": "<<l.one<<" "<<l.two<<" "<<std::endl;
         }
     }
     else
@@ -77,7 +75,7 @@ void ThreeAddressCode::print(cStrRef fileName)
         output<<"ThreeAddressCode:"<<std::endl;
         for(auto l : _lines)
         {
-            output<<l.name<<": "<<l.one<<" "<<l.two<<" "<<std::endl;
+            output<<l.operation<<": "<<l.one<<" "<<l.two<<" "<<std::endl;
         }
     }
 }
@@ -89,19 +87,21 @@ std::string ThreeAddressCode::getRegister()
     return result;
 }
 
-
-void ThreeAddressCode::handleAssign(cStrRef name, cStrRef first, cStrRef second)
-{
-    Line line;
-    line.name = name;
-    line.one = first;
-    line.two = second;
-    _lines.push_back(line);
-}
+/*
+PRIVATE
+*/
 
 void ThreeAddressCode::reset()
 {
     _operation = "";
     _firstExtraParameter = "";
     _secondExtraParameter = "";
+}
+
+void ThreeAddressCode::handleNonCommutativeOperation(cStrRef resultName)
+{
+    std::string reg = getRegister();
+    addNewCode("COPY", reg, resultName);
+    addNewCode("COPY", resultName, _firstExtraParameter);
+    addNewCode("SUB", resultName, reg);
 }

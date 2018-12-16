@@ -63,7 +63,7 @@ commands: commands command {}
 command: identifier ASSIGN expression SEMICOLON 
     {
         d.ST.setInitialized($1.name);
-        d.TAC.addAssignCode($1.name);
+        d.TAC.handleMathOperation($1.name);
     }
     | IF condition THEN commands ELSE commands ENDIF {}
     | IF condition THEN commands ENDIF {}
@@ -121,7 +121,32 @@ expression: value
                 d.TAC.setSecondExtraParameter(reg);
             }            
         }
-    | value SUBTRACTION value {}
+    | value SUBTRACTION value
+        {
+            d.TAC.setOperation("SUB");
+            if (!$1.name.empty())
+            {
+                checkForErrors(d.ST.checkVariableExistsAndIsInitialized($1.name));
+                d.TAC.setFirstExtraParameter($1.name);
+            }
+            else
+            {
+                std::string reg = d.TAC.getRegister();
+                d.TAC.addNewCode("CONST", reg , std::to_string($1.value));
+                d.TAC.setFirstExtraParameter(reg);
+            }
+            if (!$3.name.empty())
+            {
+                checkForErrors(d.ST.checkVariableExistsAndIsInitialized($3.name));
+                d.TAC.setSecondExtraParameter($3.name);
+            }
+            else
+            {
+                std::string reg = d.TAC.getRegister();
+                d.TAC.addNewCode("CONST", reg , std::to_string($3.value));
+                d.TAC.setSecondExtraParameter(reg);
+            }            
+        }    
     | value MULTIPLICATION value {}
     | value DIVISION value {}
     | value MODULO value {}
