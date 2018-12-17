@@ -4,10 +4,10 @@
 %define api.token.prefix {T_} 
 
 %{
+#include <iostream>
 #include "Driver.hpp"
 #include "Utilities.hpp"
 #define YYSTYPE Data
-#include <iostream>
 
 extern FILE *yyin;
 extern int yylineno;  // z lex-a
@@ -15,71 +15,6 @@ int yylex();
 int yyerror(char*);
 int yyerror(const char*);
 Driver d;
-
-void checkForErrors(const std::string& str)
-{
-    if (!str.empty())
-    {
-        std::cout << "Error at line " << yylineno << ": " << str << std::endl;
-        exit(1);
-    }
-}
-
-void handleOperation(const std::string& operation, Data first, Data second)
-{
-    d.TAC.setOperation(operation);
-    if (!first.name.empty())
-    {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(first.name));
-        d.TAC.setFirstExtraParameter(first.name);
-    }
-    else
-    {
-        std::string reg = d.TAC.getVariable();
-        d.TAC.addNewCode("CONST", reg , std::to_string(first.value));
-        d.TAC.setFirstExtraParameter(reg);
-    }
-    if (!second.name.empty())
-    {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(second.name));
-        d.TAC.setSecondExtraParameter(second.name);
-    }
-    else
-    {
-        std::string reg = d.TAC.getVariable();
-        d.TAC.addNewCode("CONST", reg , std::to_string(second.value));
-        d.TAC.setSecondExtraParameter(reg);
-    }   
-}
-
-void handleConditionOperation(const std::string& operation, Data first, Data second)
-{
-    std::string arg1;
-    std::string arg2;
-    if (!first.name.empty())
-    {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(first.name));
-        arg1 = first.name;
-    }
-    else
-    {
-        std::string reg = d.TAC.getVariable();
-        d.TAC.addNewCode("CONST", reg , std::to_string(first.value));
-        arg1 = reg;
-    }
-    if (!second.name.empty())
-    {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(second.name));
-        arg2 = second.name;
-    }
-    else
-    {
-        std::string reg = d.TAC.getVariable();
-        d.TAC.addNewCode("CONST", reg , std::to_string(second.value));
-        arg2 = reg;
-    } 
-    d.TAC.handleConditionOperation(operation, arg1, arg2);
-}
 
 %}
 //programm
@@ -159,23 +94,23 @@ expression: value
     }
     | value ADDITION value 
         {   
-            handleOperation("ADD", $1, $3);           
+            handleOperation(d, "ADD", $1, $3);           
         }
     | value SUBTRACTION value
         {
-            handleOperation("SUB", $1, $3);           
+            handleOperation(d, "SUB", $1, $3);           
         }    
     | value MULTIPLICATION value
         {
-            handleOperation("MUL", $1, $3);            
+            handleOperation(d, "MUL", $1, $3);            
         }
     | value DIVISION value 
         {
-            handleOperation("DIV", $1, $3);            
+            handleOperation(d, "DIV", $1, $3);            
         }
     | value MODULO value 
         {
-            handleOperation("MOD", $1, $3);            
+            handleOperation(d, "MOD", $1, $3);            
         }
 ;
 condition: value EQUAL value {}
@@ -183,7 +118,7 @@ condition: value EQUAL value {}
     | value LESS value {}
     | value MORE value     
     {
-        handleConditionOperation("JLE", $1, $3);
+        handleConditionOperation(d, "JLE", $1, $3);
     }
     | value LESS_EQUAL value {}
     | value MORE_EQUAL value {}
