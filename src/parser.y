@@ -25,6 +25,33 @@ void checkForErrors(const std::string& str)
     }
 }
 
+void handleOperation(const std::string& operation, Data first, Data second)
+{
+    d.TAC.setOperation(operation);
+    if (!first.name.empty())
+    {
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(first.name));
+        d.TAC.setFirstExtraParameter(first.name);
+    }
+    else
+    {
+        std::string reg = d.TAC.getRegister();
+        d.TAC.addNewCode("CONST", reg , std::to_string(first.value));
+        d.TAC.setFirstExtraParameter(reg);
+    }
+    if (!second.name.empty())
+    {
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(second.name));
+        d.TAC.setSecondExtraParameter(second.name);
+    }
+    else
+    {
+        std::string reg = d.TAC.getRegister();
+        d.TAC.addNewCode("CONST", reg , std::to_string(second.value));
+        d.TAC.setSecondExtraParameter(reg);
+    }   
+}
+
 %}
 //programm
 %token DECLARE IN END
@@ -96,60 +123,25 @@ expression: value
         }
     }
     | value ADDITION value 
-        {
-            d.TAC.setOperation("ADD");
-            if (!$1.name.empty())
-            {
-                checkForErrors(d.ST.checkVariableExistsAndIsInitialized($1.name));
-                d.TAC.setFirstExtraParameter($1.name);
-            }
-            else
-            {
-                std::string reg = d.TAC.getRegister();
-                d.TAC.addNewCode("CONST", reg , std::to_string($1.value));
-                d.TAC.setFirstExtraParameter(reg);
-            }
-            if (!$3.name.empty())
-            {
-                checkForErrors(d.ST.checkVariableExistsAndIsInitialized($3.name));
-                d.TAC.setSecondExtraParameter($3.name);
-            }
-            else
-            {
-                std::string reg = d.TAC.getRegister();
-                d.TAC.addNewCode("CONST", reg , std::to_string($3.value));
-                d.TAC.setSecondExtraParameter(reg);
-            }            
+        {   
+            handleOperation("ADD", $1, $3);           
         }
     | value SUBTRACTION value
         {
-            d.TAC.setOperation("SUB");
-            if (!$1.name.empty())
-            {
-                checkForErrors(d.ST.checkVariableExistsAndIsInitialized($1.name));
-                d.TAC.setFirstExtraParameter($1.name);
-            }
-            else
-            {
-                std::string reg = d.TAC.getRegister();
-                d.TAC.addNewCode("CONST", reg , std::to_string($1.value));
-                d.TAC.setFirstExtraParameter(reg);
-            }
-            if (!$3.name.empty())
-            {
-                checkForErrors(d.ST.checkVariableExistsAndIsInitialized($3.name));
-                d.TAC.setSecondExtraParameter($3.name);
-            }
-            else
-            {
-                std::string reg = d.TAC.getRegister();
-                d.TAC.addNewCode("CONST", reg , std::to_string($3.value));
-                d.TAC.setSecondExtraParameter(reg);
-            }            
+            handleOperation("SUB", $1, $3);           
         }    
-    | value MULTIPLICATION value {}
-    | value DIVISION value {}
-    | value MODULO value {}
+    | value MULTIPLICATION value
+        {
+            handleOperation("MUL", $1, $3);            
+        }
+    | value DIVISION value 
+        {
+            handleOperation("DIV", $1, $3);            
+        }
+    | value MODULO value 
+        {
+            handleOperation("MOD", $1, $3);            
+        }
 ;
 condition: value EQUAL value {}
     | value NOT_EQUAL value {}

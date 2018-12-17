@@ -1,0 +1,10 @@
+ThreeAddressCode:
+CONST: a 1 
+CONST: b 2 
+CONST: c 3 
+COPY: a b 
+DIV: a c 
+DIV: a b 
+COPY: register_0 a 
+COPY: a b 
+DIV: a register_0 

@@ -22,13 +22,13 @@ void ThreeAddressCode::handleMathOperation(cStrRef resultName)
     }
     else if (_secondExtraParameter == resultName)
     {
-        if (_operation == "ADD")
+        if (_operation == "ADD" || _operation == "MUL")
         {
             addNewCode(_operation, resultName, _firstExtraParameter);
         }
-        else if (_operation == "SUB")
+        else if (_operation == "SUB" || _operation == "DIV" || _operation == "MOD")
         {
-            handleNonCommutativeOperation(resultName);
+            handleNonCommutativeOperation(resultName, _operation);
         }
     }
     else
@@ -98,10 +98,10 @@ void ThreeAddressCode::reset()
     _secondExtraParameter = "";
 }
 
-void ThreeAddressCode::handleNonCommutativeOperation(cStrRef resultName)
+void ThreeAddressCode::handleNonCommutativeOperation(cStrRef resultName, cStrRef operation)
 {
     std::string reg = getRegister();
     addNewCode("COPY", reg, resultName);
     addNewCode("COPY", resultName, _firstExtraParameter);
-    addNewCode("SUB", resultName, reg);
+    addNewCode(operation, resultName, reg);
 }

@@ -6,4 +6,7 @@ IN
   c := 3;
   a := b + 2;
   a := 2 + b;
+  a := b + c;
+  a := a + b;
+  a := b + a;
 END

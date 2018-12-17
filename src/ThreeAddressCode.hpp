@@ -27,7 +27,7 @@ class ThreeAddressCode
     void print(cStrRef fileName = "");
     private:
     void reset();
-    void handleNonCommutativeOperation(cStrRef resultName);
+    void handleNonCommutativeOperation(cStrRef resultName, cStrRef operation);
 
     int _registerCount = 0;
     std::vector<Line> _lines;

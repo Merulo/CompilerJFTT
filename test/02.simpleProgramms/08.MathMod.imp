@@ -1,0 +1,10 @@
+DECLARE
+  a; b; c;
+IN
+  a := 1;
+  b := 2;
+  c := 3;
+  a := b % c;
+  a := a % b;
+  a := b % a;
+END
