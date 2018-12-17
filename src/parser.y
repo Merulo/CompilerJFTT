@@ -35,7 +35,7 @@ void handleOperation(const std::string& operation, Data first, Data second)
     }
     else
     {
-        std::string reg = d.TAC.getRegister();
+        std::string reg = d.TAC.getVariable();
         d.TAC.addNewCode("CONST", reg , std::to_string(first.value));
         d.TAC.setFirstExtraParameter(reg);
     }
@@ -46,10 +46,39 @@ void handleOperation(const std::string& operation, Data first, Data second)
     }
     else
     {
-        std::string reg = d.TAC.getRegister();
+        std::string reg = d.TAC.getVariable();
         d.TAC.addNewCode("CONST", reg , std::to_string(second.value));
         d.TAC.setSecondExtraParameter(reg);
     }   
+}
+
+void handleConditionOperation(const std::string& operation, Data first, Data second)
+{
+    std::string arg1;
+    std::string arg2;
+    if (!first.name.empty())
+    {
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(first.name));
+        arg1 = first.name;
+    }
+    else
+    {
+        std::string reg = d.TAC.getVariable();
+        d.TAC.addNewCode("CONST", reg , std::to_string(first.value));
+        arg1 = reg;
+    }
+    if (!second.name.empty())
+    {
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(second.name));
+        arg2 = second.name;
+    }
+    else
+    {
+        std::string reg = d.TAC.getVariable();
+        d.TAC.addNewCode("CONST", reg , std::to_string(second.value));
+        arg2 = reg;
+    } 
+    d.TAC.handleConditionOperation(operation, arg1, arg2);
 }
 
 %}
@@ -72,7 +101,10 @@ void handleOperation(const std::string& operation, Data first, Data second)
 %token SEMICOLON ERROR
 
 %%
-program: DECLARE declarations IN commands END {}
+program: DECLARE declarations IN commands END
+    {
+        d.TAC.addNewCode("HALT");
+    }
 ;
 declarations: declarations PIDIDENTIFIER SEMICOLON 
     {
@@ -93,7 +125,10 @@ command: identifier ASSIGN expression SEMICOLON
         d.TAC.handleMathOperation($1.name);
     }
     | IF condition THEN commands ELSE commands ENDIF {}
-    | IF condition THEN commands ENDIF {}
+    | IF condition THEN commands ENDIF 
+    {
+        d.TAC.endIf();
+    }
     | WHILE condition DO commands ENDWHILE {}
     | DO commands WHILE condition ENDDO {}
     | FOR PIDIDENTIFIER FROM value TO value DO commands ENDFOR {}
@@ -146,7 +181,10 @@ expression: value
 condition: value EQUAL value {}
     | value NOT_EQUAL value {}
     | value LESS value {}
-    | value MORE value {}
+    | value MORE value     
+    {
+        handleConditionOperation("JLE", $1, $3);
+    }
     | value LESS_EQUAL value {}
     | value MORE_EQUAL value {}
 ;

@@ -1,0 +1,26 @@
+ThreeAddressCode:
+CONST: a 10 
+CONST: b 20 
+CONST: variable_0 0 
+CONST: variable_1 1 
+JLE: variable_0 variable_1 goto L_0
+CONST: a 100 
+#L_0
+CONST: variable_2 2 
+JLE: a variable_2 goto L_1
+CONST: a 101 
+#L_1
+CONST: variable_3 3 
+JLE: variable_3 a goto L_2
+CONST: a 102 
+#L_2
+JLE: b a goto L_3
+CONST: a 103 
+#L_3
+JLE: a b goto L_4
+CONST: a 104 
+#L_4
+JLE: a a goto L_5
+CONST: a 105 
+#L_5
+HALT:   

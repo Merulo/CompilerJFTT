@@ -2,13 +2,14 @@ ThreeAddressCode:
 CONST: a 1 
 CONST: b 2 
 CONST: c 3 
-CONST: register_0 2 
+CONST: variable_0 2 
 COPY: a b 
-ADD: a register_0 
-CONST: register_1 2 
-COPY: a register_1 
+ADD: a variable_0 
+CONST: variable_1 2 
+COPY: a variable_1 
 ADD: a b 
 COPY: a b 
 ADD: a c 
 ADD: a b 
 ADD: a b 
+HALT:   

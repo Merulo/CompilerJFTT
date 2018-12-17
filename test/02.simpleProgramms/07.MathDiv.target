@@ -5,6 +5,7 @@ CONST: c 3
 COPY: a b 
 DIV: a c 
 DIV: a b 
-COPY: register_0 a 
+COPY: variable_0 a 
 COPY: a b 
-DIV: a register_0 
+DIV: a variable_0 
+HALT:   

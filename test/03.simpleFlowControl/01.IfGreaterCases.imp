@@ -1,0 +1,24 @@
+DECLARE
+  a; b;
+IN
+  a := 10;
+  b := 20;
+  IF 0 > 1 THEN
+    a := 100;
+  ENDIF
+  IF a > 2 THEN
+    a := 101;
+  ENDIF
+  IF 3 > a THEN
+    a := 102;
+  ENDIF
+  IF b > a THEN
+    a := 103;
+  ENDIF
+  IF a > b THEN
+    a := 104;
+  ENDIF
+  IF a > a THEN
+    a := 105;
+  ENDIF
+END

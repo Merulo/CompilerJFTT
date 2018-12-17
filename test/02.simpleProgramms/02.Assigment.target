@@ -5,3 +5,4 @@ CONST: c 3
 COPY: a b 
 COPY: a c 
 COPY: a a 
+HALT:   

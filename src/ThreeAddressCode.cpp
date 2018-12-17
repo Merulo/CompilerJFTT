@@ -2,6 +2,15 @@
 
 void ThreeAddressCode::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 {
+    while (tester > 0)
+    {
+        // std::cerr<<"Adding label="<<_labels.top()<<std::endl; 
+        Line line;
+        line.thisLabel = _labels.top();
+        _labels.pop();
+        _lines.push_back(line);
+        tester--;
+    }
     Line line;
     line.operation = operation;
     line.one = one;
@@ -11,7 +20,7 @@ void ThreeAddressCode::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 
 void ThreeAddressCode::handleMathOperation(cStrRef resultName)
 {
-    std::cerr<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
+    // std::cerr<<"Math="<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
     if (_operation.empty())
     {
         addNewCode("CONST", resultName, _firstExtraParameter);
@@ -61,28 +70,26 @@ void ThreeAddressCode::setSecondExtraParameter(cStrRef second)
 
 void ThreeAddressCode::print(cStrRef fileName)
 {
+    std::streambuf * buf;
     if (fileName.empty())
     {
-        std::cerr<<"ThreeAddressCode:"<<std::endl;
-        for(auto l : _lines)
-        {
-            std::cerr<<l.operation<<": "<<l.one<<" "<<l.two<<" "<<std::endl;
-        }
+        buf = std::cerr.rdbuf();
+        std::ostream out(buf);
+        writeToStream(out);
     }
     else
     {
         std::ofstream output(fileName);
-        output<<"ThreeAddressCode:"<<std::endl;
-        for(auto l : _lines)
-        {
-            output<<l.operation<<": "<<l.one<<" "<<l.two<<" "<<std::endl;
-        }
+        buf = output.rdbuf();
+        std::ostream out(buf);
+        writeToStream(out);
     }
+
 }
 
-std::string ThreeAddressCode::getRegister()
+std::string ThreeAddressCode::getVariable()
 {
-    std::string result = "register_" + std::to_string(_registerCount);
+    std::string result = "variable_" + std::to_string(_registerCount);
     _registerCount++;
     return result;
 }
@@ -100,7 +107,7 @@ void ThreeAddressCode::reset()
 
 void ThreeAddressCode::handleNonCommutativeOperation(cStrRef resultName, cStrRef operation)
 {
-    std::string reg = getRegister();
+    std::string reg = getVariable();
     addNewCode("COPY", reg, resultName);
     addNewCode("COPY", resultName, _firstExtraParameter);
     addNewCode(operation, resultName, reg);

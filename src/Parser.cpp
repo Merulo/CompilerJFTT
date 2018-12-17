@@ -95,7 +95,7 @@ void handleOperation(const std::string& operation, Data first, Data second)
     }
     else
     {
-        std::string reg = d.TAC.getRegister();
+        std::string reg = d.TAC.getVariable();
         d.TAC.addNewCode("CONST", reg , std::to_string(first.value));
         d.TAC.setFirstExtraParameter(reg);
     }
@@ -106,14 +106,43 @@ void handleOperation(const std::string& operation, Data first, Data second)
     }
     else
     {
-        std::string reg = d.TAC.getRegister();
+        std::string reg = d.TAC.getVariable();
         d.TAC.addNewCode("CONST", reg , std::to_string(second.value));
         d.TAC.setSecondExtraParameter(reg);
     }   
 }
 
+void handleConditionOperation(const std::string& operation, Data first, Data second)
+{
+    std::string arg1;
+    std::string arg2;
+    if (!first.name.empty())
+    {
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(first.name));
+        arg1 = first.name;
+    }
+    else
+    {
+        std::string reg = d.TAC.getVariable();
+        d.TAC.addNewCode("CONST", reg , std::to_string(first.value));
+        arg1 = reg;
+    }
+    if (!second.name.empty())
+    {
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(second.name));
+        arg2 = second.name;
+    }
+    else
+    {
+        std::string reg = d.TAC.getVariable();
+        d.TAC.addNewCode("CONST", reg , std::to_string(second.value));
+        arg2 = reg;
+    } 
+    d.TAC.handleConditionOperation(operation, arg1, arg2);
+}
 
-#line 117 "src/Parser.cpp" /* yacc.c:339  */
+
+#line 146 "src/Parser.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -204,7 +233,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 208 "src/Parser.cpp" /* yacc.c:358  */
+#line 237 "src/Parser.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -505,10 +534,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    75,    75,    77,    81,    85,    87,    88,    90,    95,
-      96,    97,    98,    99,   100,   101,   106,   112,   125,   129,
-     133,   137,   141,   146,   147,   148,   149,   150,   151,   153,
-     154,   156,   160,   164
+       0,   104,   104,   109,   113,   117,   119,   120,   122,   127,
+     128,   132,   133,   134,   135,   136,   141,   147,   160,   164,
+     168,   172,   176,   181,   182,   183,   184,   188,   189,   191,
+     192,   194,   198,   202
 };
 #endif
 
@@ -1356,104 +1385,108 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 75 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1362 "src/Parser.cpp" /* yacc.c:1646  */
+#line 105 "src/parser.y" /* yacc.c:1646  */
+    {
+        d.TAC.addNewCode("HALT");
+    }
+#line 1393 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 78 "src/parser.y" /* yacc.c:1646  */
+#line 110 "src/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST.addVariable((yyvsp[-1]).name));
     }
-#line 1370 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1401 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 82 "src/parser.y" /* yacc.c:1646  */
+#line 114 "src/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST.addTable((yyvsp[-6]).name, (yyvsp[-4]).value, (yyvsp[-2]).value));
     }
-#line 1378 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1409 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 87 "src/parser.y" /* yacc.c:1646  */
+#line 119 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1384 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1415 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 88 "src/parser.y" /* yacc.c:1646  */
+#line 120 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1390 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1421 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 91 "src/parser.y" /* yacc.c:1646  */
+#line 123 "src/parser.y" /* yacc.c:1646  */
     {
         d.ST.setInitialized((yyvsp[-3]).name);
         d.TAC.handleMathOperation((yyvsp[-3]).name);
     }
-#line 1399 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1430 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 95 "src/parser.y" /* yacc.c:1646  */
+#line 127 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1405 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1436 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 96 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1411 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 11:
-#line 97 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1417 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 12:
-#line 98 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1423 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 13:
-#line 99 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1429 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 14:
-#line 100 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1435 "src/Parser.cpp" /* yacc.c:1646  */
-    break;
-
-  case 15:
-#line 102 "src/parser.y" /* yacc.c:1646  */
+#line 129 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.checkVariableExists((yyvsp[-1]).name));
-        d.TAC.addNewCode("READ", (yyvsp[-1]).name);
+        d.TAC.endIf();
     }
 #line 1444 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
+  case 11:
+#line 132 "src/parser.y" /* yacc.c:1646  */
+    {}
+#line 1450 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 12:
+#line 133 "src/parser.y" /* yacc.c:1646  */
+    {}
+#line 1456 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 134 "src/parser.y" /* yacc.c:1646  */
+    {}
+#line 1462 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 14:
+#line 135 "src/parser.y" /* yacc.c:1646  */
+    {}
+#line 1468 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
+  case 15:
+#line 137 "src/parser.y" /* yacc.c:1646  */
+    {
+        checkForErrors(d.ST.checkVariableExists((yyvsp[-1]).name));
+        d.TAC.addNewCode("READ", (yyvsp[-1]).name);
+    }
+#line 1477 "src/Parser.cpp" /* yacc.c:1646  */
+    break;
+
   case 16:
-#line 107 "src/parser.y" /* yacc.c:1646  */
+#line 142 "src/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[-2]).name));
         d.TAC.addNewCode("WRITE", (yyvsp[-1]).name);
     }
-#line 1453 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1486 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 113 "src/parser.y" /* yacc.c:1646  */
+#line 148 "src/parser.y" /* yacc.c:1646  */
     {
         if (!(yyvsp[0]).name.empty())
         {
@@ -1466,123 +1499,125 @@ yyreduce:
             d.TAC.setFirstExtraParameter(std::to_string((yyvsp[0]).value));
         }
     }
-#line 1470 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1503 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 126 "src/parser.y" /* yacc.c:1646  */
+#line 161 "src/parser.y" /* yacc.c:1646  */
     {   
             handleOperation("ADD", (yyvsp[-2]), (yyvsp[0]));           
         }
-#line 1478 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1511 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 130 "src/parser.y" /* yacc.c:1646  */
+#line 165 "src/parser.y" /* yacc.c:1646  */
     {
             handleOperation("SUB", (yyvsp[-2]), (yyvsp[0]));           
         }
-#line 1486 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1519 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 134 "src/parser.y" /* yacc.c:1646  */
+#line 169 "src/parser.y" /* yacc.c:1646  */
     {
             handleOperation("MUL", (yyvsp[-2]), (yyvsp[0]));            
         }
-#line 1494 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1527 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 138 "src/parser.y" /* yacc.c:1646  */
+#line 173 "src/parser.y" /* yacc.c:1646  */
     {
             handleOperation("DIV", (yyvsp[-2]), (yyvsp[0]));            
         }
-#line 1502 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1535 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 142 "src/parser.y" /* yacc.c:1646  */
+#line 177 "src/parser.y" /* yacc.c:1646  */
     {
             handleOperation("MOD", (yyvsp[-2]), (yyvsp[0]));            
         }
-#line 1510 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1543 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 146 "src/parser.y" /* yacc.c:1646  */
+#line 181 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1516 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1549 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 147 "src/parser.y" /* yacc.c:1646  */
+#line 182 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1522 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1555 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 148 "src/parser.y" /* yacc.c:1646  */
+#line 183 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1528 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1561 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 149 "src/parser.y" /* yacc.c:1646  */
-    {}
-#line 1534 "src/Parser.cpp" /* yacc.c:1646  */
+#line 185 "src/parser.y" /* yacc.c:1646  */
+    {
+        handleConditionOperation("JLE", (yyvsp[-2]), (yyvsp[0]));
+    }
+#line 1569 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 150 "src/parser.y" /* yacc.c:1646  */
+#line 188 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1540 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1575 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 151 "src/parser.y" /* yacc.c:1646  */
+#line 189 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1546 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1581 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 153 "src/parser.y" /* yacc.c:1646  */
+#line 191 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1552 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1587 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 154 "src/parser.y" /* yacc.c:1646  */
+#line 192 "src/parser.y" /* yacc.c:1646  */
     {}
-#line 1558 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1593 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 157 "src/parser.y" /* yacc.c:1646  */
+#line 195 "src/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST.checkVariableIsVariable((yyvsp[0]).name));   
     }
-#line 1566 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1601 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 161 "src/parser.y" /* yacc.c:1646  */
+#line 199 "src/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST.checkVariableIsTable((yyvsp[-3]).name));     
     }
-#line 1574 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1609 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 165 "src/parser.y" /* yacc.c:1646  */
+#line 203 "src/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST.checkVariableIsTable((yyvsp[-3]).name));   
     }
-#line 1582 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1617 "src/Parser.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1586 "src/Parser.cpp" /* yacc.c:1646  */
+#line 1621 "src/Parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1810,7 +1845,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 169 "src/parser.y" /* yacc.c:1906  */
+#line 207 "src/parser.y" /* yacc.c:1906  */
 
 
 int yyerror(char *s)

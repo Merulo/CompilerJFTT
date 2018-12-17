@@ -1,0 +1,22 @@
+DECLARE
+  a; b;
+IN
+  IF 0 > 1 THEN
+    IF 2 > 3 THEN
+      IF 4 > 5 THEN
+        IF 6 > 7 THEN
+          a:= 8;
+        ENDIF
+      ENDIF
+    ENDIF
+    IF 9 > 10 THEN
+      a:= 11;
+    ENDIF
+    IF 12 > 13 THEN
+      a:= 14;
+    ENDIF
+    IF 15 > 16 THEN
+      a:= 17;
+    ENDIF        
+  ENDIF
+END

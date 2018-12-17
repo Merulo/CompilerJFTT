@@ -6,3 +6,4 @@ COPY: a b
 MUL: a c 
 MUL: a b 
 MUL: a b 
+HALT:   
