@@ -10,7 +10,7 @@
 #define YYSTYPE Data
 
 extern FILE *yyin;
-extern int yylineno;  // z lex-a
+extern int yylineno;
 int yylex();
 int yyerror(char*);
 int yyerror(const char*);
@@ -113,15 +113,30 @@ expression: value
             handleOperation(d, "MOD", $1, $3);            
         }
 ;
-condition: value EQUAL value {}
-    | value NOT_EQUAL value {}
-    | value LESS value {}
+condition: value EQUAL value 
+    {    
+        handleConditionOperation(d, "JNE", $1, $3);
+    }
+    | value NOT_EQUAL value 
+    {
+        handleConditionOperation(d, "JEQ", $1, $3);
+    }
+    | value LESS value 
+    {
+        handleConditionOperation(d, "JME", $1, $3);
+    }
     | value MORE value     
     {
         handleConditionOperation(d, "JLE", $1, $3);
     }
-    | value LESS_EQUAL value {}
-    | value MORE_EQUAL value {}
+    | value LESS_EQUAL value 
+    {
+        handleConditionOperation(d, "JMR", $1, $3);
+    }
+    | value MORE_EQUAL value 
+    {
+        handleConditionOperation(d, "JLS", $1, $3);
+    }
 ;
 value: NUMBER {}
     | identifier {}
