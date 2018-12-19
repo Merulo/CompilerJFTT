@@ -20,74 +20,29 @@ struct Line
 class ThreeAddressCode
 {
     public:
+    //adds new code
     void addNewCode(cStrRef operation, cStrRef one = "", cStrRef two = "");
+    //performs math operation
     void handleMathOperation(cStrRef resultName);
-    void handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two)
-    {
-        addNewCode(operation, one, two);
-        std::string label = generateLabel();
-        _lines.back().targetLabel = label;
-        std::cout<<"Generated label="<<label<<std::endl;
-        _labels.push(label);
-
-    }
+    //handles condition operation
+    void handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two);
+    std::string getVariable();
+    
+    //setters for nested operations
     void setOperation(cStrRef operation);
     void setFirstExtraParameter(cStrRef first);
     void setSecondExtraParameter(cStrRef second);
-    std::string getVariable();
-    std::string generateLabel()
-    {
-        std::string result = "L_" + std::to_string(_labelCount);
-        _labelCount++;
-        return result; 
-    }
 
-    void addJump()
-    {
-        addNewCode("JUMP");
-        std::string label = generateLabel();
-        _lines.back().targetLabel = label;
-        std::cout<<"Generated label="<<label<<std::endl;
-        _labels.push(label);        
-    }
-
-    void swap()
-    {
-        std::string s1 = _labels.top();
-        _labels.pop();
-        std::string s2 = _labels.top();
-        _labels.pop();
-        _labels.push(s1);
-        _labels.push(s2);
-    }
-
-    void endIf()
-    {
-        // std::cerr<<"ENDIF="<<tester<<std::endl;
-        tester++;
-    }
+    void addJump();
+    void swap();
+    void endIf();
 
     void print(cStrRef fileName = "");
     private:
+
+    std::string generateLabel();    
     void reset();
-    void writeToStream(std::ostream& stream)
-    {
-        stream<<"ThreeAddressCode:"<<std::endl;
-        for(auto l : _lines)
-        {
-            if (!l.thisLabel.empty())
-            {
-                stream<<"#"<<l.thisLabel<<std::endl;
-                continue;
-            }
-            stream<<l.operation<<": "<<l.one<<" "<<l.two<<" ";
-            if (!l.targetLabel.empty())
-            {
-                stream<<"goto "<<l.targetLabel;
-            }
-            stream<<std::endl;
-        }
-    }
+    void writeToStream(std::ostream& stream);
     void handleNonCommutativeOperation(cStrRef resultName, cStrRef operation);
 
     int _registerCount = 0;
@@ -100,6 +55,6 @@ class ThreeAddressCode
 
     std::stack<std::string> _labels;
 
-    int tester = 0;
+    int _labelsToRemove = 0;
 
 };

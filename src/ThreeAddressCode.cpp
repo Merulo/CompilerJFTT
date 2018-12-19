@@ -2,14 +2,14 @@
 
 void ThreeAddressCode::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 {
-    while (tester > 0)
+    while (_labelsToRemove > 0)
     {
         // std::cerr<<"Adding label="<<_labels.top()<<std::endl; 
         Line line;
         line.thisLabel = _labels.top();
         _labels.pop();
         _lines.push_back(line);
-        tester--;
+        _labelsToRemove--;
     }
     Line line;
     line.operation = operation;
@@ -55,6 +55,15 @@ void ThreeAddressCode::handleMathOperation(cStrRef resultName)
     reset();
 }
 
+void ThreeAddressCode::handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two)
+{
+    addNewCode(operation, one, two);
+    std::string label = generateLabel();
+    _lines.back().targetLabel = label;
+    std::cout<<"Generated label="<<label<<std::endl;
+    _labels.push(label);
+}
+
 void ThreeAddressCode::setOperation(cStrRef operation)
 {
     _operation = operation;
@@ -94,6 +103,31 @@ std::string ThreeAddressCode::getVariable()
     return result;
 }
 
+void ThreeAddressCode::addJump()
+{
+    addNewCode("JUMP");
+    std::string label = generateLabel();
+    _lines.back().targetLabel = label;
+    std::cout<<"Generated label="<<label<<std::endl;
+    _labels.push(label);        
+}
+
+void ThreeAddressCode::swap()
+{
+    std::string s1 = _labels.top();
+    _labels.pop();
+    std::string s2 = _labels.top();
+    _labels.pop();
+    _labels.push(s1);
+    _labels.push(s2);
+}
+
+void ThreeAddressCode::endIf()
+{
+    // std::cerr<<"ENDIF="<<tester<<std::endl;
+    _labelsToRemove++;
+}
+
 /*
 PRIVATE
 */
@@ -111,4 +145,30 @@ void ThreeAddressCode::handleNonCommutativeOperation(cStrRef resultName, cStrRef
     addNewCode("COPY", reg, resultName);
     addNewCode("COPY", resultName, _firstExtraParameter);
     addNewCode(operation, resultName, reg);
+}
+
+std::string ThreeAddressCode::generateLabel()
+{
+    std::string result = "L_" + std::to_string(_labelCount);
+    _labelCount++;
+    return result; 
+}
+
+void ThreeAddressCode::writeToStream(std::ostream& stream)
+{
+    stream<<"ThreeAddressCode:"<<std::endl;
+    for(auto& l : _lines)
+    {
+        if (!l.thisLabel.empty())
+        {
+            stream<<"#"<<l.thisLabel<<std::endl;
+            continue;
+        }
+        stream<<l.operation<<": "<<l.one<<" "<<l.two<<" ";
+        if (!l.targetLabel.empty())
+        {
+            stream<<"goto "<<l.targetLabel;
+        }
+        stream<<std::endl;
+    }
 }
