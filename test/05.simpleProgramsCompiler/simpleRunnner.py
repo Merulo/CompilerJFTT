@@ -90,3 +90,4 @@ for i in filtered:
 			print("\tTest increased cost from", targetInts[-1], "to", resultInts[-1], COLORS.END)
 		# remove rm file, test passed
 		os.remove(rm)
+		os.remove(result)
