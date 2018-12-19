@@ -33,3 +33,4 @@
 
 # Tests
 *.result
+*.rm

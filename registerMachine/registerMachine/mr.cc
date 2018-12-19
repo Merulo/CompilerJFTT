@@ -26,7 +26,7 @@ void run_machine( std::vector< std::tuple<int,int,int> > & program )
 
   long long t;
 
-  std::cout << "Uruchamianie programu." << std::endl;
+  std::cerr << "Uruchamianie programu." << std::endl;
   lr = 0;
   srand( time(NULL) );
   for(int i = 0; i<8; i++ ) r[i] = rand();
@@ -35,8 +35,8 @@ void run_machine( std::vector< std::tuple<int,int,int> > & program )
   {
     switch( std::get<0>(program[lr]) )
     {
-      case GET:		std::cout << "? "; std::cin >> r[std::get<1>(program[lr])]; t+=100; lr++; break;
-      case PUT:		std::cout << "> " << r[std::get<1>(program[lr])] << std::endl; t+=100; lr++; break;
+      case GET:		std::cerr << "? "; std::cin >> r[std::get<1>(program[lr])]; t+=100; lr++; break;
+      case PUT:		std::cout << r[std::get<1>(program[lr])] << std::endl; t+=100; lr++; break;
       case LOAD:	r[std::get<1>(program[lr])] = pam[r[0]]; t+=50; lr++; break;
       case STORE:	pam[r[0]] = r[std::get<1>(program[lr])]; t+=50; lr++; break;
       case COPY:	r[std::get<1>(program[lr])] = r[std::get<2>(program[lr])] ; t+=5; lr++; break;
@@ -60,5 +60,6 @@ void run_machine( std::vector< std::tuple<int,int,int> > & program )
       exit(-1);
     }
   }
-  std::cout << "Skończono program (koszt: " << t << ")." << std::endl;
+  std::cerr << "Skończono program (koszt: " << t << ")." << std::endl;
+  std::cout<<t<<std::endl;
 }

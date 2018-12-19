@@ -30,7 +30,7 @@ testCounter = 0
 for i in filtered:
 	sys.stdout.write(COLORS.HEADER)
 	# somefile.result
-	result = i.replace("imp", "rm")
+	rm = i.replace("imp", "rm")
 	# somefile.target
 	target = i.replace("imp", "target")
 	fNull = open(os.devnull, 'w')	
@@ -38,22 +38,28 @@ for i in filtered:
 	
 	print("\tTesting: ", i, COLORS.END)
 	# assuming main is in the same directory
-	# ./main.exe
-	cmd = ['./main.exe', i, result]
-	print(cmd)
-	# redirect stdout to somefile.result
+	cmd = ['./main.exe', i, rm]
+	# redirect stdout to somefile.rm
 	process = subprocess.Popen(cmd, stdout=fNull, stderr=fNull)
 	process.wait()
 	
+	result = i.replace("imp", "result")
+	data = i.replace("imp", "data")
+	fIn =  open(data, "r")
+	fOut = open(result, "w")
+	cmd = ['./emulator.exe', rm]
+	process = subprocess.Popen(cmd, stdin=fIn, stdout=fOut, stderr=fNull)
+	process.wait()
+
 	# print what you are testing
-	if (not os.path.isfile(result) or not filecmp.cmp(result, target)): 	# files are not the same
-		# keep result file for reference
-		# os.remove(result)
+	if (not os.path.isfile(rm) or not filecmp.cmp(rm, target)): 	# files are not the same
+		# keep rm file for reference
+		# os.remove(rm)
 		sys.stdout.write(COLORS.FAIL)
 		print("\tTest: ", i, " failed", COLORS.END)
 	else:									# files are the same
 		testPassed += 1
 		sys.stdout.write(COLORS.OK_GREEN)
 		print("\tTest: ", i, " passed", COLORS.END)
-		# remove result file, test passed
-		os.remove(result)
+		# remove rm file, test passed
+		os.remove(rm)

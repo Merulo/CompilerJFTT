@@ -51,8 +51,8 @@ void yyerror( std::vector< std::tuple<int,int,int> > & program, char const *s )
 
 void run_parser( std::vector< std::tuple<int,int,int> > & program, FILE * data ) 
 {
-  std::cout << "Czytanie kodu." << std::endl;
+  std::cerr << "Czytanie kodu." << std::endl;
   yyset_in( data );
   yyparse( program );
-  std::cout << "Skończono czytanie kodu (liczba rozkazów: " << program.size() << ")." << std::endl;
+  std::cerr << "Skończono czytanie kodu (liczba rozkazów: " << program.size() << ")." << std::endl;
 }
