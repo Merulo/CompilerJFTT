@@ -16,10 +16,12 @@ LD_FLAGS += -lpthread
 
 SOURCE_DIR = src
 BINARY_DIR = bin
+TEST_DIR   = test
 
 MAIN = $(SOURCE_DIR)/Main.cpp
 
 ALL_SOURCES = $(shell find $(SOURCE_DIR) -type f -name *.cpp ! -iname Parser.cpp ! -iname Scanner.cpp)
+ALL_TESTS = $(shell find $(TEST_DIR) -type d)
 SOURCES = $(filter-out $(MAIN), $(ALL_SOURCES))
 
 OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
@@ -34,9 +36,7 @@ start:
 
 main.exe: $(MAIN) $(OBJECTS)
 	$(LD) $(LD_FLAGS) $(OBJECTS) $(MAIN) -o $@
-	cp main.exe test/01.errors/main.exe
-	cp main.exe test/02.simpleProgramms/main.exe
-	cp main.exe test/03.simpleFlowControl/main.exe	
+	echo $(ALL_TESTS) | xargs -n 1 cp main.exe
 
 $(BINARY_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(dir $@)
 	@mkdir -p $(dir $@)
