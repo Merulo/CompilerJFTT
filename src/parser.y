@@ -78,7 +78,7 @@ command: identifier ASSIGN expression SEMICOLON
     }
     | WRITE value SEMICOLON
     {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized($1.name));
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized($2.name));
         d.TAC.addNewCode("WRITE", $2.name);
     }
 ;

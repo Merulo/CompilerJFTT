@@ -1,0 +1,14 @@
+DECLARE
+  b; c; d; e; f;
+IN
+  b := 10;
+  c := 11;
+  READ d;
+  READ e;
+  f := 12;
+  WRITE b;
+  WRITE c;
+  WRITE d;
+  WRITE e;
+  WRITE f;
+END

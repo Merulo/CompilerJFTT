@@ -1414,7 +1414,7 @@ yyreduce:
   case 16:
 #line 80 "src/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[-2]).name));
+        checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[-1]).name));
         d.TAC.addNewCode("WRITE", (yyvsp[-1]).name);
     }
 #line 1421 "src/Parser.cpp" /* yacc.c:1646  */
