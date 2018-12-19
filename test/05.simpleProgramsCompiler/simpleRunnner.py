@@ -87,7 +87,9 @@ for i in filtered:
 		print("\tTest: ", i, " passed")
 		if (resultInts[-1] > targetInts[-1]):
 			sys.stdout.write(COLORS.FAIL)
-			print("\tTest increased cost from", targetInts[-1], "to", resultInts[-1], COLORS.END)
+			print("\t\tTest increased cost from", targetInts[-1], "to", resultInts[-1], COLORS.END)
 		# remove rm file, test passed
-		os.remove(rm)
-		os.remove(result)
+		else:
+			# os.remove(rm)
+			# os.remove(result)
+			k = 10

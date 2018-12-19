@@ -7,5 +7,10 @@ struct Register
     unsigned long long value = 0;
     std::string variableName;
     std::string registerName;
-    bool isUsed = false;
+};
+
+struct AddressRegister
+{
+    unsigned long long value = 0;
+    std::string registerName;
 };

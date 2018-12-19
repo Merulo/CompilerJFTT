@@ -31,20 +31,22 @@ struct Iterator
 class SymbolTable
 {
     public:
-    std::string addTable(const std::string& name, ull beginIndex, ull endIndex);
-    std::string addVariable(const std::string& name);
+    std::string addTable(std::string name, ull beginIndex, ull endIndex);
+    std::string addVariable(std::string name);
     void assignMemory();
 
-    std::string checkVariableExists(const std::string& name);
-    std::string checkVariableExistsAndIsInitialized(const std::string& name);
-    std::string checkVariableIsTable(const std::string& name);
-    std::string checkVariableIsVariable(const std::string& name);
-    void setInitialized(const std::string& name);
+    std::string checkVariableExists(std::string name);
+    std::string checkVariableExistsAndIsInitialized(std::string name);
+    std::string checkVariableIsTable(std::string name);
+    std::string checkVariableIsVariable(std::string name);
+    void setInitialized(std::string name);
+
+    unsigned long long getMemoryCell(std::string name);
 
     void print();
     
     private:
-    bool isNameTaken(const std::string& name);
+    bool isNameTaken(std::string name);
     std::map<std::string, Variable> _variables;
     std::map<std::string, Table> _tables;
     // std::map<std::string, Iterator> _iterators;

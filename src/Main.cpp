@@ -28,6 +28,7 @@ int main(int argc, char** argv)
         }        
     }
     d.compile(argv[2]);
+    d.ST.print();
 
 
     return 0;

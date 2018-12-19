@@ -1,0 +1,26 @@
+DECLARE
+  b; c; d; e; f; g; h; i; j; k; l;
+IN
+  READ b;
+  READ c;
+  READ d;
+  READ e;
+  READ f;
+  READ g;
+  READ h;
+  READ i;
+  READ j;
+  READ k;
+  READ l;
+  WRITE b;
+  WRITE c;
+  WRITE d;
+  WRITE e;
+  WRITE f;
+  WRITE g;
+  WRITE h;
+  WRITE i;
+  WRITE j;
+  WRITE k;
+  WRITE l;
+END

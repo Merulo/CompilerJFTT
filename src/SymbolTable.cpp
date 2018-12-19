@@ -23,7 +23,7 @@ void SymbolTable::print()
     }
 }
 
-std::string SymbolTable::addVariable(const std::string& name)
+std::string SymbolTable::addVariable(std::string name)
 {
     if (isNameTaken(name))
     {
@@ -32,6 +32,16 @@ std::string SymbolTable::addVariable(const std::string& name)
     Variable v;
     _variables[name] = v;
     return "";
+}
+
+unsigned long long SymbolTable::getMemoryCell(std::string name)
+{
+    if (_variables.find(name) != _variables.end())
+    {
+        return _variables[name].memoryCell;
+    }
+    std::cerr<<"ADDRESS OF "<<name<<" WAS NOT FOUND"<<std::endl;
+    return 0;
 }
 
 void SymbolTable::assignMemory()
@@ -45,7 +55,7 @@ void SymbolTable::assignMemory()
     //TODO: allocate memory for tables
 }
 
-std::string SymbolTable::addTable(const std::string& name, ull beginIndex, ull endIndex)
+std::string SymbolTable::addTable(std::string name, ull beginIndex, ull endIndex)
 {
     if (isNameTaken(name))
     {
@@ -60,7 +70,7 @@ std::string SymbolTable::addTable(const std::string& name, ull beginIndex, ull e
     return "";
 }
 
-std::string SymbolTable::checkVariableExists(const std::string& name)
+std::string SymbolTable::checkVariableExists(std::string name)
 {
     if (! isNameTaken(name))
     {
@@ -73,7 +83,7 @@ std::string SymbolTable::checkVariableExists(const std::string& name)
     return "";
 }
 
-std::string SymbolTable::checkVariableIsTable(const std::string& name)
+std::string SymbolTable::checkVariableIsTable(std::string name)
 {
     if (_tables.find(name) == _tables.end() && _variables.find(name) != _variables.end())
     {
@@ -82,7 +92,7 @@ std::string SymbolTable::checkVariableIsTable(const std::string& name)
     return "";
 }
 
-std::string SymbolTable::checkVariableIsVariable(const std::string& name)
+std::string SymbolTable::checkVariableIsVariable(std::string name)
 {
     if (_variables.find(name) == _variables.end() && _tables.find(name) != _tables.end())
     {
@@ -91,7 +101,7 @@ std::string SymbolTable::checkVariableIsVariable(const std::string& name)
     return "";
 }
 
-std::string SymbolTable::checkVariableExistsAndIsInitialized(const std::string& name)
+std::string SymbolTable::checkVariableExistsAndIsInitialized(std::string name)
 {
     if (! isNameTaken(name))
     {
@@ -108,7 +118,7 @@ std::string SymbolTable::checkVariableExistsAndIsInitialized(const std::string& 
     return "";
 }
 
-void SymbolTable::setInitialized(const std::string& name)
+void SymbolTable::setInitialized(std::string name)
 {
     if (_variables.find(name) != _variables.end())
     {
@@ -119,7 +129,7 @@ void SymbolTable::setInitialized(const std::string& name)
 /*
 PRIVATE
 */
-bool SymbolTable::isNameTaken(const std::string& name)
+bool SymbolTable::isNameTaken(std::string name)
 {
     if(_variables.find(name) != _variables.end())
     {
