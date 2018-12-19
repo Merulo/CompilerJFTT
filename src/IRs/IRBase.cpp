@@ -4,11 +4,17 @@ IRBase::IRBase(std::string IRName) : _IRName(IRName)
 {
 }
 
+std::vector<Line> IRBase::getLines()
+{
+    return _lines;
+}
+
 void IRBase::print(cStrRef fileName)
 {
     std::streambuf * buf;
     if (fileName.empty())
     {
+        std::cerr<<"**************************"<<std::endl;
         buf = std::cerr.rdbuf();
         std::ostream out(buf);
         writeToStream(out);

@@ -18,9 +18,16 @@ int main(int argc, char** argv)
         if (str == "-TAC")
         {
             d.TAC.print(argv[i+1]);
+            return 0;
         }
+        if (str == "-FIR")
+        {
+            d.FIR.parse(d.TAC.getLines());
+            d.FIR.print(argv[i+1]);
+            return 0;
+        }        
     }
-    d.compile();
+    d.compile(argv[2]);
 
 
     return 0;

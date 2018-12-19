@@ -13,6 +13,7 @@ class IRBase
     public:
     IRBase(std::string IRName);
     void print(cStrRef fileName = "");
+    std::vector<Line> getLines();
 
     protected:
     std::vector<Line> _lines;
