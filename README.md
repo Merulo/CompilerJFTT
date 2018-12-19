@@ -29,5 +29,5 @@
 | JNE | A B L_X | If A is NOT equal to B jump to L_X |
 | JEQ | A B L_X | If A is equal to B jump to L_X |
 | HALT | _none_ | End |
-
+| JUMP | L_X | Jump to L_X |
 ### Final IR
