@@ -6,20 +6,16 @@
 #include <fstream>
 #include <stack>
 
+#include "DataTypes/Line.hpp"
+#include "IRBase.hpp"
+
 typedef const std::string & cStrRef;
 
-struct Line
-{
-    std::string thisLabel;
-    std::string targetLabel;
-    std::string operation;
-    std::string one;
-    std::string two;
-};
-
-class ThreeAddressCode
+class ThreeAddressCode : public IRBase
 {
     public:
+    ThreeAddressCode() : IRBase("ThreeAddressCode") {};
+    
     //adds new code
     void addNewCode(cStrRef operation, cStrRef one = "", cStrRef two = "");
     //performs math operation
@@ -37,17 +33,14 @@ class ThreeAddressCode
     void swap();
     void endIf();
 
-    void print(cStrRef fileName = "");
     private:
 
     std::string generateLabel();    
     void reset();
-    void writeToStream(std::ostream& stream);
     void handleNonCommutativeOperation(cStrRef resultName, cStrRef operation);
 
     int _registerCount = 0;
     int _labelCount = 0;
-    std::vector<Line> _lines;
 
     std::string _operation;
     std::string _firstExtraParameter;

@@ -77,25 +77,6 @@ void ThreeAddressCode::setSecondExtraParameter(cStrRef second)
     _secondExtraParameter = second;
 }
 
-void ThreeAddressCode::print(cStrRef fileName)
-{
-    std::streambuf * buf;
-    if (fileName.empty())
-    {
-        buf = std::cerr.rdbuf();
-        std::ostream out(buf);
-        writeToStream(out);
-    }
-    else
-    {
-        std::ofstream output(fileName);
-        buf = output.rdbuf();
-        std::ostream out(buf);
-        writeToStream(out);
-    }
-
-}
-
 std::string ThreeAddressCode::getVariable()
 {
     std::string result = "variable_" + std::to_string(_registerCount);
@@ -131,7 +112,6 @@ void ThreeAddressCode::endIf()
 /*
 PRIVATE
 */
-
 void ThreeAddressCode::reset()
 {
     _operation = "";
@@ -152,23 +132,4 @@ std::string ThreeAddressCode::generateLabel()
     std::string result = "L_" + std::to_string(_labelCount);
     _labelCount++;
     return result; 
-}
-
-void ThreeAddressCode::writeToStream(std::ostream& stream)
-{
-    stream<<"ThreeAddressCode:"<<std::endl;
-    for(auto& l : _lines)
-    {
-        if (!l.thisLabel.empty())
-        {
-            stream<<"#"<<l.thisLabel<<std::endl;
-            continue;
-        }
-        stream<<l.operation<<": "<<l.one<<" "<<l.two<<" ";
-        if (!l.targetLabel.empty())
-        {
-            stream<<"goto "<<l.targetLabel;
-        }
-        stream<<std::endl;
-    }
 }

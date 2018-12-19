@@ -20,9 +20,7 @@ int main(int argc, char** argv)
             d.TAC.print(argv[i+1]);
         }
     }
-
-    d.ST.print();
-    d.TAC.print();
+    d.compile();
 
 
     return 0;

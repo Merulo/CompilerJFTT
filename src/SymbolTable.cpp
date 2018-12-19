@@ -5,7 +5,7 @@ void SymbolTable::print()
     std::cerr<<"Variables:" <<std::endl;
     for(auto v : _variables)
     {
-        std::cerr<<v.first<<" ";
+        std::cerr<<v.first<<" at="<<v.second.memoryCell<<" ";
         if (v.second.isInitialized)
         {
             std::cerr<<"is initialized ";
@@ -32,6 +32,17 @@ std::string SymbolTable::addVariable(const std::string& name)
     Variable v;
     _variables[name] = v;
     return "";
+}
+
+void SymbolTable::assignMemory()
+{
+    ull index = 0;
+    for (auto& v : _variables)
+    {
+        v.second.memoryCell = index;
+        index++;
+    }
+    //TODO: allocate memory for tables
 }
 
 std::string SymbolTable::addTable(const std::string& name, ull beginIndex, ull endIndex)
@@ -105,10 +116,9 @@ void SymbolTable::setInitialized(const std::string& name)
     }
 }
 
-
-
-
-
+/*
+PRIVATE
+*/
 bool SymbolTable::isNameTaken(const std::string& name)
 {
     if(_variables.find(name) != _variables.end())

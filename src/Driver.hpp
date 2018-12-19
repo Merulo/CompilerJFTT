@@ -3,7 +3,8 @@
 #include <iostream>
 
 #include "SymbolTable.hpp"
-#include "ThreeAddressCode.hpp"
+#include "IRs/ThreeAddressCode.hpp"
+#include "IRs/FinalIR.hpp"
 
 class Driver
 {
@@ -14,6 +15,19 @@ class Driver
     void test()
     {
         std::cerr<<"Hello world!"<<std::endl;
+    }
+    void compile()
+    {
+        //memory assigned
+        ST.assignMemory();
+        ST.print();
+        TAC.print();
+        //change TAC to finalIR
+
+        //change finalIR to assembler
+        
+
+
     }
     
 

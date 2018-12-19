@@ -33,7 +33,7 @@ class SymbolTable
     public:
     std::string addTable(const std::string& name, ull beginIndex, ull endIndex);
     std::string addVariable(const std::string& name);
-    
+    void assignMemory();
 
     std::string checkVariableExists(const std::string& name);
     std::string checkVariableExistsAndIsInitialized(const std::string& name);

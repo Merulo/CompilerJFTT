@@ -2,7 +2,7 @@
 
 ## TODO:
 * Implement while loops
-* Implement tables
+* Implement tables and allocate memory for them
 * Implement for loop
 * Register allocator
 * Final IR
