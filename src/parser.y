@@ -59,7 +59,10 @@ command: identifier ASSIGN expression SEMICOLON
         d.ST.setInitialized($1.name);
         d.TAC.handleMathOperation($1.name);
     }
-    | IF condition THEN commands ELSE commands ENDIF {}
+    | IF condition THEN commands elseProduction commands ENDIF 
+    {
+        d.TAC.endIf();
+    }
     | IF condition THEN commands ENDIF 
     {
         d.TAC.endIf();
@@ -79,6 +82,13 @@ command: identifier ASSIGN expression SEMICOLON
         d.TAC.addNewCode("WRITE", $2.name);
     }
 ;
+elseProduction: ELSE
+{
+    d.TAC.addJump();
+    d.TAC.endIf();
+    d.TAC.swap();
+};
+
 expression: value 
     {
         if (!$1.name.empty())

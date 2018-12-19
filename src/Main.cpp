@@ -21,7 +21,7 @@ int main(int argc, char** argv)
         }
     }
 
-    // d.ST.print()
+    d.ST.print();
     d.TAC.print();
 
 

@@ -1,0 +1,28 @@
+DECLARE
+  a; b; c;
+IN
+  a := 10;
+  b := 20;
+  IF a > b THEN
+    IF a > b THEN
+      IF a > b THEN
+        c := 110;
+      ELSE
+        c := 120;
+      ENDIF
+      c := 130;
+    ELSE
+      c := 140;
+    ENDIF
+  ELSE
+    IF a > b THEN
+      c := 150;
+    ELSE
+      IF a > b THEN
+        c := 160;
+      ELSE
+        c := 170;
+      ENDIF
+    ENDIF
+  ENDIF
+END

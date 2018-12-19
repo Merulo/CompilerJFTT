@@ -42,6 +42,25 @@ class ThreeAddressCode
         return result; 
     }
 
+    void addJump()
+    {
+        addNewCode("JUMP");
+        std::string label = generateLabel();
+        _lines.back().targetLabel = label;
+        std::cout<<"Generated label="<<label<<std::endl;
+        _labels.push(label);        
+    }
+
+    void swap()
+    {
+        std::string s1 = _labels.top();
+        _labels.pop();
+        std::string s2 = _labels.top();
+        _labels.pop();
+        _labels.push(s1);
+        _labels.push(s2);
+    }
+
     void endIf()
     {
         // std::cerr<<"ENDIF="<<tester<<std::endl;

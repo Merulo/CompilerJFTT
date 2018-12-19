@@ -1,0 +1,31 @@
+ThreeAddressCode:
+CONST: a 10 
+CONST: b 20 
+JLE: a b goto L_0
+JLE: a b goto L_1
+JLE: a b goto L_2
+CONST: c 110 
+JUMP:   goto L_3
+#L_2
+CONST: c 120 
+#L_3
+CONST: c 130 
+JUMP:   goto L_4
+#L_1
+CONST: c 140 
+#L_4
+JUMP:   goto L_5
+#L_0
+JLE: a b goto L_6
+CONST: c 150 
+JUMP:   goto L_7
+#L_6
+JLE: a b goto L_8
+CONST: c 160 
+JUMP:   goto L_9
+#L_8
+CONST: c 170 
+#L_9
+#L_7
+#L_5
+HALT:   
