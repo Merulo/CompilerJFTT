@@ -50,9 +50,33 @@ for i in filtered:
 	cmd = ['./emulator.exe', rm]
 	process = subprocess.Popen(cmd, stdin=fIn, stdout=fOut, stderr=fNull)
 	process.wait()
+	fOut.close()
+
+
+	fResult = open(result, "r")
+	fTarget = open(target, "r")
+
+	resultInts = []
+	for val in fResult.read().split():
+		resultInts.append(int(val))
+	fResult.close()
+
+	targetInts = []
+	for val in fTarget.read().split():
+		targetInts.append(int(val))
+	fTarget.close()
+
+	same = True
+	if (len(resultInts) != len(targetInts)):
+		same = False
+	else:
+		for j in range(len(resultInts) - 1):
+			if (resultInts[j] != targetInts[j]):
+				same = False
+
 
 	# print what you are testing
-	if (not os.path.isfile(rm) or not filecmp.cmp(rm, target)): 	# files are not the same
+	if (not same): 	# files are not the same
 		# keep rm file for reference
 		# os.remove(rm)
 		sys.stdout.write(COLORS.FAIL)
@@ -60,6 +84,9 @@ for i in filtered:
 	else:									# files are the same
 		testPassed += 1
 		sys.stdout.write(COLORS.OK_GREEN)
-		print("\tTest: ", i, " passed", COLORS.END)
+		print("\tTest: ", i, " passed")
+		if (resultInts[-1] > targetInts[-1]):
+			sys.stdout.write(COLORS.FAIL)
+			print("\tTest increased cost from", targetInts[-1], "to", resultInts[-1], COLORS.END)
 		# remove rm file, test passed
 		os.remove(rm)
