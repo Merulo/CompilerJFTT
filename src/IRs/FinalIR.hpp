@@ -13,5 +13,11 @@ class FinalIR : public IRBase
     void parse(const std::vector<Line>& TACLines);
 
     private:
-    std::set<std::string> _simpleInstructions = {"READ", "WRITE", "HALT", "CONST"};
+    std::set<std::string> _simpleInstructions = {"READ", "WRITE", "HALT", "CONST", "ADD", "SUB", "MOD", "DIV", "MUL"};
+    std::set<std::string> _jumpInstructions = {"JLE"};
+
+void handleJump(Line line)
+{
+    
+}    
 };

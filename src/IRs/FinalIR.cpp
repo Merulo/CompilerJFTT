@@ -8,6 +8,10 @@ void FinalIR::parse(const std::vector<Line>& TACLines)
         {
             _lines.push_back(l);
         }
+        else if (_jumpInstructions.count(l.operation))
+        {
+            handleJump(l);
+        }
         else
         {
             _lines.push_back(l);

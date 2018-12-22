@@ -27,7 +27,10 @@ void ThreeAddressCode::handleMathOperation(cStrRef resultName)
     }
     else if (_operation == "COPY")
     {
-        addNewCode("COPY", resultName, _firstExtraParameter);      
+        if (resultName != _firstExtraParameter)
+        {
+            addNewCode("COPY", resultName, _firstExtraParameter);      
+        }
     }
     else if (_secondExtraParameter == resultName)
     {

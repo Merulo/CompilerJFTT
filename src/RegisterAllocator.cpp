@@ -6,7 +6,7 @@ RegisterAllocator::RegisterAllocator(SymbolTable& symbolTable)
     : _symbolTable(symbolTable)
 {
     //should be i < 8
-    for(int i = 1; i < 2; i++)
+    for(int i = 1; i < 3; i++)
     {
         Register r;
         std::string str;
@@ -58,7 +58,15 @@ void RegisterAllocator::compile(const std::string& fileName, std::vector<Line> f
         if (l.operation == "CONST")
         {
             handleConst(l.one, std::stoull(l.two));
-        }     
+        }
+        if (l.operation == "COPY")
+        {
+            handleCopy(l);
+        }
+        if (l.operation == "ADD" || l.operation == "SUB")
+        {
+            handleSimpleMath(l);
+        }
     }
 }
 
@@ -69,58 +77,80 @@ PRIVATE
 void RegisterAllocator::handleRead(std::string& variableName)
 {
     
-    Register& r = getRegisterForVariable(variableName).first;
+    Register r = getRegisterForVariable(variableName).first;
     _lines.push_back("GET " + r.registerName);
+    _registers.push_back(r);
 }
 
 void RegisterAllocator::handleWrite(std::string& variableName)
 {
     auto pair = getRegisterForVariable(variableName);
-    if(!pair.second)
-    {
-        prepareAddressRegister(pair.first);
-        pair.first.value = 0;
-        _lines.push_back("LOAD " + pair.first.registerName);
-
-    }
+    loadIfNeeded(pair.first, pair.second);
     _lines.push_back("PUT " + pair.first.registerName);
+    _registers.push_back(pair.first);
 } 
 
 void RegisterAllocator::handleConst(std::string variableName, ull value)
 {
-    Register& r = getRegisterForVariable(variableName).first;
-
+    Register r = getRegisterForVariable(variableName).first;
     auto resultVec = NumberGenerator::generateConstFrom(value, {{r.registerName, r.value}});
 
     _lines.insert(_lines.end(), resultVec.begin(), resultVec.end());
     r.value = value;
+    _registers.push_back(r);
+}
+
+void RegisterAllocator::handleCopy(Line line)
+{
+    auto firstRegister = getRegisterForVariable(line.one);
+    auto secondRegister = getRegisterForVariable(line.two);
+    loadIfNeeded(firstRegister.first, firstRegister.second);
+    loadIfNeeded(secondRegister.first, secondRegister.second);    
+    _lines.push_back("COPY " + firstRegister.first.registerName + " " + secondRegister.first.registerName);
+    _registers.push_back(firstRegister.first);
+    _registers.push_back(secondRegister.first);
+}
+
+void RegisterAllocator::handleSimpleMath(Line line)
+{
+    print();
+    auto firstRegister = getRegisterForVariable(line.one);
+    auto secondRegister = getRegisterForVariable(line.two);
+    //todo: decide based which one will be cheaper
+    loadIfNeeded(firstRegister.first, firstRegister.second);
+    loadIfNeeded(secondRegister.first, secondRegister.second);
+    std::cerr<<"TEST "<<firstRegister.first<<" " <<secondRegister.first<<std::endl;
+    _lines.push_back(line.operation + " " + firstRegister.first.registerName + " " + secondRegister.first.registerName);
+    _registers.push_back(firstRegister.first);
+    _registers.push_back(secondRegister.first);    
 }
 
 //todo upgrade this so that less calls to saving [Curent state: ROUND ROBIN]
-std::pair<Register&, bool> RegisterAllocator::getRegisterForVariable(std::string name)
+std::pair<Register, bool> RegisterAllocator::getRegisterForVariable(std::string name)
 {
-    std::cerr<<"Looking for "<<name<<std::endl;
-    for(auto& r : _registers)
+    // std::cerr<<"Looking for "<<name<<std::endl;
+    for(auto r : _registers)
     {
-        std::cerr<<"\tTesting "<<r.variableName<<std::endl;
+        // std::cerr<<"\tTesting "<<r.variableName<<std::endl;
         if(r.variableName == name)
         {
-            r.variableName = name;
-            return {r, true};
+            Register result = r;
+            _registers.erase(std::remove(_registers.begin(), _registers.end(), r), _registers.end());
+            result.variableName = name;
+            return {result, true};
         }
     }
 
     Register r = _registers.front();
     _registers.pop_front();
-    _registers.push_back(r);
+    // _registers.push_back(r);
     if (!r.variableName.empty())
     {
         prepareAddressRegister(r);
         _lines.push_back("STORE "+r.registerName);
     }
-    _registers.back().variableName = name;
-    // _registers.back().value = 0;
-    return {_registers.back(), false};
+    r.variableName = name;
+    return {r, false};
 }
 
 void RegisterAllocator::prepareAddressRegister(Register& r)
@@ -133,7 +163,7 @@ void RegisterAllocator::prepareAddressRegister(Register& r)
     }
     //todo check if any register has a close const number to this
     //todo check how to generate this constant fastest
-    std::cerr<<"seting address at "<<memoryCell<<" for "<<r.variableName<<std::endl;
+    // std::cerr<<"seting address at "<<memoryCell<<" for "<<r.variableName<<std::endl;
     while(_addressRegister.value < memoryCell)
     {
         _lines.push_back("INC A");
