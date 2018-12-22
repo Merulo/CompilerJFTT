@@ -97,14 +97,6 @@ void RegisterAllocator::handleConst(std::string variableName, ull value)
         _lines.push_back(result);
     }
     r.value = value;
-
-
-    // _lines.push_back("SUB " + r.registerName + " " + r.registerName);
-    // while(r.value < value)
-    // {
-    //     _lines.push_back("INC " + r.registerName);
-    //     r.value++;
-    // }
 }
 
 //todo upgrade this so that less calls to saving [Curent state: ROUND ROBIN]
