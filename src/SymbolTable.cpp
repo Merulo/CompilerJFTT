@@ -55,6 +55,16 @@ void SymbolTable::assignMemory()
     //TODO: allocate memory for tables
 }
 
+void SymbolTable::setConsts(std::map<std::string, std::string> consts)
+{
+    _consts = consts;
+}
+
+bool SymbolTable::isConst(std::string name)
+{
+    return _consts.find(name) != _consts.end();
+}
+
 std::string SymbolTable::addTable(std::string name, ull beginIndex, ull endIndex)
 {
     if (isNameTaken(name))

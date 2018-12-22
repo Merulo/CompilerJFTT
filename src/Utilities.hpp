@@ -32,7 +32,7 @@ std::string validateAndConvertData(Driver& d, const Data& data)
     }
     else
     {
-        std::string reg = d.TAC.getVariable();
+        std::string reg = d.TAC.getVariable(std::to_string(data.value));
         d.TAC.addNewCode("CONST", reg , std::to_string(data.value));
         return reg;
     }

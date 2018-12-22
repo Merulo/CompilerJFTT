@@ -23,6 +23,8 @@ class Driver
     {
         //loop over TAC to and transform to optimize
 
+        //transfer const ownership
+        ST.setConsts(TAC.getConsts());
         //memory assigned
         ST.assignMemory();
         

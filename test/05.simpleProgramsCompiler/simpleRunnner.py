@@ -28,7 +28,7 @@ testPassed = 0
 testCounter = 0
 
 for i in filtered:
-	sys.stdout.write(COLORS.HEADER)
+	# sys.stdout.write(COLORS.HEADER)
 	# somefile.result
 	rm = i.replace("imp", "rm")
 	# somefile.target
@@ -36,7 +36,7 @@ for i in filtered:
 	fNull = open(os.devnull, 'w')	
 	testCounter += 1
 	
-	print("\tTesting: ", i, COLORS.END)
+	# print("\tTesting: ", i, COLORS.END)
 	# assuming main is in the same directory
 	cmd = ['./main.exe', i, rm]
 	# redirect stdout to somefile.rm
@@ -45,7 +45,8 @@ for i in filtered:
 	
 	result = i.replace("imp", "result")
 	data = i.replace("imp", "data")
-	fIn =  open(data, "r")
+	if os.path.isfile(data):
+		fIn =  open(data, "r")
 	fOut = open(result, "w")
 	cmd = ['./emulator.exe', rm]
 	process = subprocess.Popen(cmd, stdin=fIn, stdout=fOut, stderr=fNull)
@@ -83,13 +84,17 @@ for i in filtered:
 		print("\tTest: ", i, " failed", COLORS.END)
 	else:									# files are the same
 		testPassed += 1
-		sys.stdout.write(COLORS.OK_GREEN)
-		print("\tTest: ", i, " passed")
 		if (resultInts[-1] > targetInts[-1]):
+			sys.stdout.write(COLORS.OK_GREEN)
+			print("\tTest: ", i, " passed")
 			sys.stdout.write(COLORS.FAIL)
-			print("\t\tTest increased cost from", targetInts[-1], "to", resultInts[-1], COLORS.END)
+			print("\t\tTest increased cost from", targetInts[-1], " to", resultInts[-1], COLORS.END)
 		# remove rm file, test passed
 		else:
 			# os.remove(rm)
 			# os.remove(result)
 			k = 10
+percent = testPassed/float(testCounter)*100
+percent = round(percent, 0)
+sys.stdout.write(COLORS.OK_BLUE)
+print("Passed:", percent, "%", COLORS.END)

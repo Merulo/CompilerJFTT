@@ -1,0 +1,18 @@
+DECLARE
+  a; b; c; d;
+IN
+  a := 0;
+  b := 1;
+  a := b + 5;
+  WRITE a;
+  a := 10 + 1;
+  WRITE a;
+  a := 1 + 10;
+  WRITE a;
+  a := 5 + b;
+  WRITE a;
+  c := 100 + 101;
+  d := 101 + 100;
+  WRITE c;
+  WRITE d;
+END

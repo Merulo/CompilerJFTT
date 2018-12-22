@@ -5,6 +5,7 @@
 #include <vector>
 #include <fstream>
 #include <stack>
+#include <map>
 
 #include "DataTypes/Line.hpp"
 #include "IRBase.hpp"
@@ -22,7 +23,10 @@ class ThreeAddressCode : public IRBase
     void handleMathOperation(cStrRef resultName);
     //handles condition operation
     void handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two);
-    std::string getVariable();
+    //generates new variable
+    std::string getVariable(std::string value);
+    //returns map with temporary variables
+    std::map<std::string, std::string> getConsts();
     
     //setters for nested operations
     void setOperation(cStrRef operation);
@@ -34,12 +38,12 @@ class ThreeAddressCode : public IRBase
     void endIf();
 
     private:
-
     std::string generateLabel();    
     void reset();
     void handleNonCommutativeOperation(cStrRef resultName, cStrRef operation);
 
     int _registerCount = 0;
+    int _labelsToRemove = 0;
     int _labelCount = 0;
 
     std::string _operation;
@@ -47,7 +51,5 @@ class ThreeAddressCode : public IRBase
     std::string _secondExtraParameter;
 
     std::stack<std::string> _labels;
-
-    int _labelsToRemove = 0;
-
+    std::map<std::string, std::string> _consts;
 };

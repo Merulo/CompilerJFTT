@@ -58,6 +58,11 @@ void ThreeAddressCode::handleMathOperation(cStrRef resultName)
     reset();
 }
 
+std::map<std::string, std::string> ThreeAddressCode::getConsts()
+{
+    return _consts;
+}
+
 void ThreeAddressCode::handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two)
 {
     addNewCode(operation, one, two);
@@ -80,10 +85,12 @@ void ThreeAddressCode::setSecondExtraParameter(cStrRef second)
     _secondExtraParameter = second;
 }
 
-std::string ThreeAddressCode::getVariable()
+std::string ThreeAddressCode::getVariable(std::string value)
 {
+    std::cerr<<"generating variable with "<<value<<std::endl;
     std::string result = "variable_" + std::to_string(_registerCount);
     _registerCount++;
+    _consts[result] = value;
     return result;
 }
 
@@ -124,7 +131,8 @@ void ThreeAddressCode::reset()
 
 void ThreeAddressCode::handleNonCommutativeOperation(cStrRef resultName, cStrRef operation)
 {
-    std::string reg = getVariable();
+    std::cout<<"TEST="<<resultName<<std::endl;
+    std::string reg = getVariable(resultName);
     addNewCode("COPY", reg, resultName);
     addNewCode("COPY", resultName, _firstExtraParameter);
     addNewCode(operation, resultName, reg);

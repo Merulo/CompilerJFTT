@@ -30,7 +30,7 @@ class RegisterAllocator
     void prepareAddressRegister(Register& r);
     void loadIfNeeded(Register& r, bool value)
     {
-        if(!value)
+        if(!value && !_symbolTable.isConst(r.variableName))
         {
             prepareAddressRegister(r);
             r.value = 0;

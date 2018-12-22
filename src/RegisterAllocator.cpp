@@ -6,7 +6,7 @@ RegisterAllocator::RegisterAllocator(SymbolTable& symbolTable)
     : _symbolTable(symbolTable)
 {
     //should be i < 8
-    for(int i = 1; i < 3; i++)
+    for(int i = 1; i < 4; i++)
     {
         Register r;
         std::string str;
@@ -144,7 +144,7 @@ std::pair<Register, bool> RegisterAllocator::getRegisterForVariable(std::string 
     Register r = _registers.front();
     _registers.pop_front();
     // _registers.push_back(r);
-    if (!r.variableName.empty())
+    if (!r.variableName.empty() && !_symbolTable.isConst(r.variableName))
     {
         prepareAddressRegister(r);
         _lines.push_back("STORE "+r.registerName);

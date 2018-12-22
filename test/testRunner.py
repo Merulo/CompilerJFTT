@@ -40,6 +40,7 @@ for directory in onlyDirectories:
 		decoded = decoded.replace(b'(', b'')
 		decoded = decoded.replace(b')', b'')
 		decoded = decoded.replace(b'\',', b'')
+		decoded = decoded.replace(b', ', b'')
 		decoded = decoded.replace(b' \'', b'')
 		decoded = decoded.replace(b'\'', b'')
 		decoded = decoded.replace(b'\\x', b'\\x')
