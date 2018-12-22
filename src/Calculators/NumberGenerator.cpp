@@ -7,7 +7,7 @@ std::vector<std::string> NumberGenerator::generateConstFrom(
     std::vector<std::pair<std::string, unsigned long long>> values)
 {
     _result.clear();
-    int c1 = getCostWithIncAndAdd(target);
+    getCostWithIncAndAdd(target);
     //if c1 is min;
     generateWithIncAndAdd(target, values[0].first);
 
@@ -49,7 +49,7 @@ void NumberGenerator::generateWithIncAndAdd(unsigned long long target, std::stri
             target--;
         }
     }
-    for(int i = 0; i < target; i++)
+    for(size_t i = 0; i < target; i++)
     {
         _result.push_back("INC " + name);
     }
