@@ -17,6 +17,8 @@ class RegisterAllocator
     void compile(const std::string& fileName, std::vector<Line> _lines);
     void print();
 
+    void handleConst(std::string variableName, ull value);
+
     private:
     void handleRead(std::string& variableName);
     void handleWrite(std::string& variableName);

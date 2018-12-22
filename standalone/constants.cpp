@@ -12,14 +12,20 @@ int getCostWithIncAndAdd(long long target)
     {
         if (target % 2 == 0)
         {
+            std::cout<<"ADD" << std::endl;
             target = target / 2;
             cost += 5;
         }
         else
         {
+            std::cout<<"INC"  << std::endl;
             target--;
             cost++;
         }
+    }
+    for(int i = 0; i < target; i++)
+    {
+        std::cout<<"INC"  << std::endl;
     }
     return cost + target;
 }
@@ -52,10 +58,10 @@ void findOptimal(const std::vector<long long>& numbers)
     if (numbers.size() == 1)
     {
         costINC = getCostWithIncAndAdd(numbers[0]);
-        auto costDecPair = getCostWithCasualDec(numbers[0]);
+        // auto costDecPair = getCostWithCasualDec(numbers[0]);
 
         std::cout<<costINC<<std::endl;
-        std::cout<<costDecPair.first<<" with " <<costDecPair.second<<" times DEC" <<std::endl;
+        // std::cout<<costDecPair.first<<" with " <<costDecPair.second<<" times DEC" <<std::endl;
     }
     return;
 }

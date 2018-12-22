@@ -8,5 +8,9 @@ void FinalIR::parse(const std::vector<Line>& TACLines)
         {
             _lines.push_back(l);
         }
+        else
+        {
+            _lines.push_back(l);
+        }
     }
 }

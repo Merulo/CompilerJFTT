@@ -1,5 +1,7 @@
 #include "RegisterAllocator.hpp"
 
+#include "Calculators/NumberGenerator.hpp"
+
 RegisterAllocator::RegisterAllocator(SymbolTable& symbolTable)
     : _symbolTable(symbolTable)
 {
@@ -40,6 +42,7 @@ void RegisterAllocator::compile(const std::string& fileName, std::vector<Line> f
 
     for (auto& l : finalIR)
     {
+        std::cerr<<l.operation<<" "<<l.one<<" "<<l.two<<std::endl;
         if (l.operation == "READ")
         {
             handleRead(l.one);
@@ -51,6 +54,10 @@ void RegisterAllocator::compile(const std::string& fileName, std::vector<Line> f
         if (l.operation == "HALT")
         {
             _lines.push_back("HALT");
+        }
+        if (l.operation == "CONST")
+        {
+            handleConst(l.one, std::stoull(l.two));
         }     
     }
 }
@@ -72,11 +79,33 @@ void RegisterAllocator::handleWrite(std::string& variableName)
     if(!pair.second)
     {
         prepareAddressRegister(pair.first);
+        pair.first.value = 0;
         _lines.push_back("LOAD " + pair.first.registerName);
 
     }
     _lines.push_back("PUT " + pair.first.registerName);
 } 
+
+void RegisterAllocator::handleConst(std::string variableName, ull value)
+{
+    Register& r = getRegisterForVariable(variableName).first;
+
+    auto results = NumberGenerator::generateConstFrom(value, {{r.registerName, r.value}});
+
+    for(auto result : results)
+    {
+        _lines.push_back(result);
+    }
+    r.value = value;
+
+
+    // _lines.push_back("SUB " + r.registerName + " " + r.registerName);
+    // while(r.value < value)
+    // {
+    //     _lines.push_back("INC " + r.registerName);
+    //     r.value++;
+    // }
+}
 
 //todo upgrade this so that less calls to saving [Curent state: ROUND ROBIN]
 std::pair<Register&, bool> RegisterAllocator::getRegisterForVariable(std::string name)
@@ -101,6 +130,7 @@ std::pair<Register&, bool> RegisterAllocator::getRegisterForVariable(std::string
         _lines.push_back("STORE "+r.registerName);
     }
     _registers.back().variableName = name;
+    // _registers.back().value = 0;
     return {_registers.back(), false};
 }
 
@@ -126,3 +156,5 @@ void RegisterAllocator::prepareAddressRegister(Register& r)
         _addressRegister.value--;
     }
 }
+
+

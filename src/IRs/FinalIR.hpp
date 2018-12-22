@@ -13,5 +13,5 @@ class FinalIR : public IRBase
     void parse(const std::vector<Line>& TACLines);
 
     private:
-    std::set<std::string> _simpleInstructions = {"READ", "WRITE", "HALT"};
+    std::set<std::string> _simpleInstructions = {"READ", "WRITE", "HALT", "CONST"};
 };

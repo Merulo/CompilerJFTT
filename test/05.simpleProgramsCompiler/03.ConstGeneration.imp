@@ -6,6 +6,7 @@ IN
   READ d;
   READ e;
   f := 12;
+  b := 13;
   WRITE b;
   WRITE c;
   WRITE d;
