@@ -90,12 +90,9 @@ void RegisterAllocator::handleConst(std::string variableName, ull value)
 {
     Register& r = getRegisterForVariable(variableName).first;
 
-    auto results = NumberGenerator::generateConstFrom(value, {{r.registerName, r.value}});
+    auto resultVec = NumberGenerator::generateConstFrom(value, {{r.registerName, r.value}});
 
-    for(auto result : results)
-    {
-        _lines.push_back(result);
-    }
+    _lines.insert(_lines.end(), resultVec.begin(), resultVec.end());
     r.value = value;
 }
 
