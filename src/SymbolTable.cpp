@@ -55,9 +55,9 @@ void SymbolTable::assignMemory()
     //TODO: allocate memory for tables
 }
 
-void SymbolTable::setConsts(std::map<std::string, std::string> consts)
+void SymbolTable::addConst(std::string key, std::string value)
 {
-    _consts = consts;
+    _consts[key] = value;
 }
 
 bool SymbolTable::isConst(std::string name)

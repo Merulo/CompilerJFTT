@@ -9,6 +9,7 @@ int main(int argc, char** argv)
         std::cout<<"Not enough arguments\n";
         return 1;
     }
+    d.FIR.setSymbolTable(d.ST);
     yyin = fopen(argv[1], "r");
     yyparse();
 

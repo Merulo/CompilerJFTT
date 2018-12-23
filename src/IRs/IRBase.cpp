@@ -9,6 +9,11 @@ std::vector<Line> IRBase::getLines()
     return _lines;
 }
 
+void IRBase::setSymbolTable(std::shared_ptr<SymbolTable> symbolTable)
+{
+    _symbolTable = symbolTable;
+}
+
 void IRBase::print(cStrRef fileName)
 {
     std::streambuf * buf;

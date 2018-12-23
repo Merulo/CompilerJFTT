@@ -25,8 +25,6 @@ class FirstIR : public IRBase
     void handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two);
     //generates new variable
     std::string getVariable(std::string value);
-    //returns map with temporary variables
-    std::map<std::string, std::string> getConsts();
     
     //setters for nested operations
     void setOperation(cStrRef operation);
@@ -51,5 +49,5 @@ class FirstIR : public IRBase
     std::string _secondExtraParameter;
 
     std::stack<std::string> _labels;
-    std::map<std::string, std::string> _consts;
+    // std::map<std::string, std::string> _consts;
 };

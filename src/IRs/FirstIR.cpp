@@ -58,11 +58,6 @@ void FirstIR::handleMathOperation(cStrRef resultName)
     reset();
 }
 
-std::map<std::string, std::string> FirstIR::getConsts()
-{
-    return _consts;
-}
-
 void FirstIR::handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two)
 {
     addNewCode(operation, one, two);
@@ -90,7 +85,7 @@ std::string FirstIR::getVariable(std::string value)
     std::cerr<<"generating variable with "<<value<<std::endl;
     std::string result = "variable_" + std::to_string(_registerCount);
     _registerCount++;
-    _consts[result] = value;
+    _symbolTable->addConst(result, value);
     return result;
 }
 

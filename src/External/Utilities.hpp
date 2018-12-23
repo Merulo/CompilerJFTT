@@ -27,7 +27,7 @@ std::string validateAndConvertData(Driver& d, const Data& data)
 {
     if (!data.name.empty())
     {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized(data.name));
+        checkForErrors(d.ST->checkVariableExistsAndIsInitialized(data.name));
         return data.name;
     }
     else

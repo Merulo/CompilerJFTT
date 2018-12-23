@@ -1328,7 +1328,7 @@ yyreduce:
   case 3:
 #line 45 "src/External/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.addVariable((yyvsp[-1]).name));
+        checkForErrors(d.ST->addVariable((yyvsp[-1]).name));
     }
 #line 1334 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1336,7 +1336,7 @@ yyreduce:
   case 4:
 #line 49 "src/External/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.addTable((yyvsp[-6]).name, (yyvsp[-4]).value, (yyvsp[-2]).value));
+        checkForErrors(d.ST->addTable((yyvsp[-6]).name, (yyvsp[-4]).value, (yyvsp[-2]).value));
     }
 #line 1342 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1356,7 +1356,7 @@ yyreduce:
   case 8:
 #line 58 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.ST.setInitialized((yyvsp[-3]).name);
+        d.ST->setInitialized((yyvsp[-3]).name);
         d.FIR.handleMathOperation((yyvsp[-3]).name);
     }
 #line 1363 "src/External/Parser.cpp" /* yacc.c:1646  */
@@ -1405,7 +1405,7 @@ yyreduce:
   case 15:
 #line 75 "src/External/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.checkVariableExists((yyvsp[-1]).name));
+        checkForErrors(d.ST->checkVariableExists((yyvsp[-1]).name));
         d.FIR.addNewCode("READ", (yyvsp[-1]).name);
     }
 #line 1412 "src/External/Parser.cpp" /* yacc.c:1646  */
@@ -1414,7 +1414,7 @@ yyreduce:
   case 16:
 #line 80 "src/External/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[-1]).name));
+        checkForErrors(d.ST->checkVariableExistsAndIsInitialized((yyvsp[-1]).name));
         d.FIR.addNewCode("WRITE", (yyvsp[-1]).name);
     }
 #line 1421 "src/External/Parser.cpp" /* yacc.c:1646  */
@@ -1435,7 +1435,7 @@ yyreduce:
     {
         if (!(yyvsp[0]).name.empty())
         {
-            checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[0]).name));
+            checkForErrors(d.ST->checkVariableExistsAndIsInitialized((yyvsp[0]).name));
             d.FIR.setOperation("COPY");
             d.FIR.setFirstExtraParameter((yyvsp[0]).name);
         }
@@ -1550,7 +1550,7 @@ yyreduce:
   case 32:
 #line 155 "src/External/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.checkVariableIsVariable((yyvsp[0]).name));   
+        checkForErrors(d.ST->checkVariableIsVariable((yyvsp[0]).name));   
     }
 #line 1556 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1558,7 +1558,7 @@ yyreduce:
   case 33:
 #line 159 "src/External/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.checkVariableIsTable((yyvsp[-3]).name));     
+        checkForErrors(d.ST->checkVariableIsTable((yyvsp[-3]).name));     
     }
 #line 1564 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1566,7 +1566,7 @@ yyreduce:
   case 34:
 #line 163 "src/External/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST.checkVariableIsTable((yyvsp[-3]).name));   
+        checkForErrors(d.ST->checkVariableIsTable((yyvsp[-3]).name));   
     }
 #line 1572 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;

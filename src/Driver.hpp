@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 
 #include "SymbolTable.hpp"
 #include "IRs/FirstIR.hpp"
@@ -8,36 +9,19 @@
 class Driver
 {
     public:
-    SymbolTable ST;
-    FirstIR FIR;
-    // FinalIR FIR;
-
-    void test()
+    Driver()
     {
-        std::cerr<<"Hello world!"<<std::endl;
+        ST = std::make_shared<SymbolTable>();
     }
+    std::shared_ptr<SymbolTable> ST;
+
+    // SymbolTable ST;
+    FirstIR FIR;
+
     //this means that first FIR was created
     void compile(const std::string& fileName)
     {
-        //loop over FIR to and transform to optimize
-
-        //transfer const ownership
-        ST.setConsts(FIR.getConsts());
-        //memory assigned
-        ST.assignMemory();
-        
-        // //change FIR to finalIR
-        // FIR.parse(FIR.getLines());
-
-        // //change finalIR to assembler
-        // RegisterAllocator RA(ST);
-        // RA.compile(fileName, FIR.getLines());
-
-        //print for test purposes
-        // ST.print();
-        // FIR.print();
-        // FIR.print();
-        // RA.print();
+        ST->assignMemory();
     }
     
 

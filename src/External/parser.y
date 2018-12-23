@@ -43,11 +43,11 @@ program: DECLARE declarations IN commands END
 ;
 declarations: declarations PIDIDENTIFIER SEMICOLON 
     {
-        checkForErrors(d.ST.addVariable($2.name));
+        checkForErrors(d.ST->addVariable($2.name));
     }
     | declarations PIDIDENTIFIER LEFT_BRACKET NUMBER TABLE_RANGE NUMBER RIGHT_BRACKET SEMICOLON
     {
-        checkForErrors(d.ST.addTable($2.name, $4.value, $6.value));
+        checkForErrors(d.ST->addTable($2.name, $4.value, $6.value));
     }
     |
 ;
@@ -56,7 +56,7 @@ commands: commands command {}
 ;
 command: identifier ASSIGN expression SEMICOLON 
     {
-        d.ST.setInitialized($1.name);
+        d.ST->setInitialized($1.name);
         d.FIR.handleMathOperation($1.name);
     }
     | IF condition THEN commands elseProduction commands ENDIF 
@@ -73,12 +73,12 @@ command: identifier ASSIGN expression SEMICOLON
     | FOR PIDIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
     | READ identifier SEMICOLON 
     {
-        checkForErrors(d.ST.checkVariableExists($2.name));
+        checkForErrors(d.ST->checkVariableExists($2.name));
         d.FIR.addNewCode("READ", $2.name);
     }
     | WRITE value SEMICOLON
     {
-        checkForErrors(d.ST.checkVariableExistsAndIsInitialized($2.name));
+        checkForErrors(d.ST->checkVariableExistsAndIsInitialized($2.name));
         d.FIR.addNewCode("WRITE", $2.name);
     }
 ;
@@ -93,7 +93,7 @@ expression: value
     {
         if (!$1.name.empty())
         {
-            checkForErrors(d.ST.checkVariableExistsAndIsInitialized($1.name));
+            checkForErrors(d.ST->checkVariableExistsAndIsInitialized($1.name));
             d.FIR.setOperation("COPY");
             d.FIR.setFirstExtraParameter($1.name);
         }
@@ -153,15 +153,15 @@ value: NUMBER {}
 ;
 identifier: PIDIDENTIFIER 
     {
-        checkForErrors(d.ST.checkVariableIsVariable($1.name));   
+        checkForErrors(d.ST->checkVariableIsVariable($1.name));   
     }
     | PIDIDENTIFIER LEFT_BRACKET PIDIDENTIFIER RIGHT_BRACKET 
     {
-        checkForErrors(d.ST.checkVariableIsTable($1.name));     
+        checkForErrors(d.ST->checkVariableIsTable($1.name));     
     }
     | PIDIDENTIFIER LEFT_BRACKET NUMBER RIGHT_BRACKET 
     {
-        checkForErrors(d.ST.checkVariableIsTable($1.name));   
+        checkForErrors(d.ST->checkVariableIsTable($1.name));   
     }
 ;
 %%

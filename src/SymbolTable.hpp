@@ -34,7 +34,7 @@ class SymbolTable
     std::string addTable(std::string name, ull beginIndex, ull endIndex);
     std::string addVariable(std::string name);
     void assignMemory();
-    void setConsts(std::map<std::string, std::string> consts);
+    void addConst(std::string key, std::string value);
     bool isConst(std::string name);
 
     std::string checkVariableExists(std::string name);
