@@ -4,15 +4,13 @@
 
 #include "SymbolTable.hpp"
 #include "IRs/ThreeAddressCode.hpp"
-#include "IRs/FinalIR.hpp"
-#include "RegisterAllocator.hpp"
 
 class Driver
 {
     public:
     SymbolTable ST;
     ThreeAddressCode TAC;
-    FinalIR FIR;
+    // FinalIR FIR;
 
     void test()
     {
@@ -28,18 +26,18 @@ class Driver
         //memory assigned
         ST.assignMemory();
         
-        //change TAC to finalIR
-        FIR.parse(TAC.getLines());
+        // //change TAC to finalIR
+        // FIR.parse(TAC.getLines());
 
-        //change finalIR to assembler
-        RegisterAllocator RA(ST);
-        RA.compile(fileName, FIR.getLines());
+        // //change finalIR to assembler
+        // RegisterAllocator RA(ST);
+        // RA.compile(fileName, FIR.getLines());
 
         //print for test purposes
         // ST.print();
         // TAC.print();
         // FIR.print();
-        RA.print();
+        // RA.print();
     }
     
 

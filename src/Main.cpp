@@ -29,19 +29,19 @@ int main(int argc, char** argv)
         }
         if (str == "-FIR")
         {
-            d.FIR.parse(d.TAC.getLines());
-            if (i + 1 < argc)
-            {
-                d.FIR.print(argv[i+1]);
-            }
-            else
-            {
-                d.FIR.print("");
-            }            
-            return 0;
+            // d.FIR.parse(d.TAC.getLines());
+            // if (i + 1 < argc)
+            // {
+            //     d.FIR.print(argv[i+1]);
+            // }
+            // else
+            // {
+            //     d.FIR.print("");
+            // }            
+            // return 0;
         }        
     }
-    d.compile(argv[2]);
+    // d.compile(argv[2]);
     // d.ST.print();
 
 
