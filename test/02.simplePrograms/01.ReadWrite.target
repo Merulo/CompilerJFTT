@@ -1,4 +1,4 @@
-ThreeAddressCode:
+FirstIR:
 READ: a  
 READ: b  
 WRITE: a  

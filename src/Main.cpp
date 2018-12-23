@@ -15,21 +15,21 @@ int main(int argc, char** argv)
     for(int i = 0; i < argc; i++)
     {
         std::string str = argv[i];
-        if (str == "-TAC")
+        if (str == "-FIR")
         {
             if (i + 1 < argc)
             {
-                d.TAC.print(argv[i+1]);
+                d.FIR.print(argv[i+1]);
             }
             else
             {
-                d.TAC.print("");
+                d.FIR.print("");
             }
             return 0;
         }
-        if (str == "-FIR")
-        {
-            // d.FIR.parse(d.TAC.getLines());
+        // if (str == "-FIR")
+        // {
+            // d.FIR.parse(d.FIR.getLines());
             // if (i + 1 < argc)
             // {
             //     d.FIR.print(argv[i+1]);
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
             //     d.FIR.print("");
             // }            
             // return 0;
-        }        
+        // }        
     }
     // d.compile(argv[2]);
     // d.ST.print();

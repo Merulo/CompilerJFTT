@@ -12,10 +12,10 @@
 
 typedef const std::string & cStrRef;
 
-class ThreeAddressCode : public IRBase
+class FirstIR : public IRBase
 {
     public:
-    ThreeAddressCode() : IRBase("ThreeAddressCode") {};
+    FirstIR() : IRBase("FirstIR") {};
     
     //adds new code
     void addNewCode(cStrRef operation, cStrRef one = "", cStrRef two = "");

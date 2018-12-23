@@ -1,8 +1,8 @@
 #include "FinalIR.hpp"
 
-void FinalIR::parse(const std::vector<Line>& TACLines)
+void FinalIR::parse(const std::vector<Line>& FIRLines)
 {
-    for(auto& l : TACLines)
+    for(auto& l : FIRLines)
     {
         if (_simpleInstructions.count(l.operation))
         {

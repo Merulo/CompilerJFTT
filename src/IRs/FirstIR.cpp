@@ -1,6 +1,6 @@
-#include "ThreeAddressCode.hpp"
+#include "FirstIR.hpp"
 
-void ThreeAddressCode::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
+void FirstIR::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 {
     while (_labelsToRemove > 0)
     {
@@ -18,7 +18,7 @@ void ThreeAddressCode::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
     _lines.push_back(line);
 }
 
-void ThreeAddressCode::handleMathOperation(cStrRef resultName)
+void FirstIR::handleMathOperation(cStrRef resultName)
 {
     // std::cerr<<"Math="<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
     if (_operation.empty())
@@ -58,12 +58,12 @@ void ThreeAddressCode::handleMathOperation(cStrRef resultName)
     reset();
 }
 
-std::map<std::string, std::string> ThreeAddressCode::getConsts()
+std::map<std::string, std::string> FirstIR::getConsts()
 {
     return _consts;
 }
 
-void ThreeAddressCode::handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two)
+void FirstIR::handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two)
 {
     addNewCode(operation, one, two);
     std::string label = generateLabel();
@@ -72,20 +72,20 @@ void ThreeAddressCode::handleConditionOperation(cStrRef operation, cStrRef one, 
     _labels.push(label);
 }
 
-void ThreeAddressCode::setOperation(cStrRef operation)
+void FirstIR::setOperation(cStrRef operation)
 {
     _operation = operation;
 }
-void ThreeAddressCode::setFirstExtraParameter(cStrRef first)
+void FirstIR::setFirstExtraParameter(cStrRef first)
 {
     _firstExtraParameter = first;
 }
-void ThreeAddressCode::setSecondExtraParameter(cStrRef second)
+void FirstIR::setSecondExtraParameter(cStrRef second)
 {
     _secondExtraParameter = second;
 }
 
-std::string ThreeAddressCode::getVariable(std::string value)
+std::string FirstIR::getVariable(std::string value)
 {
     std::cerr<<"generating variable with "<<value<<std::endl;
     std::string result = "variable_" + std::to_string(_registerCount);
@@ -94,7 +94,7 @@ std::string ThreeAddressCode::getVariable(std::string value)
     return result;
 }
 
-void ThreeAddressCode::addJump()
+void FirstIR::addJump()
 {
     addNewCode("JUMP");
     std::string label = generateLabel();
@@ -103,7 +103,7 @@ void ThreeAddressCode::addJump()
     _labels.push(label);        
 }
 
-void ThreeAddressCode::swap()
+void FirstIR::swap()
 {
     std::string s1 = _labels.top();
     _labels.pop();
@@ -113,7 +113,7 @@ void ThreeAddressCode::swap()
     _labels.push(s2);
 }
 
-void ThreeAddressCode::endIf()
+void FirstIR::endIf()
 {
     // std::cerr<<"ENDIF="<<tester<<std::endl;
     _labelsToRemove++;
@@ -122,14 +122,14 @@ void ThreeAddressCode::endIf()
 /*
 PRIVATE
 */
-void ThreeAddressCode::reset()
+void FirstIR::reset()
 {
     _operation = "";
     _firstExtraParameter = "";
     _secondExtraParameter = "";
 }
 
-void ThreeAddressCode::handleNonCommutativeOperation(cStrRef resultName, cStrRef operation)
+void FirstIR::handleNonCommutativeOperation(cStrRef resultName, cStrRef operation)
 {
     std::cout<<"TEST="<<resultName<<std::endl;
     std::string reg = getVariable(resultName);
@@ -138,7 +138,7 @@ void ThreeAddressCode::handleNonCommutativeOperation(cStrRef resultName, cStrRef
     addNewCode(operation, resultName, reg);
 }
 
-std::string ThreeAddressCode::generateLabel()
+std::string FirstIR::generateLabel()
 {
     std::string result = "L_" + std::to_string(_labelCount);
     _labelCount++;

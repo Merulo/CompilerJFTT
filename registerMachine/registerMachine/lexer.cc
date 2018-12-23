@@ -265,24 +265,24 @@ struct yy_buffer_state
 	};
 #endif /* !YY_STRUCT_YY_BUFFER_STATE */
 
-/* Stack of input buffers. */
-static size_t yy_buffer_stack_top = 0; /**< index of top of stack. */
-static size_t yy_buffer_stack_max = 0; /**< capacity of stack. */
-static YY_BUFFER_STATE * yy_buffer_stack = NULL; /**< Stack as an array. */
+/* SFIRk of input buffers. */
+static size_t yy_buffer_sFIRk_top = 0; /**< index of top of sFIRk. */
+static size_t yy_buffer_sFIRk_max = 0; /**< capacity of sFIRk. */
+static YY_BUFFER_STATE * yy_buffer_sFIRk = NULL; /**< SFIRk as an array. */
 
 /* We provide macros for accessing buffer states in case in the
  * future we want to put the buffer states in a more general
  * "scanner state".
  *
- * Returns the top of the stack, or NULL.
+ * Returns the top of the sFIRk, or NULL.
  */
-#define YY_CURRENT_BUFFER ( (yy_buffer_stack) \
-                          ? (yy_buffer_stack)[(yy_buffer_stack_top)] \
+#define YY_CURRENT_BUFFER ( (yy_buffer_sFIRk) \
+                          ? (yy_buffer_sFIRk)[(yy_buffer_sFIRk_top)] \
                           : NULL)
-/* Same as previous macro, but useful when we know that the buffer stack is not
+/* Same as previous macro, but useful when we know that the buffer sFIRk is not
  * NULL or when we need an lvalue. For internal use only.
  */
-#define YY_CURRENT_BUFFER_LVALUE (yy_buffer_stack)[(yy_buffer_stack_top)]
+#define YY_CURRENT_BUFFER_LVALUE (yy_buffer_sFIRk)[(yy_buffer_sFIRk_top)]
 
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
@@ -307,7 +307,7 @@ void yy_flush_buffer ( YY_BUFFER_STATE b  );
 void yypush_buffer_state ( YY_BUFFER_STATE new_buffer  );
 void yypop_buffer_state ( void );
 
-static void yyensure_buffer_stack ( void );
+static void yyensure_buffer_sFIRk ( void );
 static void yy_load_buffer_state ( void );
 static void yy_init_buffer ( YY_BUFFER_STATE b, FILE *file  );
 #define YY_FLUSH_BUFFER yy_flush_buffer( YY_CURRENT_BUFFER )
@@ -324,7 +324,7 @@ void yyfree ( void *  );
 #define yy_set_interactive(is_interactive) \
 	{ \
 	if ( ! YY_CURRENT_BUFFER ){ \
-        yyensure_buffer_stack (); \
+        yyensure_buffer_sFIRk (); \
 		YY_CURRENT_BUFFER_LVALUE =    \
             yy_create_buffer( yyin, YY_BUF_SIZE ); \
 	} \
@@ -333,7 +333,7 @@ void yyfree ( void *  );
 #define yy_set_bol(at_bol) \
 	{ \
 	if ( ! YY_CURRENT_BUFFER ){\
-        yyensure_buffer_stack (); \
+        yyensure_buffer_sFIRk (); \
 		YY_CURRENT_BUFFER_LVALUE =    \
             yy_create_buffer( yyin, YY_BUF_SIZE ); \
 	} \
@@ -664,9 +664,9 @@ static int input ( void );
 #define yyterminate() return YY_NULL
 #endif
 
-/* Number of entries by which start-condition stack grows. */
-#ifndef YY_START_STACK_INCR
-#define YY_START_STACK_INCR 25
+/* Number of entries by which start-condition sFIRk grows. */
+#ifndef YY_START_SFIRK_INCR
+#define YY_START_SFIRK_INCR 25
 #endif
 
 /* Report a fatal error. */
@@ -728,7 +728,7 @@ YY_DECL
 			yyout = stdout;
 
 		if ( ! YY_CURRENT_BUFFER ) {
-			yyensure_buffer_stack ();
+			yyensure_buffer_sFIRk ();
 			YY_CURRENT_BUFFER_LVALUE =
 				yy_create_buffer( yyin, YY_BUF_SIZE );
 		}
@@ -1376,7 +1376,7 @@ static int yy_get_next_buffer (void)
 {
     
 	if ( ! YY_CURRENT_BUFFER ){
-        yyensure_buffer_stack ();
+        yyensure_buffer_sFIRk ();
 		YY_CURRENT_BUFFER_LVALUE =
             yy_create_buffer( yyin, YY_BUF_SIZE );
 	}
@@ -1397,7 +1397,7 @@ static int yy_get_next_buffer (void)
 	 *		yypop_buffer_state();
 	 *		yypush_buffer_state(new_buffer);
      */
-	yyensure_buffer_stack ();
+	yyensure_buffer_sFIRk ();
 	if ( YY_CURRENT_BUFFER == new_buffer )
 		return;
 
@@ -1532,8 +1532,8 @@ static void yy_load_buffer_state  (void)
 		yy_load_buffer_state(  );
 }
 
-/** Pushes the new state onto the stack. The new state becomes
- *  the current state. This function will allocate the stack
+/** Pushes the new state onto the sFIRk. The new state becomes
+ *  the current state. This function will allocate the sFIRk
  *  if necessary.
  *  @param new_buffer The new state.
  *  
@@ -1543,7 +1543,7 @@ void yypush_buffer_state (YY_BUFFER_STATE new_buffer )
     	if (new_buffer == NULL)
 		return;
 
-	yyensure_buffer_stack();
+	yyensure_buffer_sFIRk();
 
 	/* This block is copied from yy_switch_to_buffer. */
 	if ( YY_CURRENT_BUFFER )
@@ -1556,7 +1556,7 @@ void yypush_buffer_state (YY_BUFFER_STATE new_buffer )
 
 	/* Only push if top exists. Otherwise, replace top. */
 	if (YY_CURRENT_BUFFER)
-		(yy_buffer_stack_top)++;
+		(yy_buffer_sFIRk_top)++;
 	YY_CURRENT_BUFFER_LVALUE = new_buffer;
 
 	/* copied from yy_switch_to_buffer. */
@@ -1564,7 +1564,7 @@ void yypush_buffer_state (YY_BUFFER_STATE new_buffer )
 	(yy_did_buffer_switch_on_eof) = 1;
 }
 
-/** Removes and deletes the top of the stack, if present.
+/** Removes and deletes the top of the sFIRk, if present.
  *  The next element becomes the new top.
  *  
  */
@@ -1575,8 +1575,8 @@ void yypop_buffer_state (void)
 
 	yy_delete_buffer(YY_CURRENT_BUFFER );
 	YY_CURRENT_BUFFER_LVALUE = NULL;
-	if ((yy_buffer_stack_top) > 0)
-		--(yy_buffer_stack_top);
+	if ((yy_buffer_sFIRk_top) > 0)
+		--(yy_buffer_sFIRk_top);
 
 	if (YY_CURRENT_BUFFER) {
 		yy_load_buffer_state(  );
@@ -1584,49 +1584,49 @@ void yypop_buffer_state (void)
 	}
 }
 
-/* Allocates the stack if it does not exist.
+/* Allocates the sFIRk if it does not exist.
  *  Guarantees space for at least one push.
  */
-static void yyensure_buffer_stack (void)
+static void yyensure_buffer_sFIRk (void)
 {
 	yy_size_t num_to_alloc;
     
-	if (!(yy_buffer_stack)) {
+	if (!(yy_buffer_sFIRk)) {
 
 		/* First allocation is just for 2 elements, since we don't know if this
-		 * scanner will even need a stack. We use 2 instead of 1 to avoid an
+		 * scanner will even need a sFIRk. We use 2 instead of 1 to avoid an
 		 * immediate realloc on the next call.
          */
       num_to_alloc = 1; /* After all that talk, this was set to 1 anyways... */
-		(yy_buffer_stack) = (struct yy_buffer_state**)yyalloc
+		(yy_buffer_sFIRk) = (struct yy_buffer_state**)yyalloc
 								(num_to_alloc * sizeof(struct yy_buffer_state*)
 								);
-		if ( ! (yy_buffer_stack) )
-			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
+		if ( ! (yy_buffer_sFIRk) )
+			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_sFIRk()" );
 
-		memset((yy_buffer_stack), 0, num_to_alloc * sizeof(struct yy_buffer_state*));
+		memset((yy_buffer_sFIRk), 0, num_to_alloc * sizeof(struct yy_buffer_state*));
 
-		(yy_buffer_stack_max) = num_to_alloc;
-		(yy_buffer_stack_top) = 0;
+		(yy_buffer_sFIRk_max) = num_to_alloc;
+		(yy_buffer_sFIRk_top) = 0;
 		return;
 	}
 
-	if ((yy_buffer_stack_top) >= ((yy_buffer_stack_max)) - 1){
+	if ((yy_buffer_sFIRk_top) >= ((yy_buffer_sFIRk_max)) - 1){
 
 		/* Increase the buffer to prepare for a possible push. */
 		yy_size_t grow_size = 8 /* arbitrary grow size */;
 
-		num_to_alloc = (yy_buffer_stack_max) + grow_size;
-		(yy_buffer_stack) = (struct yy_buffer_state**)yyrealloc
-								((yy_buffer_stack),
+		num_to_alloc = (yy_buffer_sFIRk_max) + grow_size;
+		(yy_buffer_sFIRk) = (struct yy_buffer_state**)yyrealloc
+								((yy_buffer_sFIRk),
 								num_to_alloc * sizeof(struct yy_buffer_state*)
 								);
-		if ( ! (yy_buffer_stack) )
-			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_stack()" );
+		if ( ! (yy_buffer_sFIRk) )
+			YY_FATAL_ERROR( "out of dynamic memory in yyensure_buffer_sFIRk()" );
 
 		/* zero only the new slots.*/
-		memset((yy_buffer_stack) + (yy_buffer_stack_max), 0, grow_size * sizeof(struct yy_buffer_state*));
-		(yy_buffer_stack_max) = num_to_alloc;
+		memset((yy_buffer_sFIRk) + (yy_buffer_sFIRk_max), 0, grow_size * sizeof(struct yy_buffer_state*));
+		(yy_buffer_sFIRk_max) = num_to_alloc;
 	}
 }
 
@@ -1832,9 +1832,9 @@ static int yy_init_globals (void)
     /* We do not touch yylineno unless the option is enabled. */
     yylineno =  1;
     
-    (yy_buffer_stack) = NULL;
-    (yy_buffer_stack_top) = 0;
-    (yy_buffer_stack_max) = 0;
+    (yy_buffer_sFIRk) = NULL;
+    (yy_buffer_sFIRk_top) = 0;
+    (yy_buffer_sFIRk_max) = 0;
     (yy_c_buf_p) = NULL;
     (yy_init) = 0;
     (yy_start) = 0;
@@ -1858,16 +1858,16 @@ static int yy_init_globals (void)
 int yylex_destroy  (void)
 {
     
-    /* Pop the buffer stack, destroying each element. */
+    /* Pop the buffer sFIRk, destroying each element. */
 	while(YY_CURRENT_BUFFER){
 		yy_delete_buffer( YY_CURRENT_BUFFER  );
 		YY_CURRENT_BUFFER_LVALUE = NULL;
 		yypop_buffer_state();
 	}
 
-	/* Destroy the stack itself. */
-	yyfree((yy_buffer_stack) );
-	(yy_buffer_stack) = NULL;
+	/* Destroy the sFIRk itself. */
+	yyfree((yy_buffer_sFIRk) );
+	(yy_buffer_sFIRk) = NULL;
 
     /* Reset the globals. This is important in a non-reentrant scanner so the next time
      * yylex() is called, initialization will occur. */

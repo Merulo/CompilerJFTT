@@ -10,7 +10,7 @@ class FinalIR : public IRBase
     public:
     FinalIR() : IRBase("FinalIR") {};
 
-    void parse(const std::vector<Line>& TACLines);
+    void parse(const std::vector<Line>& FIRLines);
 
     private:
     std::set<std::string> _simpleInstructions = {"READ", "WRITE", "HALT", "CONST", "ADD", "SUB", "MOD", "DIV"};

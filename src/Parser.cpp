@@ -1320,7 +1320,7 @@ yyreduce:
         case 2:
 #line 40 "src/parser.y" /* yacc.c:1646  */
     {
-        d.TAC.addNewCode("HALT");
+        d.FIR.addNewCode("HALT");
     }
 #line 1326 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1357,7 +1357,7 @@ yyreduce:
 #line 58 "src/parser.y" /* yacc.c:1646  */
     {
         d.ST.setInitialized((yyvsp[-3]).name);
-        d.TAC.handleMathOperation((yyvsp[-3]).name);
+        d.FIR.handleMathOperation((yyvsp[-3]).name);
     }
 #line 1363 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1365,7 +1365,7 @@ yyreduce:
   case 9:
 #line 63 "src/parser.y" /* yacc.c:1646  */
     {
-        d.TAC.endIf();
+        d.FIR.endIf();
     }
 #line 1371 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1373,7 +1373,7 @@ yyreduce:
   case 10:
 #line 67 "src/parser.y" /* yacc.c:1646  */
     {
-        d.TAC.endIf();
+        d.FIR.endIf();
     }
 #line 1379 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1406,7 +1406,7 @@ yyreduce:
 #line 75 "src/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST.checkVariableExists((yyvsp[-1]).name));
-        d.TAC.addNewCode("READ", (yyvsp[-1]).name);
+        d.FIR.addNewCode("READ", (yyvsp[-1]).name);
     }
 #line 1412 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1415,7 +1415,7 @@ yyreduce:
 #line 80 "src/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[-1]).name));
-        d.TAC.addNewCode("WRITE", (yyvsp[-1]).name);
+        d.FIR.addNewCode("WRITE", (yyvsp[-1]).name);
     }
 #line 1421 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1423,9 +1423,9 @@ yyreduce:
   case 17:
 #line 86 "src/parser.y" /* yacc.c:1646  */
     {
-    d.TAC.addJump();
-    d.TAC.endIf();
-    d.TAC.swap();
+    d.FIR.addJump();
+    d.FIR.endIf();
+    d.FIR.swap();
 }
 #line 1431 "src/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1436,12 +1436,12 @@ yyreduce:
         if (!(yyvsp[0]).name.empty())
         {
             checkForErrors(d.ST.checkVariableExistsAndIsInitialized((yyvsp[0]).name));
-            d.TAC.setOperation("COPY");
-            d.TAC.setFirstExtraParameter((yyvsp[0]).name);
+            d.FIR.setOperation("COPY");
+            d.FIR.setFirstExtraParameter((yyvsp[0]).name);
         }
         else
         {
-            d.TAC.setFirstExtraParameter(std::to_string((yyvsp[0]).value));
+            d.FIR.setFirstExtraParameter(std::to_string((yyvsp[0]).value));
         }
     }
 #line 1448 "src/Parser.cpp" /* yacc.c:1646  */

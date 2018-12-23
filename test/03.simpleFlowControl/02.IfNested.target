@@ -1,4 +1,4 @@
-ThreeAddressCode:
+FirstIR:
 CONST: variable_0 0 
 CONST: variable_1 1 
 JLE: variable_0 variable_1 goto L_0

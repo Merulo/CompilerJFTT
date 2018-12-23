@@ -1,4 +1,4 @@
-ThreeAddressCode:
+FirstIR:
 CONST: a 10 
 CONST: b 20 
 JLE: a b goto L_0

@@ -254,19 +254,19 @@ typedef short int yytype_int16;
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
-# ifdef YYSTACK_USE_ALLOCA
-#  if YYSTACK_USE_ALLOCA
+# ifdef YYSFIRK_USE_ALLOCA
+#  if YYSFIRK_USE_ALLOCA
 #   ifdef __GNUC__
-#    define YYSTACK_ALLOC __builtin_alloca
+#    define YYSFIRK_ALLOC __builtin_alloca
 #   elif defined __BUILTIN_VA_ARG_INCR
 #    include <alloca.h> /* INFRINGES ON USER NAME SPACE */
 #   elif defined _AIX
-#    define YYSTACK_ALLOC __alloca
+#    define YYSFIRK_ALLOC __alloca
 #   elif defined _MSC_VER
 #    include <malloc.h> /* INFRINGES ON USER NAME SPACE */
 #    define alloca _alloca
 #   else
-#    define YYSTACK_ALLOC alloca
+#    define YYSFIRK_ALLOC alloca
 #    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS
 #     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
       /* Use EXIT_SUCCESS as a witness for stdlib.h.  */
@@ -278,21 +278,21 @@ typedef short int yytype_int16;
 #  endif
 # endif
 
-# ifdef YYSTACK_ALLOC
+# ifdef YYSFIRK_ALLOC
    /* Pacify GCC's 'empty if-body' warning.  */
-#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (0)
-#  ifndef YYSTACK_ALLOC_MAXIMUM
-    /* The OS might guarantee only one guard page at the bottom of the stack,
+#  define YYSFIRK_FREE(Ptr) do { /* empty */; } while (0)
+#  ifndef YYSFIRK_ALLOC_MAXIMUM
+    /* The OS might guarantee only one guard page at the bottom of the sFIRk,
        and a page size can be as small as 4096 bytes.  So we cannot safely
        invoke alloca (N) if N exceeds 4096.  Use a slightly smaller number
-       to allow for a few compiler-allocated temporary stack slots.  */
-#   define YYSTACK_ALLOC_MAXIMUM 4032 /* reasonable circa 2006 */
+       to allow for a few compiler-allocated temporary sFIRk slots.  */
+#   define YYSFIRK_ALLOC_MAXIMUM 4032 /* reasonable circa 2006 */
 #  endif
 # else
-#  define YYSTACK_ALLOC YYMALLOC
-#  define YYSTACK_FREE YYFREE
-#  ifndef YYSTACK_ALLOC_MAXIMUM
-#   define YYSTACK_ALLOC_MAXIMUM YYSIZE_MAXIMUM
+#  define YYSFIRK_ALLOC YYMALLOC
+#  define YYSFIRK_FREE YYFREE
+#  ifndef YYSFIRK_ALLOC_MAXIMUM
+#   define YYSFIRK_ALLOC_MAXIMUM YYSIZE_MAXIMUM
 #  endif
 #  if (defined __cplusplus && ! defined EXIT_SUCCESS \
        && ! ((defined YYMALLOC || defined malloc) \
@@ -322,36 +322,36 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
      && (! defined __cplusplus \
          || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
-/* A type that is properly aligned for any stack member.  */
+/* A type that is properly aligned for any sFIRk member.  */
 union yyalloc
 {
   yytype_int16 yyss_alloc;
   YYSTYPE yyvs_alloc;
 };
 
-/* The size of the maximum gap between one aligned stack and the next.  */
-# define YYSTACK_GAP_MAXIMUM (sizeof (union yyalloc) - 1)
+/* The size of the maximum gap between one aligned sFIRk and the next.  */
+# define YYSFIRK_GAP_MAXIMUM (sizeof (union yyalloc) - 1)
 
-/* The size of an array large to enough to hold all stacks, each with
+/* The size of an array large to enough to hold all sFIRks, each with
    N elements.  */
-# define YYSTACK_BYTES(N) \
+# define YYSFIRK_BYTES(N) \
      ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE)) \
-      + YYSTACK_GAP_MAXIMUM)
+      + YYSFIRK_GAP_MAXIMUM)
 
 # define YYCOPY_NEEDED 1
 
-/* Relocate STACK from its old location to the new one.  The
-   local variables YYSIZE and YYSTACKSIZE give the old and new number of
-   elements in the stack, and YYPTR gives the new location of the
-   stack.  Advance YYPTR to a properly aligned location for the next
-   stack.  */
-# define YYSTACK_RELOCATE(Stack_alloc, Stack)                           \
+/* Relocate SFIRK from its old location to the new one.  The
+   local variables YYSIZE and YYSFIRKSIZE give the old and new number of
+   elements in the sFIRk, and YYPTR gives the new location of the
+   sFIRk.  Advance YYPTR to a properly aligned location for the next
+   sFIRk.  */
+# define YYSFIRK_RELOCATE(SFIRk_alloc, SFIRk)                           \
     do                                                                  \
       {                                                                 \
         YYSIZE_T yynewbytes;                                            \
-        YYCOPY (&yyptr->Stack_alloc, Stack, yysize);                    \
-        Stack = &yyptr->Stack_alloc;                                    \
-        yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
+        YYCOPY (&yyptr->SFIRk_alloc, SFIRk, yysize);                    \
+        SFIRk = &yyptr->SFIRk_alloc;                                    \
+        yynewbytes = yysFIRksize * sizeof (*SFIRk) + YYSFIRK_GAP_MAXIMUM; \
         yyptr += yynewbytes / sizeof (*yyptr);                          \
       }                                                                 \
     while (0)
@@ -554,7 +554,7 @@ do                                                              \
     {                                                           \
       yychar = (Token);                                         \
       yylval = (Value);                                         \
-      YYPOPSTACK (yylen);                                       \
+      YYPOPSFIRK (yylen);                                       \
       yystate = *yyssp;                                         \
       goto yybackup;                                            \
     }                                                           \
@@ -638,14 +638,14 @@ yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, std
 }
 
 /*------------------------------------------------------------------.
-| yy_stack_print -- Print the state stack from its BOTTOM up to its |
+| yy_sFIRk_print -- Print the state sFIRk from its BOTTOM up to its |
 | TOP (included).                                                   |
 `------------------------------------------------------------------*/
 
 static void
-yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
+yy_sFIRk_print (yytype_int16 *yybottom, yytype_int16 *yytop)
 {
-  YYFPRINTF (stderr, "Stack now");
+  YYFPRINTF (stderr, "SFIRk now");
   for (; yybottom <= yytop; yybottom++)
     {
       int yybot = *yybottom;
@@ -654,10 +654,10 @@ yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
   YYFPRINTF (stderr, "\n");
 }
 
-# define YY_STACK_PRINT(Bottom, Top)                            \
+# define YY_SFIRK_PRINT(Bottom, Top)                            \
 do {                                                            \
   if (yydebug)                                                  \
-    yy_stack_print ((Bottom), (Top));                           \
+    yy_sFIRk_print ((Bottom), (Top));                           \
 } while (0)
 
 
@@ -671,7 +671,7 @@ yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule, std::vector< s
   unsigned long int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
+  YYFPRINTF (stderr, "Reducing sFIRk by rule %d (line %lu):\n",
              yyrule - 1, yylno);
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
@@ -697,21 +697,21 @@ int yydebug;
 #else /* !YYDEBUG */
 # define YYDPRINTF(Args)
 # define YY_SYMBOL_PRINT(Title, Type, Value, Location)
-# define YY_STACK_PRINT(Bottom, Top)
+# define YY_SFIRK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
 #endif /* !YYDEBUG */
 
 
-/* YYINITDEPTH -- initial size of the parser's stacks.  */
+/* YYINITDEPTH -- initial size of the parser's sFIRks.  */
 #ifndef YYINITDEPTH
 # define YYINITDEPTH 200
 #endif
 
-/* YYMAXDEPTH -- maximum size the stacks can grow to (effective only
-   if the built-in stack extension method is used).
+/* YYMAXDEPTH -- maximum size the sFIRks can grow to (effective only
+   if the built-in sFIRk extension method is used).
 
    Do not make this value too large; the results are undefined if
-   YYSTACK_ALLOC_MAXIMUM < YYSTACK_BYTES (YYMAXDEPTH)
+   YYSFIRK_ALLOC_MAXIMUM < YYSFIRK_BYTES (YYMAXDEPTH)
    evaluated with infinite-precision integer arithmetic.  */
 
 #ifndef YYMAXDEPTH
@@ -806,7 +806,7 @@ yytnamerr (char *yyres, const char *yystr)
 # endif
 
 /* Copy into *YYMSG, which is of size *YYMSG_ALLOC, an error message
-   about the unexpected token YYTOKEN for the state stack whose top is
+   about the unexpected token YYTOKEN for the state sFIRk whose top is
    YYSSP.
 
    Return 0 if *YYMSG was successfully written.  Return 1 if *YYMSG is
@@ -880,7 +880,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                 {
                   YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
                   if (! (yysize <= yysize1
-                         && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+                         && yysize1 <= YYSFIRK_ALLOC_MAXIMUM))
                     return 2;
                   yysize = yysize1;
                 }
@@ -905,7 +905,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 
   {
     YYSIZE_T yysize1 = yysize + yystrlen (yyformat);
-    if (! (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+    if (! (yysize <= yysize1 && yysize1 <= YYSFIRK_ALLOC_MAXIMUM))
       return 2;
     yysize = yysize1;
   }
@@ -914,8 +914,8 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
     {
       *yymsg_alloc = 2 * yysize;
       if (! (yysize <= *yymsg_alloc
-             && *yymsg_alloc <= YYSTACK_ALLOC_MAXIMUM))
-        *yymsg_alloc = YYSTACK_ALLOC_MAXIMUM;
+             && *yymsg_alloc <= YYSFIRK_ALLOC_MAXIMUM))
+        *yymsg_alloc = YYSFIRK_ALLOC_MAXIMUM;
       return 1;
     }
 
@@ -982,24 +982,24 @@ yyparse (std::vector< std::tuple<int,int,int> > & program)
     /* Number of tokens to shift before error messages enabled.  */
     int yyerrstatus;
 
-    /* The stacks and their tools:
+    /* The sFIRks and their tools:
        'yyss': related to states.
        'yyvs': related to semantic values.
 
-       Refer to the stacks through separate pointers, to allow yyoverflow
+       Refer to the sFIRks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
 
-    /* The state stack.  */
+    /* The state sFIRk.  */
     yytype_int16 yyssa[YYINITDEPTH];
     yytype_int16 *yyss;
     yytype_int16 *yyssp;
 
-    /* The semantic value stack.  */
+    /* The semantic value sFIRk.  */
     YYSTYPE yyvsa[YYINITDEPTH];
     YYSTYPE *yyvs;
     YYSTYPE *yyvsp;
 
-    YYSIZE_T yystacksize;
+    YYSIZE_T yysFIRksize;
 
   int yyn;
   int yyresult;
@@ -1016,7 +1016,7 @@ yyparse (std::vector< std::tuple<int,int,int> > & program)
   YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
-#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
+#define YYPOPSFIRK(N)   (yyvsp -= (N), yyssp -= (N))
 
   /* The number of symbols on the RHS of the reduced rule.
      Keep to zero when no symbol should be popped.  */
@@ -1024,7 +1024,7 @@ yyparse (std::vector< std::tuple<int,int,int> > & program)
 
   yyssp = yyss = yyssa;
   yyvsp = yyvs = yyvsa;
-  yystacksize = YYINITDEPTH;
+  yysFIRksize = YYINITDEPTH;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
@@ -1038,60 +1038,60 @@ yyparse (std::vector< std::tuple<int,int,int> > & program)
 | yynewstate -- Push a new state, which is found in yystate.  |
 `------------------------------------------------------------*/
  yynewstate:
-  /* In all cases, when you get here, the value and location stacks
-     have just been pushed.  So pushing a state here evens the stacks.  */
+  /* In all cases, when you get here, the value and location sFIRks
+     have just been pushed.  So pushing a state here evens the sFIRks.  */
   yyssp++;
 
  yysetstate:
   *yyssp = yystate;
 
-  if (yyss + yystacksize - 1 <= yyssp)
+  if (yyss + yysFIRksize - 1 <= yyssp)
     {
-      /* Get the current used size of the three stacks, in elements.  */
+      /* Get the current used size of the three sFIRks, in elements.  */
       YYSIZE_T yysize = yyssp - yyss + 1;
 
 #ifdef yyoverflow
       {
-        /* Give user a chance to reallocate the stack.  Use copies of
+        /* Give user a chance to reallocate the sFIRk.  Use copies of
            these so that the &'s don't force the real ones into
            memory.  */
         YYSTYPE *yyvs1 = yyvs;
         yytype_int16 *yyss1 = yyss;
 
-        /* Each stack pointer address is followed by the size of the
-           data in use in that stack, in bytes.  This used to be a
+        /* Each sFIRk pointer address is followed by the size of the
+           data in use in that sFIRk, in bytes.  This used to be a
            conditional around just the two extra args, but that might
            be undefined if yyoverflow is a macro.  */
         yyoverflow (YY_("memory exhausted"),
                     &yyss1, yysize * sizeof (*yyssp),
                     &yyvs1, yysize * sizeof (*yyvsp),
-                    &yystacksize);
+                    &yysFIRksize);
 
         yyss = yyss1;
         yyvs = yyvs1;
       }
 #else /* no yyoverflow */
-# ifndef YYSTACK_RELOCATE
+# ifndef YYSFIRK_RELOCATE
       goto yyexhaustedlab;
 # else
-      /* Extend the stack our own way.  */
-      if (YYMAXDEPTH <= yystacksize)
+      /* Extend the sFIRk our own way.  */
+      if (YYMAXDEPTH <= yysFIRksize)
         goto yyexhaustedlab;
-      yystacksize *= 2;
-      if (YYMAXDEPTH < yystacksize)
-        yystacksize = YYMAXDEPTH;
+      yysFIRksize *= 2;
+      if (YYMAXDEPTH < yysFIRksize)
+        yysFIRksize = YYMAXDEPTH;
 
       {
         yytype_int16 *yyss1 = yyss;
         union yyalloc *yyptr =
-          (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
+          (union yyalloc *) YYSFIRK_ALLOC (YYSFIRK_BYTES (yysFIRksize));
         if (! yyptr)
           goto yyexhaustedlab;
-        YYSTACK_RELOCATE (yyss_alloc, yyss);
-        YYSTACK_RELOCATE (yyvs_alloc, yyvs);
-#  undef YYSTACK_RELOCATE
+        YYSFIRK_RELOCATE (yyss_alloc, yyss);
+        YYSFIRK_RELOCATE (yyvs_alloc, yyvs);
+#  undef YYSFIRK_RELOCATE
         if (yyss1 != yyssa)
-          YYSTACK_FREE (yyss1);
+          YYSFIRK_FREE (yyss1);
       }
 # endif
 #endif /* no yyoverflow */
@@ -1099,10 +1099,10 @@ yyparse (std::vector< std::tuple<int,int,int> > & program)
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
 
-      YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-                  (unsigned long int) yystacksize));
+      YYDPRINTF ((stderr, "SFIRk size increased to %lu\n",
+                  (unsigned long int) yysFIRksize));
 
-      if (yyss + yystacksize - 1 <= yyssp)
+      if (yyss + yysFIRksize - 1 <= yyssp)
         YYABORT;
     }
 
@@ -1263,9 +1263,9 @@ yyreduce:
      before the lookahead is translated.  */
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
 
-  YYPOPSTACK (yylen);
+  YYPOPSFIRK (yylen);
   yylen = 0;
-  YY_STACK_PRINT (yyss, yyssp);
+  YY_SFIRK_PRINT (yyss, yyssp);
 
   *++yyvsp = yyval;
 
@@ -1310,8 +1310,8 @@ yyerrlab:
         else if (yysyntax_error_status == 1)
           {
             if (yymsg != yymsgbuf)
-              YYSTACK_FREE (yymsg);
-            yymsg = (char *) YYSTACK_ALLOC (yymsg_alloc);
+              YYSFIRK_FREE (yymsg);
+            yymsg = (char *) YYSFIRK_ALLOC (yymsg_alloc);
             if (!yymsg)
               {
                 yymsg = yymsgbuf;
@@ -1371,9 +1371,9 @@ yyerrorlab:
 
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
-  YYPOPSTACK (yylen);
+  YYPOPSFIRK (yylen);
   yylen = 0;
-  YY_STACK_PRINT (yyss, yyssp);
+  YY_SFIRK_PRINT (yyss, yyssp);
   yystate = *yyssp;
   goto yyerrlab1;
 
@@ -1405,9 +1405,9 @@ yyerrlab1:
 
       yydestruct ("Error: popping",
                   yystos[yystate], yyvsp, program);
-      YYPOPSTACK (1);
+      YYPOPSFIRK (1);
       yystate = *yyssp;
-      YY_STACK_PRINT (yyss, yyssp);
+      YY_SFIRK_PRINT (yyss, yyssp);
     }
 
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
@@ -1457,21 +1457,21 @@ yyreturn:
     }
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYABORT or YYACCEPT.  */
-  YYPOPSTACK (yylen);
-  YY_STACK_PRINT (yyss, yyssp);
+  YYPOPSFIRK (yylen);
+  YY_SFIRK_PRINT (yyss, yyssp);
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
                   yystos[*yyssp], yyvsp, program);
-      YYPOPSTACK (1);
+      YYPOPSFIRK (1);
     }
 #ifndef yyoverflow
   if (yyss != yyssa)
-    YYSTACK_FREE (yyss);
+    YYSFIRK_FREE (yyss);
 #endif
 #if YYERROR_VERBOSE
   if (yymsg != yymsgbuf)
-    YYSTACK_FREE (yymsg);
+    YYSFIRK_FREE (yymsg);
 #endif
   return yyresult;
 }
