@@ -10,7 +10,20 @@
 
 ##  Intermediate representations
 
-### Three Address Code
+### First IR
+First IR is created by blocks in format:
+```cpp
+    std::string blockName;
+    std::vector<Line> lines;
+    std::string blockIfTrue;
+    std::string blockIfFalse;
+    std::string blockJump;
+```
+Transition between blocks:
+* If the last line is a condition then calculate result and follow blockIfTrue or blockIfFalse
+* If there is no condition then follow blockJump
+* If there is no blockJump the go to next block in storage order
+
 | Operand | Arguments | Meaning |
 | --- | --- | --- |
 | READ | A | Read stdin to variable A |
@@ -22,12 +35,11 @@
 | MUL | A B | Multiply A by B |
 | DIV | A B | Divide A by B |
 | MOD | A B | Calculate A modulo B |
-| JLS | A B L_X | If A is less than B jump to L_X |
-| JMR | A B L_X | If A is more than B jump to L_X |
-| JLE | A B L_X | If A is less or equal to B jump to L_X |
-| JME | A B L_X | If A is more or equal to B jump to L_X |
-| JNE | A B L_X | If A is NOT equal to B jump to L_X |
-| JEQ | A B L_X | If A is equal to B jump to L_X |
+| JLS | A B | If A is less than B do block jump |
+| JMR | A B | If A is more than B do block jump |
+| JLE | A B | If A is less or equal to B do block jump |
+| JME | A B | If A is more or equal to B do block jump |
+| JNE | A B | If A is NOT equal to B do block jump |
+| JEQ | A B | If A is equal to B do block jump |
 | HALT | _none_ | End |
-| JUMP | L_X | Jump to L_X |
 ### Final IR
