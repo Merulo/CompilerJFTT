@@ -4,20 +4,17 @@ FirstIR:
 	CONST b 20
 #end of Block_0
 #Block_1
-	CONST variable_0 0
-	CONST variable_1 1
+	CONST variable_0 1
+	CONST variable_1 0
 	JMR variable_0 variable_1
 #ifTrue Block_3
 #ifFalse Block_2
 #end of Block_1
 #Block_3
-	CONST a 100
-#jump to Block_4
+	WRITE a 
+#jump to Block_1
 #end of Block_3
 #Block_2
-	CONST b 200
-#jump to Block_4
-#end of Block_2
-#Block_4
+	WRITE b 
 	HALT  
-#end of Block_4
+#end of Block_2

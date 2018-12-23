@@ -53,12 +53,19 @@ void FirstIR::handleMathOperation(cStrRef resultName)
 
 void FirstIR::handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two)
 {
+    _conditionBlocks.push(_currentBlock.top());
     addNewCode(operation, one, two);
     _blocks.push_back(_currentBlock.top());
     _currentBlock.pop();
-    generateBlock();
+
+    //creates blockIfFalse
+    Block b2 = generateBlock();
+    _currentBlock.push(b2);
     _blocks.back().blockIfFalse = _currentBlock.top().blockName;
-    generateBlock();
+
+    //creates blockIfTrue
+    Block b3 = generateBlock();
+    _currentBlock.push(b3);
     _blocks.back().blockIfTrue = _currentBlock.top().blockName;    
 
 }
@@ -91,7 +98,8 @@ void FirstIR::endElse()
     _currentBlock.pop();
     Block s2 = _currentBlock.top();
     _currentBlock.pop();
-    generateBlock();
+    Block b1 = generateBlock();
+    _currentBlock.push(b1);
     Block s1 = _currentBlock.top();
     s3.blockJump = s1.blockName;
     _blocks.push_back(s3);
@@ -100,8 +108,43 @@ void FirstIR::endElse()
 
 void FirstIR::endIf()
 {
+    Block endOfTrueBlock = _currentBlock.top();
+    _currentBlock.pop();
+    endOfTrueBlock.blockJump = _currentBlock.top().blockName;
+    _blocks.push_back(endOfTrueBlock);
+    _conditionBlocks.pop();
+}
+
+void FirstIR::closeBlock()
+{
+    //closes current block
     _blocks.push_back(_currentBlock.top());
     _currentBlock.pop();
+    Block b1 = generateBlock();
+    _currentBlock.push(b1);
+    _conditionBlocks.push(b1);
+}
+
+void FirstIR::endWhileDo()
+{
+    Block endOfTrueBlock = _currentBlock.top();
+    _currentBlock.pop();
+    std::cerr<<"Setting "<<endOfTrueBlock.blockName<<" to "<<_conditionBlocks.top().blockName<<std::endl;
+    _conditionBlocks.pop();
+    endOfTrueBlock.blockJump = _conditionBlocks.top().blockName;
+    _conditionBlocks.pop();
+    _blocks.push_back(endOfTrueBlock);  
+}
+
+void FirstIR::endDoWhile()
+{
+    Block endOfTrueBlock = _currentBlock.top();
+    _currentBlock.pop();
+    _conditionBlocks.pop();
+    _conditionBlocks.pop();
+    endOfTrueBlock.blockJump = _conditionBlocks.top().blockName;
+    _conditionBlocks.pop();
+    _blocks.push_back(endOfTrueBlock);       
 }
 
 /*

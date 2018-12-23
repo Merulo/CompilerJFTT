@@ -1,71 +1,92 @@
 FirstIR:
 #Block_0
+#end of Block_0
+#Block_1
 	CONST variable_0 0
 	CONST variable_1 1
 	JME variable_0 variable_1
-#ifTrue Block_2
-#ifFalse Block_1
-#end of Block_0
-#Block_2
+#ifTrue Block_3
+#ifFalse Block_2
+#end of Block_1
+#Block_3
+#end of Block_3
+#Block_4
 	CONST variable_2 2
 	CONST variable_3 3
 	JLS variable_2 variable_3
-#ifTrue Block_4
-#ifFalse Block_3
-#end of Block_2
-#Block_4
-	CONST variable_4 4
-	CONST variable_5 5
-	JLE variable_4 variable_5
 #ifTrue Block_6
 #ifFalse Block_5
 #end of Block_4
 #Block_6
+#end of Block_6
+#Block_7
+	CONST variable_4 4
+	CONST variable_5 5
+	JLE variable_4 variable_5
+#ifTrue Block_9
+#ifFalse Block_8
+#end of Block_7
+#Block_9
+#end of Block_9
+#Block_10
 	CONST variable_6 6
 	CONST variable_7 7
 	JEQ variable_6 variable_7
-#ifTrue Block_8
-#ifFalse Block_7
-#end of Block_6
-#Block_8
+#ifTrue Block_12
+#ifFalse Block_11
+#end of Block_10
+#Block_12
 	CONST a 8
+#jump to Block_11
+#end of Block_12
+#Block_11
+#jump to Block_8
+#end of Block_11
+#Block_8
+#jump to Block_5
 #end of Block_8
-#Block_7
-#end of Block_7
 #Block_5
 #end of Block_5
-#Block_3
+#Block_13
 	CONST variable_8 9
 	CONST variable_9 10
 	JNE variable_8 variable_9
-#ifTrue Block_10
-#ifFalse Block_9
-#end of Block_3
-#Block_10
+#ifTrue Block_15
+#ifFalse Block_14
+#end of Block_13
+#Block_15
 	CONST a 11
-#end of Block_10
-#Block_9
+#jump to Block_14
+#end of Block_15
+#Block_14
+#end of Block_14
+#Block_16
 	CONST variable_10 12
 	CONST variable_11 13
 	JLS variable_10 variable_11
-#ifTrue Block_12
-#ifFalse Block_11
-#end of Block_9
-#Block_12
+#ifTrue Block_18
+#ifFalse Block_17
+#end of Block_16
+#Block_18
 	CONST a 14
-#end of Block_12
-#Block_11
+#jump to Block_17
+#end of Block_18
+#Block_17
+#end of Block_17
+#Block_19
 	CONST variable_12 15
 	CONST variable_13 16
 	JNE variable_12 variable_13
-#ifTrue Block_14
-#ifFalse Block_13
-#end of Block_11
-#Block_14
+#ifTrue Block_21
+#ifFalse Block_20
+#end of Block_19
+#Block_21
 	CONST a 17
-#end of Block_14
-#Block_13
-#end of Block_13
-#Block_1
+#jump to Block_20
+#end of Block_21
+#Block_20
+#jump to Block_2
+#end of Block_20
+#Block_2
 	HALT  
-#end of Block_1
+#end of Block_2

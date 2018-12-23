@@ -2,62 +2,77 @@ FirstIR:
 #Block_0
 	CONST a 10
 	CONST b 20
-	JMR a b
-#ifTrue Block_2
-#ifFalse Block_1
 #end of Block_0
-#Block_2
-	JMR b a
-#ifTrue Block_4
-#ifFalse Block_3
-#end of Block_2
-#Block_4
+#Block_1
 	JMR a b
+#ifTrue Block_3
+#ifFalse Block_2
+#end of Block_1
+#Block_3
+#end of Block_3
+#Block_4
+	JMR b a
 #ifTrue Block_6
 #ifFalse Block_5
 #end of Block_4
 #Block_6
-	CONST c 110
-#jump to Block_7
 #end of Block_6
-#Block_5
-	CONST c 120
-#end of Block_5
 #Block_7
-	CONST c 130
-#jump to Block_8
+	JMR a b
+#ifTrue Block_9
+#ifFalse Block_8
 #end of Block_7
-#Block_3
-	CONST c 140
-#end of Block_3
+#Block_9
+	CONST c 110
+#jump to Block_10
+#end of Block_9
 #Block_8
-#jump to Block_9
+	CONST c 120
+#jump to Block_10
 #end of Block_8
-#Block_1
-	JMR b a
-#ifTrue Block_11
-#ifFalse Block_10
-#end of Block_1
+#Block_10
+	CONST c 130
+#jump to Block_11
+#end of Block_10
+#Block_5
+	CONST c 140
+#jump to Block_11
+#end of Block_5
 #Block_11
-	CONST c 150
 #jump to Block_12
 #end of Block_11
-#Block_10
-	JMR a b
-#ifTrue Block_14
-#ifFalse Block_13
-#end of Block_10
-#Block_14
-	CONST c 160
-#jump to Block_15
-#end of Block_14
+#Block_2
+#end of Block_2
 #Block_13
-	CONST c 170
+	JMR b a
+#ifTrue Block_15
+#ifFalse Block_14
 #end of Block_13
 #Block_15
+	CONST c 150
+#jump to Block_16
 #end of Block_15
+#Block_14
+#end of Block_14
+#Block_17
+	JMR a b
+#ifTrue Block_19
+#ifFalse Block_18
+#end of Block_17
+#Block_19
+	CONST c 160
+#jump to Block_20
+#end of Block_19
+#Block_18
+	CONST c 170
+#jump to Block_20
+#end of Block_18
+#Block_20
+#jump to Block_16
+#end of Block_20
+#Block_16
+#jump to Block_12
+#end of Block_16
 #Block_12
-#end of Block_12
-#Block_9
 	HALT  
-#end of Block_9
+#end of Block_12

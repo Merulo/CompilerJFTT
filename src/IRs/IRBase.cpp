@@ -2,7 +2,7 @@
 
 IRBase::IRBase(std::string IRName) : _IRName(IRName)
 {
-    generateBlock();
+    _currentBlock.push(generateBlock());
 }
 
 // std::vector<Line> IRBase::getLines()

@@ -1,0 +1,16 @@
+DECLARE
+  a; b; c; d;
+IN
+  a := 10;
+  b := 20;
+  c := 30;
+  d := 40;
+  DO
+    WRITE a;
+    DO
+      WRITE b;
+    WHILE 0 > 1 ENDDO    
+    WRITE c;
+  WHILE 2 > 3 ENDDO
+  WRITE d;
+END

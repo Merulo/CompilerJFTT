@@ -1,0 +1,10 @@
+DECLARE
+  a; b;
+IN
+  a := 10;
+  b := 20;
+  DO
+    WRITE a;
+  WHILE 1 > 0 ENDDO
+  WRITE b;
+END

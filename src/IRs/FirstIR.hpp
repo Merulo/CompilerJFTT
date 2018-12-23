@@ -31,8 +31,14 @@ class FirstIR : public IRBase
     void setFirstExtraParameter(cStrRef first);
     void setSecondExtraParameter(cStrRef second);
 
+    //for conditions
     void endElse();
     void endIf();
+    void closeBlock();
+
+    //for loops
+    void endWhileDo();
+    void endDoWhile();
 
     private:
     void reset();
@@ -43,4 +49,5 @@ class FirstIR : public IRBase
     std::string _operation;
     std::string _firstExtraParameter;
     std::string _secondExtraParameter;
+    std::stack<Block> _conditionBlocks;
 };

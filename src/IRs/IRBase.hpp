@@ -20,12 +20,12 @@ class IRBase
     void setSymbolTable(std::shared_ptr<SymbolTable> symbolTable);
 
     protected:
-    void generateBlock()
+    Block generateBlock()
     {
         Block block;
         block.blockName = "Block_" + std::to_string(_blockCounter);
         _blockCounter++;
-        _currentBlock.push(block);
+        return block;
     }
 
     std::shared_ptr<SymbolTable> _symbolTable;

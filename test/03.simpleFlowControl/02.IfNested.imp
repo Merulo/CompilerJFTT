@@ -5,20 +5,20 @@ IN
     IF 2 > 3 THEN
       IF 4 > 5 THEN
         IF 6 > 7 THEN
-          a:= 8;
+          a:= 100;
         ENDIF
       ENDIF
     ENDIF
-    IF 9 > 10 THEN
-      a:= 11;
+    IF 8 > 9 THEN
+      a:= 200;
+    ENDIF
+    IF 10 > 11 THEN
+      a:= 300;
     ENDIF
     IF 12 > 13 THEN
-      a:= 14;
+      a:= 400;
     ENDIF
-    IF 15 > 16 THEN
-      a:= 17;
-    ENDIF
-    a := 18;       
+    a := 500;       
   ENDIF
-  a := 19;
+  a := 600;
 END

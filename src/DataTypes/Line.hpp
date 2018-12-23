@@ -24,6 +24,8 @@ struct Block
     std::string blockIfTrue;
     std::string blockIfFalse;
     std::string blockJump;
+    inline bool operator==(const Block& rhs){ return blockName == rhs.blockName; }
+
     friend std::ostream& operator<<(std::ostream& os, const Block& b)
     {
         os << "#"<< b.blockName << std::endl;

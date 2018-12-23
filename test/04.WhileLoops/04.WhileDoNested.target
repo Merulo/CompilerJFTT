@@ -2,6 +2,8 @@ FirstIR:
 #Block_0
 	CONST a 10
 	CONST b 20
+	CONST c 30
+	CONST d 40
 #end of Block_0
 #Block_1
 	CONST variable_0 0
@@ -11,13 +13,23 @@ FirstIR:
 #ifFalse Block_2
 #end of Block_1
 #Block_3
-	CONST a 100
-#jump to Block_4
+	WRITE a 
+#jump to Block_1
 #end of Block_3
 #Block_2
-	CONST b 200
-#jump to Block_4
 #end of Block_2
 #Block_4
-	HALT  
+	CONST variable_2 2
+	CONST variable_3 3
+	JMR variable_2 variable_3
+#ifTrue Block_6
+#ifFalse Block_5
 #end of Block_4
+#Block_6
+	WRITE b 
+#jump to Block_4
+#end of Block_6
+#Block_5
+	WRITE d 
+	HALT  
+#end of Block_5

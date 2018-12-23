@@ -67,8 +67,14 @@ command: identifier ASSIGN expression SEMICOLON
     {
         d.FIR.endIf();
     }
-    | WHILE condition DO commands ENDWHILE {}
-    | DO commands WHILE condition ENDDO {}
+    | WHILE condition DO commands ENDWHILE 
+    {
+        d.FIR.endWhileDo();
+    }
+    | DO {d.FIR.closeBlock();} commands WHILE condition ENDDO 
+    {
+        d.FIR.endDoWhile();
+    }
     | FOR PIDIDENTIFIER FROM value TO value DO commands ENDFOR {}
     | FOR PIDIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
     | READ identifier SEMICOLON 
@@ -121,27 +127,27 @@ expression: value
             handleOperation(d, "MOD", $1, $3);            
         }
 ;
-condition: value EQUAL value 
+condition: value EQUAL value {d.FIR.closeBlock();}
     {    
         handleConditionOperation(d, "JEQ", $1, $3);
     }
-    | value NOT_EQUAL value 
+    | value NOT_EQUAL value {d.FIR.closeBlock();}
     {
         handleConditionOperation(d, "JNE", $1, $3);
     }
-    | value LESS value 
+    | value LESS value {d.FIR.closeBlock();}
     {
         handleConditionOperation(d, "JLS", $1, $3);
     }
-    | value MORE value     
+    | value MORE value {d.FIR.closeBlock();}
     {
         handleConditionOperation(d, "JMR", $1, $3);
     }
-    | value LESS_EQUAL value 
+    | value LESS_EQUAL value {d.FIR.closeBlock();}
     {
         handleConditionOperation(d, "JLE", $1, $3);
     }
-    | value MORE_EQUAL value 
+    | value MORE_EQUAL value {d.FIR.closeBlock();}
     {
         handleConditionOperation(d, "JME", $1, $3);
     }
