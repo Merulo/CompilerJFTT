@@ -1,5 +1,5 @@
-#include "Scanner.cpp"
-#include "Parser.cpp"
+#include "External/Scanner.cpp"
+#include "External/Parser.cpp"
 
 
 int main(int argc, char** argv)

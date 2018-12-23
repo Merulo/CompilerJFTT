@@ -14,9 +14,10 @@ CXX_FLAGS += -MMD
 LD_FLAGS = $(COMMON_FLAGS)
 LD_FLAGS += -lpthread
 
-SOURCE_DIR = src
-BINARY_DIR = bin
-TEST_DIR   = test
+SOURCE_DIR 		= src
+BINARY_DIR 		= bin
+TEST_DIR   		= test
+EXTERNAL_DIR	= src/External
 
 MAIN = $(SOURCE_DIR)/Main.cpp
 
@@ -31,8 +32,8 @@ all: start main.exe
 .PHONY : main.exe
 
 start:
-	flex -o $(SOURCE_DIR)/Scanner.cpp $(SOURCE_DIR)/scanner.l
-	bison -d -o $(SOURCE_DIR)/Parser.cpp $(SOURCE_DIR)/parser.y
+	flex -o $(EXTERNAL_DIR)/Scanner.cpp $(EXTERNAL_DIR)/scanner.l
+	bison -d -o $(EXTERNAL_DIR)/Parser.cpp $(EXTERNAL_DIR)/parser.y
 
 main.exe: $(MAIN) $(OBJECTS)
 	$(LD) $(LD_FLAGS) $(OBJECTS) $(MAIN) -o $@
