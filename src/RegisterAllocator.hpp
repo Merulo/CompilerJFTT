@@ -24,20 +24,13 @@ class RegisterAllocator
     void handleWrite(std::string& variableName);
     void handleCopy(Line line);
     void handleSimpleMath(Line line);
+    void handleJump(Line line);
+    void handleLabel(Line line);
 
     //todo upgrade this so that less calls to saving [Curent state: ROUND ROBIN]
     std::pair<Register, bool> getRegisterForVariable(std::string name);
     void prepareAddressRegister(Register& r);
-    void loadIfNeeded(Register& r, bool value)
-    {
-        if(!value && !_symbolTable.isConst(r.variableName))
-        {
-            prepareAddressRegister(r);
-            r.value = 0;
-            _lines.push_back("LOAD " + r.registerName);
-
-        }
-    }
+    void loadIfNeeded(Register& r, bool value);
     
     std::vector<std::string> _lines;
     std::ofstream _outputFile;

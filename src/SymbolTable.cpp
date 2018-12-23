@@ -62,6 +62,10 @@ void SymbolTable::setConsts(std::map<std::string, std::string> consts)
 
 bool SymbolTable::isConst(std::string name)
 {
+    if (name.find("temporary") != std::string::npos)
+    {
+        return true;
+    }
     return _consts.find(name) != _consts.end();
 }
 

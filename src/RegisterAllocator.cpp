@@ -42,7 +42,7 @@ void RegisterAllocator::compile(const std::string& fileName, std::vector<Line> f
 
     for (auto& l : finalIR)
     {
-        std::cerr<<l.operation<<" "<<l.one<<" "<<l.two<<std::endl;
+        // std::cerr<<l.operation<<" "<<l.one<<" "<<l.two<<std::endl;
         if (l.operation == "READ")
         {
             handleRead(l.one);
@@ -66,6 +66,14 @@ void RegisterAllocator::compile(const std::string& fileName, std::vector<Line> f
         if (l.operation == "ADD" || l.operation == "SUB")
         {
             handleSimpleMath(l);
+        }
+        if (l.operation == "JUMP" || l.operation == "JZERO")
+        {
+            handleJump(l);
+        }
+        if (!l.thisLabel.empty())
+        {
+            handleLabel(l);
         }
     }
 }
@@ -113,7 +121,6 @@ void RegisterAllocator::handleCopy(Line line)
 
 void RegisterAllocator::handleSimpleMath(Line line)
 {
-    print();
     auto firstRegister = getRegisterForVariable(line.one);
     auto secondRegister = getRegisterForVariable(line.two);
     //todo: decide based which one will be cheaper
@@ -123,6 +130,28 @@ void RegisterAllocator::handleSimpleMath(Line line)
     _lines.push_back(line.operation + " " + firstRegister.first.registerName + " " + secondRegister.first.registerName);
     _registers.push_back(firstRegister.first);
     _registers.push_back(secondRegister.first);    
+}
+
+void RegisterAllocator::handleJump(Line line)
+{
+    auto r = getRegisterForVariable(line.one);
+    _lines.push_back(line.operation + " " + r.first.registerName + " " + line.targetLabel);
+    _registers.push_back(r.first);
+}
+
+void RegisterAllocator::handleLabel(Line line)
+{
+    std::string searched = line.thisLabel;
+    std::cerr<<"searching for "<<searched<<std::endl;
+    size_t currentInstruction = _lines.size();
+    for(auto& l : _lines)
+    {
+        if (l.find(searched) != std::string::npos)
+        {
+            l.replace(l.find(searched), searched.length(), std::to_string(currentInstruction));
+            return;
+        }
+    }
 }
 
 //todo upgrade this so that less calls to saving [Curent state: ROUND ROBIN]
@@ -141,6 +170,13 @@ std::pair<Register, bool> RegisterAllocator::getRegisterForVariable(std::string 
         }
     }
 
+    if(_registers.size() == 0)
+    {
+        std::cerr<<"REGISTERS WERE NOT RETURNED TO POOL"<<std::endl;
+    }
+
+    //todo: first choose a register with variable_x or temporary
+
     Register r = _registers.front();
     _registers.pop_front();
     // _registers.push_back(r);
@@ -151,6 +187,17 @@ std::pair<Register, bool> RegisterAllocator::getRegisterForVariable(std::string 
     }
     r.variableName = name;
     return {r, false};
+}
+
+void RegisterAllocator::loadIfNeeded(Register& r, bool value)
+{
+    if(!value && !_symbolTable.isConst(r.variableName))
+    {
+        prepareAddressRegister(r);
+        r.value = 0;
+        _lines.push_back("LOAD " + r.registerName);
+
+    }
 }
 
 void RegisterAllocator::prepareAddressRegister(Register& r)

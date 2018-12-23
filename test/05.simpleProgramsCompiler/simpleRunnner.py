@@ -30,9 +30,9 @@ testCounter = 0
 for i in filtered:
 	# sys.stdout.write(COLORS.HEADER)
 	# somefile.result
-	rm = i.replace("imp", "rm")
+	rm = i.replace(".imp", ".rm")
 	# somefile.target
-	target = i.replace("imp", "target")
+	target = i.replace(".imp", ".target")
 	fNull = open(os.devnull, 'w')	
 	testCounter += 1
 	
@@ -43,8 +43,8 @@ for i in filtered:
 	process = subprocess.Popen(cmd, stdout=fNull, stderr=fNull)
 	process.wait()
 	
-	result = i.replace("imp", "result")
-	data = i.replace("imp", "data")
+	result = i.replace(".imp", ".result")
+	data = i.replace(".imp", ".data")
 	if os.path.isfile(data):
 		fIn =  open(data, "r")
 	fOut = open(result, "w")

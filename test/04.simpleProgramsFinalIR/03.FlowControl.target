@@ -1,6 +1,9 @@
 FinalIR:
 CONST: a 1 
 CONST: b 2 
+COPY: temporary_0 a 
+SUB: temporary_0 b 
+JZERO: temporary_0  goto L_0
 WRITE: a  
 JUMP:   goto L_1
 #L_0
