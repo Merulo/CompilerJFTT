@@ -17,6 +17,8 @@ IN
     ENDIF
     IF 15 > 16 THEN
       a:= 17;
-    ENDIF        
+    ENDIF
+    a := 18;       
   ENDIF
+  a := 19;
 END

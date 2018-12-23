@@ -1,7 +1,10 @@
 FirstIR:
-CONST: a 1 
-CONST: b 2 
-CONST: c 3 
-COPY: a b 
-COPY: a c 
-HALT:   
+#Block_0
+	CONST a 1
+	CONST b 2
+	CONST c 3
+	COPY a b
+	COPY a c
+	COPY a a
+	HALT  
+#end of Block_0

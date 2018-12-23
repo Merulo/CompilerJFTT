@@ -1,12 +1,20 @@
 FirstIR:
-CONST: a 10 
-CONST: b 20 
-CONST: variable_0 0 
-CONST: variable_1 1 
-JLE: variable_0 variable_1 goto L_0
-CONST: a 100 
-JUMP:   goto L_1
-#L_0
-CONST: b 200 
-#L_1
-HALT:   
+#Block_0
+	CONST a 10
+	CONST b 20
+	CONST variable_0 0
+	CONST variable_1 1
+	JMR variable_0 variable_1
+#ifTrue Block_2
+#ifFalse Block_1
+#end of Block_0
+#Block_2
+	CONST a 100
+#jump to Block_3
+#end of Block_2
+#Block_1
+	CONST b 200
+#end of Block_1
+#Block_3
+	HALT  
+#end of Block_3

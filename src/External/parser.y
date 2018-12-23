@@ -84,9 +84,7 @@ command: identifier ASSIGN expression SEMICOLON
 ;
 elseProduction: ELSE
 {
-    d.FIR.addJump();
-    d.FIR.endIf();
-    d.FIR.swap();
+    d.FIR.endElse();
 };
 
 expression: value 
@@ -125,27 +123,27 @@ expression: value
 ;
 condition: value EQUAL value 
     {    
-        handleConditionOperation(d, "JNE", $1, $3);
+        handleConditionOperation(d, "JEQ", $1, $3);
     }
     | value NOT_EQUAL value 
     {
-        handleConditionOperation(d, "JEQ", $1, $3);
+        handleConditionOperation(d, "JNE", $1, $3);
     }
     | value LESS value 
     {
-        handleConditionOperation(d, "JME", $1, $3);
+        handleConditionOperation(d, "JLS", $1, $3);
     }
     | value MORE value     
     {
-        handleConditionOperation(d, "JLE", $1, $3);
+        handleConditionOperation(d, "JMR", $1, $3);
     }
     | value LESS_EQUAL value 
     {
-        handleConditionOperation(d, "JMR", $1, $3);
+        handleConditionOperation(d, "JLE", $1, $3);
     }
     | value MORE_EQUAL value 
     {
-        handleConditionOperation(d, "JLS", $1, $3);
+        handleConditionOperation(d, "JME", $1, $3);
     }
 ;
 value: NUMBER {}

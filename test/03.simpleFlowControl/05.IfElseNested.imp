@@ -4,7 +4,7 @@ IN
   a := 10;
   b := 20;
   IF a > b THEN
-    IF a > b THEN
+    IF b > a THEN
       IF a > b THEN
         c := 110;
       ELSE
@@ -15,7 +15,7 @@ IN
       c := 140;
     ENDIF
   ELSE
-    IF a > b THEN
+    IF b > a THEN
       c := 150;
     ELSE
       IF a > b THEN

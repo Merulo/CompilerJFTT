@@ -2,20 +2,16 @@
 
 void FirstIR::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 {
-    while (_labelsToRemove > 0)
-    {
-        // std::cerr<<"Adding label="<<_labels.top()<<std::endl; 
-        Line line;
-        line.thisLabel = _labels.top();
-        _labels.pop();
-        _lines.push_back(line);
-        _labelsToRemove--;
-    }
     Line line;
     line.operation = operation;
     line.one = one;
     line.two = two;
-    _lines.push_back(line);
+    _currentBlock.top().lines.push_back(line);
+    std::cerr<<line<<std::endl;
+    if (operation == "HALT")
+    {
+        _blocks.push_back(_currentBlock.top());
+    }
 }
 
 void FirstIR::handleMathOperation(cStrRef resultName)
@@ -27,10 +23,7 @@ void FirstIR::handleMathOperation(cStrRef resultName)
     }
     else if (_operation == "COPY")
     {
-        if (resultName != _firstExtraParameter)
-        {
-            addNewCode("COPY", resultName, _firstExtraParameter);      
-        }
+        addNewCode("COPY", resultName, _firstExtraParameter);      
     }
     else if (_secondExtraParameter == resultName)
     {
@@ -61,10 +54,13 @@ void FirstIR::handleMathOperation(cStrRef resultName)
 void FirstIR::handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two)
 {
     addNewCode(operation, one, two);
-    std::string label = generateLabel();
-    _lines.back().targetLabel = label;
-    std::cout<<"Generated label="<<label<<std::endl;
-    _labels.push(label);
+    _blocks.push_back(_currentBlock.top());
+    _currentBlock.pop();
+    generateBlock();
+    _blocks.back().blockIfFalse = _currentBlock.top().blockName;
+    generateBlock();
+    _blocks.back().blockIfTrue = _currentBlock.top().blockName;    
+
 }
 
 void FirstIR::setOperation(cStrRef operation)
@@ -89,29 +85,23 @@ std::string FirstIR::getVariable(std::string value)
     return result;
 }
 
-void FirstIR::addJump()
+void FirstIR::endElse()
 {
-    addNewCode("JUMP");
-    std::string label = generateLabel();
-    _lines.back().targetLabel = label;
-    std::cout<<"Generated label="<<label<<std::endl;
-    _labels.push(label);        
-}
-
-void FirstIR::swap()
-{
-    std::string s1 = _labels.top();
-    _labels.pop();
-    std::string s2 = _labels.top();
-    _labels.pop();
-    _labels.push(s1);
-    _labels.push(s2);
+    Block s3 = _currentBlock.top();
+    _currentBlock.pop();
+    Block s2 = _currentBlock.top();
+    _currentBlock.pop();
+    generateBlock();
+    Block s1 = _currentBlock.top();
+    s3.blockJump = s1.blockName;
+    _blocks.push_back(s3);
+    _currentBlock.push(s2);
 }
 
 void FirstIR::endIf()
 {
-    // std::cerr<<"ENDIF="<<tester<<std::endl;
-    _labelsToRemove++;
+    _blocks.push_back(_currentBlock.top());
+    _currentBlock.pop();
 }
 
 /*
@@ -131,11 +121,4 @@ void FirstIR::handleNonCommutativeOperation(cStrRef resultName, cStrRef operatio
     addNewCode("COPY", reg, resultName);
     addNewCode("COPY", resultName, _firstExtraParameter);
     addNewCode(operation, resultName, reg);
-}
-
-std::string FirstIR::generateLabel()
-{
-    std::string result = "L_" + std::to_string(_labelCount);
-    _labelCount++;
-    return result; 
 }

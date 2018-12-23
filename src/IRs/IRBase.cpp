@@ -2,12 +2,13 @@
 
 IRBase::IRBase(std::string IRName) : _IRName(IRName)
 {
+    generateBlock();
 }
 
-std::vector<Line> IRBase::getLines()
-{
-    return _lines;
-}
+// std::vector<Line> IRBase::getLines()
+// {
+//     return _lines;
+// }
 
 void IRBase::setSymbolTable(std::shared_ptr<SymbolTable> symbolTable)
 {
@@ -36,18 +37,23 @@ void IRBase::print(cStrRef fileName)
 void IRBase::writeToStream(std::ostream& stream)
 {
     stream<<_IRName<<":"<<std::endl;
-    for(auto& l : _lines)
+    for(auto& b : _blocks)
     {
-        if (!l.thisLabel.empty())
-        {
-            stream<<"#"<<l.thisLabel<<std::endl;
-            continue;
-        }
-        stream<<l.operation<<": "<<l.one<<" "<<l.two<<" ";
-        if (!l.targetLabel.empty())
-        {
-            stream<<"goto "<<l.targetLabel;
-        }
-        stream<<std::endl;
+        stream << b;
     }
+
+    // for(auto& l : _lines)
+    // {
+    //     if (!l.thisLabel.empty())
+    //     {
+    //         stream<<"#"<<l.thisLabel<<std::endl;
+    //         continue;
+    //     }
+    //     stream<<l.operation<<": "<<l.one<<" "<<l.two<<" ";
+    //     if (!l.targetLabel.empty())
+    //     {
+    //         stream<<"goto "<<l.targetLabel;
+    //     }
+    //     stream<<std::endl;
+    // }
 }

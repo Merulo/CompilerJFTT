@@ -1,15 +1,17 @@
 FirstIR:
-CONST: a 1 
-CONST: b 2 
-CONST: c 3 
-CONST: variable_0 2 
-COPY: a b 
-ADD: a variable_0 
-CONST: variable_1 2 
-COPY: a variable_1 
-ADD: a b 
-COPY: a b 
-ADD: a c 
-ADD: a b 
-ADD: a b 
-HALT:   
+#Block_0
+	CONST a 1
+	CONST b 2
+	CONST c 3
+	CONST variable_0 2
+	COPY a b
+	ADD a variable_0
+	CONST variable_1 2
+	COPY a variable_1
+	ADD a b
+	COPY a b
+	ADD a c
+	ADD a b
+	ADD a b
+	HALT  
+#end of Block_0

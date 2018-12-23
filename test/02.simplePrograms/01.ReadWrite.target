@@ -1,6 +1,8 @@
 FirstIR:
-READ: a  
-READ: b  
-WRITE: a  
-WRITE: b  
-HALT:   
+#Block_0
+	READ a 
+	READ b 
+	WRITE a 
+	WRITE b 
+	HALT  
+#end of Block_0

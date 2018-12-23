@@ -31,23 +31,16 @@ class FirstIR : public IRBase
     void setFirstExtraParameter(cStrRef first);
     void setSecondExtraParameter(cStrRef second);
 
-    void addJump();
-    void swap();
+    void endElse();
     void endIf();
 
     private:
-    std::string generateLabel();    
     void reset();
     void handleNonCommutativeOperation(cStrRef resultName, cStrRef operation);
 
     int _registerCount = 0;
-    int _labelsToRemove = 0;
-    int _labelCount = 0;
 
     std::string _operation;
     std::string _firstExtraParameter;
     std::string _secondExtraParameter;
-
-    std::stack<std::string> _labels;
-    // std::map<std::string, std::string> _consts;
 };
