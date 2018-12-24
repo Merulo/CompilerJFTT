@@ -1,0 +1,13 @@
+FirstIR:
+#Block_0
+	CONST a 1
+	CONST b 2
+	CONST c 3
+	COPY a b
+	MOD a c
+	MOD a b
+	COPY variable_0 a
+	COPY a b
+	MOD a variable_0
+	HALT  
+#end of Block_0

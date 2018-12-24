@@ -84,8 +84,15 @@ command: identifier ASSIGN expression SEMICOLON
     }
     | WRITE value SEMICOLON
     {
-        checkForErrors(d.ST->checkVariableExistsAndIsInitialized($2.name));
-        d.FIR.addNewCode("WRITE", $2.name);
+        if (!$2.name.empty())
+        {
+            checkForErrors(d.ST->checkVariableExistsAndIsInitialized($2.name));
+            d.FIR.addNewCode("WRITE", $2.name);
+        }
+        else
+        {
+            d.FIR.addNewCode("WRITE", std::to_string($2.value));
+        }
     }
 ;
 elseProduction: ELSE

@@ -1,0 +1,8 @@
+DECLARE
+  a; b; c; arr(2:100);
+IN
+  a := 5;
+  b := 6;
+  c := 7;
+  arr(a) := 10;
+END

@@ -1,0 +1,39 @@
+FirstIR:
+#Block_0
+	CONST a 10
+	CONST b 20
+	CONST c 30
+	CONST d 40
+#end of Block_0
+#Block_1
+	WRITE a 
+#end of Block_1
+#Block_2
+	CONST variable_0 2
+	CONST variable_1 3
+	JMR variable_0 variable_1
+#ifTrue Block_4
+#ifFalse Block_3
+#end of Block_2
+#Block_4
+#jump to Block_1
+#end of Block_4
+#Block_3
+#end of Block_3
+#Block_5
+	WRITE b 
+#end of Block_5
+#Block_6
+	CONST variable_2 0
+	CONST variable_3 1
+	JMR variable_2 variable_3
+#ifTrue Block_8
+#ifFalse Block_7
+#end of Block_6
+#Block_8
+#jump to Block_5
+#end of Block_8
+#Block_7
+	WRITE c 
+	HALT  
+#end of Block_7
