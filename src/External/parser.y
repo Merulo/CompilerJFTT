@@ -77,10 +77,12 @@ command: identifier ASSIGN expression SEMICOLON
     }
     | FOR PIDIDENTIFIER FROM value TO value DO {d.FIR.closeForBlock();} commands ENDFOR 
     {
-        d.FIR.insertFor($2.name, $4, $6);
-        // d.FIR.addNewCode("FOR", $4.name, $6.name);
+        d.FIR.insertFor($2.name, $4, $6, true);
     }
-    | FOR PIDIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
+    | FOR PIDIDENTIFIER FROM value DOWNTO value DO {d.FIR.closeForBlock();} commands ENDFOR 
+    {
+        d.FIR.insertFor($2.name, $4, $6, false);
+    }
     | READ identifier SEMICOLON 
     {
         checkForErrors(d.ST->checkVariableExists($2.name));

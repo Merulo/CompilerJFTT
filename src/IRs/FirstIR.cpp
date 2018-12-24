@@ -147,6 +147,130 @@ void FirstIR::endDoWhile()
     _blocks.push_back(endOfTrueBlock);       
 }
 
+void FirstIR::closeForBlock()
+{
+    //closes current block
+    _blocks.push_back(_currentBlock.top());
+    _currentBlock.pop();
+    Block b1 = generateBlock();
+    _currentBlock.push(b1);
+    _forBlocks.push(b1);       
+}
+
+void FirstIR::insertFor(std::string iterator, Data from, Data to, bool isForTo)
+{
+    closeForBlock();
+    Block b1 = _forBlocks.top();
+    _forBlocks.pop();
+    Block b2 = _forBlocks.top();
+    _forBlocks.pop();
+
+    Block firstControlBlock = createBeforeForBlock(iterator, from, to, isForTo);
+    firstControlBlock.blockIfFalse = b2.blockName;
+    firstControlBlock.blockIfTrue = b1.blockName;
+
+    Block secondControlBlock = createSecondControlBlock(iterator, isForTo);
+    secondControlBlock.blockIfFalse = b2.blockName;
+    secondControlBlock.blockIfTrue = b1.blockName;        
+    
+    for(size_t i = 0; i < _blocks.size(); i++)
+    {
+        if (_blocks[i] == b2)
+        {
+            _blocks.insert(_blocks.begin() + i, firstControlBlock);
+            break;
+        }
+    }
+
+    _blocks.push_back(_currentBlock.top());
+    _currentBlock.pop();
+    Block testing = generateBlock();
+    _currentBlock.push(testing);
+
+    for(size_t i = 0; i < _blocks.size(); i++)
+    {
+        if (_blocks[i] == b1)
+        {
+            _blocks.insert(_blocks.begin() + i, secondControlBlock);
+            return;
+        }
+    }        
+
+}
+
+Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bool isForTo)
+{
+    Block b = generateBlock();
+    Line iteratorInit = getLine(from);
+    iteratorInit.one = iterator;
+
+    Line counterInit = getLine(to);
+    counterInit.one = iterator + forControlName;
+
+    Line counterFinal = getLine(from);
+    counterFinal.operation = "SUB";
+    counterFinal.one = counterInit.one;
+    counterFinal.two = iterator;
+
+    if (!isForTo)
+    {
+        std::swap(counterInit.two, counterFinal.two);
+    }
+
+    b.lines.push_back(iteratorInit);
+    b.lines.push_back(counterInit);
+    b.lines.push_back(counterFinal);
+
+    Line jump;
+    jump.operation = "JZERO";
+    jump.one = counterInit.one;
+    b.lines.push_back(jump);
+    return b;
+}
+
+Block FirstIR::createSecondControlBlock(std::string iterator, bool isForTo)
+{
+    Block b = generateBlock();
+    Line incLine;
+    incLine.operation = "INC";
+    incLine.one = iterator;
+
+    Line decLine;
+    decLine.operation = "DEC";
+    decLine.one = iterator + forControlName;
+
+    Line line;
+    line.operation = "JZERO";
+    line.one = iterator + forControlName;
+
+    if (!isForTo)
+    {
+        incLine.operation = "DEC";
+    }
+
+    b.lines.push_back(incLine);
+    b.lines.push_back(decLine);
+    b.lines.push_back(line);    
+
+    return b;
+}
+
+Line FirstIR::getLine(Data d)
+{
+    Line l;
+    if (!d.name.empty())
+    {
+        l.operation = "COPY";
+        l.two = d.name;
+    }
+    else
+    {
+        l.operation = "CONST";
+        l.two = std::to_string(d.value);
+    }
+    return l;
+}
+
 /*
 PRIVATE
 */

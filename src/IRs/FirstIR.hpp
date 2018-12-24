@@ -38,120 +38,14 @@ class FirstIR : public IRBase
     void endIf();
     void closeConditionBlock();
 
-
-    void closeForBlock()
-    {
-        //closes current block
-        _blocks.push_back(_currentBlock.top());
-        _currentBlock.pop();
-        Block b1 = generateBlock();
-        _currentBlock.push(b1);
-        _tests.push(b1);       
-    }
     //for loops
+    void closeForBlock();
     void endWhileDo();
     void endDoWhile();
-    void insertFor(std::string iterator, Data from, Data to)
-    {
-        closeForBlock();
-        Block b1 = _tests.top();
-        _tests.pop();
-        Block b2 = _tests.top();
-        _tests.pop();
-
-        Block firstControlBlock = createBeforeForBlock(iterator, from, to);
-        firstControlBlock.blockIfFalse = b2.blockName;
-        firstControlBlock.blockIfTrue = b1.blockName;
-
-        Block secondControlBlock = createSecondControlBlock(iterator);
-        secondControlBlock.blockIfFalse = b2.blockName;
-        secondControlBlock.blockIfTrue = b1.blockName;        
-        
-        for(size_t i = 0; i < _blocks.size(); i++)
-        {
-            if (_blocks[i] == b2)
-            {
-                _blocks.insert(_blocks.begin() + i, firstControlBlock);
-                break;
-            }
-        }
-
-        _blocks.push_back(_currentBlock.top());
-        _currentBlock.pop();
-        Block testing = generateBlock();
-        _currentBlock.push(testing);
-
-        for(size_t i = 0; i < _blocks.size(); i++)
-        {
-            if (_blocks[i] == b1)
-            {
-                _blocks.insert(_blocks.begin() + i, secondControlBlock);
-                return;
-            }
-        }        
-
-    }
-
-    Block createBeforeForBlock(std::string iterator, Data from, Data to)
-    {
-        Block b = generateBlock();
-        Line iteratorInit = getLine(from);
-        iteratorInit.one = iterator;
-        b.lines.push_back(iteratorInit);
-
-        Line counterInit = getLine(to);
-        counterInit.one = iterator + forControlName;
-        b.lines.push_back(counterInit);
-
-        Line counterFinal = getLine(from);
-        counterFinal.operation = "SUB";
-        counterFinal.one = counterInit.one;
-        counterFinal.two = iterator;
-        b.lines.push_back(counterFinal);
-
-        Line jump;
-        jump.operation = "JZERO";
-        jump.one = counterInit.one;
-        b.lines.push_back(jump);
-        return b;
-    }
-
-    Block createSecondControlBlock(std::string iterator)
-    {
-        Block b = generateBlock();
-        Line incLine;
-        incLine.operation = "INC";
-        incLine.one = iterator;
-        b.lines.push_back(incLine);
-
-        Line decLine;
-        decLine.operation = "DEC";
-        decLine.one = iterator + forControlName;
-        b.lines.push_back(decLine);
-
-        Line line;
-        line.operation = "JZERO";
-        line.one = iterator + forControlName;
-        b.lines.push_back(line);    
-
-        return b;
-    }
-
-    Line getLine(Data d)
-    {
-        Line l;
-        if (!d.name.empty())
-        {
-            l.operation = "COPY";
-            l.two = d.name;
-        }
-        else
-        {
-            l.operation = "CONST";
-            l.two = std::to_string(d.value);
-        }
-        return l;
-    }
+    void insertFor(std::string iterator, Data from, Data to, bool isForTo);
+    Block createBeforeForBlock(std::string iterator, Data from, Data to, bool isForTo);
+    Block createSecondControlBlock(std::string iterator, bool isForTo);
+    Line getLine(Data d);
 
     private:
     void reset();
@@ -164,13 +58,5 @@ class FirstIR : public IRBase
     std::string _secondExtraParameter;
     std::string _arrayValue;
     std::stack<Block> _conditionBlocks;
-    std::stack<Block> _tests;
-
-    void print123()
-    {
-        for(auto b : _blocks)
-        {
-            std::cout<<"BLOCKS="<<b.blockName<<std::endl;
-        }
-    }
+    std::stack<Block> _forBlocks;
 };
