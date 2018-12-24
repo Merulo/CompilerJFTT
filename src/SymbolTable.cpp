@@ -86,6 +86,11 @@ std::string SymbolTable::addTable(std::string name, ull beginIndex, ull endIndex
 
 std::string SymbolTable::checkVariableExists(std::string name)
 {
+    if (name.find("(") != std::string::npos)
+    {
+        name = name.substr(0, name.find("("));
+    }
+
     if (! isNameTaken(name))
     {
         return "undeclared variable " + name;
@@ -117,6 +122,11 @@ std::string SymbolTable::checkVariableIsVariable(std::string name)
 
 std::string SymbolTable::checkVariableExistsAndIsInitialized(std::string name)
 {
+    if (name.find("(") != std::string::npos)
+    {
+        name = name.substr(0, name.find("("));
+    }
+
     if (! isNameTaken(name))
     {
         return "undeclared variable " + name;

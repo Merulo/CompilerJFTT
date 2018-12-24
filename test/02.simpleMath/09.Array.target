@@ -1,13 +1,17 @@
 FirstIR:
 #Block_0
-	CONST a 1
-	CONST b 2
-	CONST c 3
-	COPY a b
-	MOD a c
-	MOD a b
-	COPY variable_0 a
-	COPY a b
-	MOD a variable_0
+	CONST arr(0) 10
+	COPY arr(10) arr(0)
+	COPY arr(18) arr(0)
+	ADD arr(18) arr(1)
+	COPY arr(18) arr(0)
+	MUL arr(18) arr(1)
+	COPY arr(18) arr(0)
+	SUB arr(18) arr(1)
+	COPY arr(18) arr(0)
+	DIV arr(18) arr(1)
+	COPY arr(18) arr(0)
+	MOD arr(18) arr(1)
+	ADD arr(0) arr(0)
 	HALT  
 #end of Block_0

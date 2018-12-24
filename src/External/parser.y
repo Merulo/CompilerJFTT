@@ -168,11 +168,14 @@ identifier: PIDIDENTIFIER
     }
     | PIDIDENTIFIER LEFT_BRACKET PIDIDENTIFIER RIGHT_BRACKET 
     {
-        checkForErrors(d.ST->checkVariableIsTable($1.name));     
+        checkForErrors(d.ST->checkVariableIsTable($1.name));
+        checkForErrors(d.ST->checkVariableIsTable($3.name));
+        $$.name = $1.name + "(" + $3.name + ")";      
     }
     | PIDIDENTIFIER LEFT_BRACKET NUMBER RIGHT_BRACKET 
     {
-        checkForErrors(d.ST->checkVariableIsTable($1.name));   
+        checkForErrors(d.ST->checkVariableIsTable($1.name));  
+        $$.name = $1.name + "(" + std::to_string($3.value) + ")";       
     }
 ;
 %%

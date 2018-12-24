@@ -49,5 +49,6 @@ class FirstIR : public IRBase
     std::string _operation;
     std::string _firstExtraParameter;
     std::string _secondExtraParameter;
+    std::string _arrayValue;
     std::stack<Block> _conditionBlocks;
 };

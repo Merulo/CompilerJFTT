@@ -1,8 +1,12 @@
 DECLARE
-  a; b; c; arr(2:100);
+  a; b; c; arr(0:100);
 IN
-  a := 5;
-  b := 6;
-  c := 7;
-  arr(a) := 10;
+  arr(0) := 10;
+  arr(10) := arr(0);
+  arr(18) := arr(0) + arr(1);
+  arr(18) := arr(0) * arr(1);
+  arr(18) := arr(0) - arr(1);
+  arr(18) := arr(0) / arr(1);
+  arr(18) := arr(0) % arr(1);
+  arr(0) := arr(0) + arr(0);
 END
