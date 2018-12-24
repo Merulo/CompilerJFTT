@@ -1,4 +1,3 @@
-[ sito Eratostenesa ]
 DECLARE
     n; j; sito(2:100);
 IN

@@ -1,0 +1,22 @@
+FirstIR:
+#Block_0
+	READ a 
+#end of Block_0
+#Block_1
+	CONST variable_0 0
+	JMR a variable_0
+#ifTrue Block_3
+#ifFalse Block_2
+#end of Block_1
+#Block_3
+	CONST variable_1 2
+	COPY b a
+	MOD b variable_1
+	CONST variable_2 2
+	DIV a variable_2
+	WRITE b 
+#jump to Block_1
+#end of Block_3
+#Block_2
+	HALT  
+#end of Block_2
