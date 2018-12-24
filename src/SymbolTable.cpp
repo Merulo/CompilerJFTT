@@ -163,5 +163,10 @@ bool SymbolTable::isNameTaken(std::string name)
     {
         return true;
     }
+    if(_iterators.find(name) != _iterators.end())
+    {
+        return true;
+    }
+
     return false;
 }

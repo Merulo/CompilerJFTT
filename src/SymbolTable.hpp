@@ -21,10 +21,7 @@ struct Table
 
 struct Iterator 
 {
-    ull memoryCellStart = 0;
-    ull begin;
-    ull end;
-    bool increment = false;
+    ull memoryCell = 0;
 };
 
 
@@ -45,12 +42,23 @@ class SymbolTable
 
     unsigned long long getMemoryCell(std::string name);
 
+    void addToIterators(std::string name)
+    {
+        Iterator i;
+        _iterators[name] = i;
+    }
+
+    void removeIterator(std::string name)
+    {
+        _iterators.erase(name);
+    }
+
     void print();
+    bool isNameTaken(std::string name);
     
     private:
-    bool isNameTaken(std::string name);
     std::map<std::string, Variable> _variables;
     std::map<std::string, Table> _tables;
     std::map<std::string, std::string> _consts;
-    // std::map<std::string, Iterator> _iterators;
+    std::map<std::string, Iterator> _iterators;
 };

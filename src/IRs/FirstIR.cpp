@@ -2,6 +2,7 @@
 
 void FirstIR::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 {
+    // std::cerr<<"OP="<<operation<<" one="<<one<<" two="<<two<<std::endl;
     Line line;
     line.operation = operation;
     line.one = one;

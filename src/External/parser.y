@@ -75,13 +75,15 @@ command: identifier ASSIGN expression SEMICOLON
     {
         d.FIR.endDoWhile();
     }
-    | FOR PIDIDENTIFIER FROM value TO value DO {d.FIR.closeForBlock();} commands ENDFOR 
+    | forProduction FROM value TO value DO {d.FIR.closeForBlock();} commands ENDFOR 
     {
         d.FIR.insertFor($2.name, $4, $6, true);
+        d.ST->removeIterator($2.name);
     }
-    | FOR PIDIDENTIFIER FROM value DOWNTO value DO {d.FIR.closeForBlock();} commands ENDFOR 
+    | forProduction FROM value DOWNTO value DO {d.FIR.closeForBlock();} commands ENDFOR 
     {
         d.FIR.insertFor($2.name, $4, $6, false);
+        d.ST->removeIterator($2.name);
     }
     | READ identifier SEMICOLON 
     {
@@ -101,6 +103,16 @@ command: identifier ASSIGN expression SEMICOLON
         }
     }
 ;
+
+forProduction: FOR PIDIDENTIFIER
+{
+    if (d.ST->isNameTaken($2.name))
+    {
+        checkForErrors("For iterator shadows declarations");
+    }
+    d.ST->addToIterators($2.name);
+};
+
 elseProduction: ELSE
 {
     d.FIR.endElse();
@@ -170,13 +182,13 @@ value: NUMBER {}
 ;
 identifier: PIDIDENTIFIER 
     {
-        checkForErrors(d.ST->checkVariableIsVariable($1.name));   
+        checkForErrors(d.ST->checkVariableIsVariable($1.name));
     }
     | PIDIDENTIFIER LEFT_BRACKET PIDIDENTIFIER RIGHT_BRACKET 
     {
         checkForErrors(d.ST->checkVariableIsTable($1.name));
-        checkForErrors(d.ST->checkVariableIsTable($3.name));
-        $$.name = $1.name + "(" + $3.name + ")";      
+        $$.name = $1.name + "(" + $3.name + ")";
+        checkForErrors(d.ST->checkVariableExistsAndIsInitialized($3.name));   
     }
     | PIDIDENTIFIER LEFT_BRACKET NUMBER RIGHT_BRACKET 
     {
