@@ -1,0 +1,29 @@
+FirstIR:
+#Block_0
+	CONST a 10
+	CONST b 20
+#end of Block_0
+#Block_3
+	COPY i a
+	COPY i_forControl b
+	SUB i_forControl i
+	JZERO i_forControl 
+#ifTrue Block_2
+#ifFalse Block_1
+#end of Block_3
+#Block_1
+	WRITE a 
+#end of Block_1
+#Block_4
+	INC i 
+	DEC i_forControl 
+	JZERO i_forControl 
+#ifTrue Block_2
+#ifFalse Block_1
+#end of Block_4
+#Block_2
+#end of Block_2
+#Block_5
+	WRITE b 
+	HALT  
+#end of Block_5

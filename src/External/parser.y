@@ -71,11 +71,15 @@ command: identifier ASSIGN expression SEMICOLON
     {
         d.FIR.endWhileDo();
     }
-    | DO {d.FIR.closeBlock();} commands WHILE condition ENDDO 
+    | DO {d.FIR.closeConditionBlock();} commands WHILE condition ENDDO 
     {
         d.FIR.endDoWhile();
     }
-    | FOR PIDIDENTIFIER FROM value TO value DO commands ENDFOR {}
+    | FOR PIDIDENTIFIER FROM value TO value DO {d.FIR.closeForBlock();} commands ENDFOR 
+    {
+        d.FIR.insertFor($2.name, $4, $6);
+        // d.FIR.addNewCode("FOR", $4.name, $6.name);
+    }
     | FOR PIDIDENTIFIER FROM value DOWNTO value DO commands ENDFOR {}
     | READ identifier SEMICOLON 
     {
@@ -134,27 +138,27 @@ expression: value
             handleOperation(d, "MOD", $1, $3);            
         }
 ;
-condition: value EQUAL value {d.FIR.closeBlock();}
+condition: value EQUAL value {d.FIR.closeConditionBlock();}
     {    
         handleConditionOperation(d, "JEQ", $1, $3);
     }
-    | value NOT_EQUAL value {d.FIR.closeBlock();}
+    | value NOT_EQUAL value {d.FIR.closeConditionBlock();}
     {
         handleConditionOperation(d, "JNE", $1, $3);
     }
-    | value LESS value {d.FIR.closeBlock();}
+    | value LESS value {d.FIR.closeConditionBlock();}
     {
         handleConditionOperation(d, "JLS", $1, $3);
     }
-    | value MORE value {d.FIR.closeBlock();}
+    | value MORE value {d.FIR.closeConditionBlock();}
     {
         handleConditionOperation(d, "JMR", $1, $3);
     }
-    | value LESS_EQUAL value {d.FIR.closeBlock();}
+    | value LESS_EQUAL value {d.FIR.closeConditionBlock();}
     {
         handleConditionOperation(d, "JLE", $1, $3);
     }
-    | value MORE_EQUAL value {d.FIR.closeBlock();}
+    | value MORE_EQUAL value {d.FIR.closeConditionBlock();}
     {
         handleConditionOperation(d, "JME", $1, $3);
     }

@@ -3,16 +3,7 @@
 #include <string>
 
 #include "Driver.hpp"
-
-struct Data 
-{
-    Data()
-    {
-        value = 0;
-    }
-    unsigned long long value;
-    std::string name;
-};
+#include "DataTypes/Data.hpp"
 
 void checkForErrors(const std::string& str)
 {

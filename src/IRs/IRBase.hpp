@@ -24,6 +24,7 @@ class IRBase
     {
         Block block;
         block.blockName = "Block_" + std::to_string(_blockCounter);
+        std::cerr<<"generating block "<<block.blockName<<std::endl;
         _blockCounter++;
         return block;
     }
@@ -31,6 +32,7 @@ class IRBase
     std::shared_ptr<SymbolTable> _symbolTable;
     std::vector<Block> _blocks;
     std::stack<Block> _currentBlock;
+    std::string forControlName = "_forControl";
 
     private:
     unsigned int _blockCounter = 0;

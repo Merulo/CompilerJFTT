@@ -1,0 +1,11 @@
+DECLARE
+  a; b; c; d;
+IN
+  a := 10;
+  b := 20;
+  FOR i FROM a TO b DO
+      WRITE a;
+  ENDFOR
+  WRITE b;
+
+END

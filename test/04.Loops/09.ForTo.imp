@@ -1,0 +1,17 @@
+DECLARE
+  a; b; c; d;
+IN
+  a := 10;
+  b := 20;
+  FOR i FROM 10 TO 20 DO
+      WRITE a;
+  ENDFOR
+  WRITE b;
+  FOR i FROM 10 TO b DO
+      WRITE a;
+  ENDFOR
+  FOR i FROM a TO 20 DO
+      WRITE a;
+  ENDFOR
+  WRITE b;
+END

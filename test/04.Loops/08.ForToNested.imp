@@ -1,0 +1,18 @@
+DECLARE
+  a; b; c; d;
+IN
+  a := 10;
+  b := 20;
+  c := 30;
+  d := 40;
+
+  FOR i FROM a TO b DO
+      WRITE a;
+      FOR ii FROM c TO b DO
+        WRITE b;
+      ENDFOR
+      WRITE c;
+  ENDFOR
+  WRITE d;
+
+END

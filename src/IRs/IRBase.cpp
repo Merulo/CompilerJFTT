@@ -41,19 +41,4 @@ void IRBase::writeToStream(std::ostream& stream)
     {
         stream << b;
     }
-
-    // for(auto& l : _lines)
-    // {
-    //     if (!l.thisLabel.empty())
-    //     {
-    //         stream<<"#"<<l.thisLabel<<std::endl;
-    //         continue;
-    //     }
-    //     stream<<l.operation<<": "<<l.one<<" "<<l.two<<" ";
-    //     if (!l.targetLabel.empty())
-    //     {
-    //         stream<<"goto "<<l.targetLabel;
-    //     }
-    //     stream<<std::endl;
-    // }
 }

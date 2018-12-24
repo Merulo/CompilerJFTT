@@ -115,7 +115,7 @@ void FirstIR::endIf()
     _conditionBlocks.pop();
 }
 
-void FirstIR::closeBlock()
+void FirstIR::closeConditionBlock()
 {
     //closes current block
     _blocks.push_back(_currentBlock.top());
