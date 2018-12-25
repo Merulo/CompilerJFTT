@@ -6,10 +6,13 @@ class SecondIR : public IRBase
     SecondIR() : IRBase("SecondIR") {};
 
     void parse(std::vector<Block> b);
+
+    private:
     void addSimpleJumps(std::vector<Block> b);
     void removeEmptyBlocks();
 
-    private:
+    void optimize();
+
     Block& getBlockByName(std::string name);
 
 };

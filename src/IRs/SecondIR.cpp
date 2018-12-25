@@ -4,7 +4,16 @@ void SecondIR::parse(std::vector<Block> b)
 {
     addSimpleJumps(b);
     removeEmptyBlocks();
+    optimize();
+}
 
+void SecondIR::optimize()
+{
+    //TODO: constant propagation
+    //TODO: loop unrolling
+    //TODO: ADD X 1 -> inc etc
+    //TODO: removed unused values
+    //TODO: reorder of constant generation inside blocks
 }
 
 void SecondIR::addSimpleJumps(std::vector<Block> b)
