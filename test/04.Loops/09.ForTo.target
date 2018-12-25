@@ -6,6 +6,7 @@ FirstIR:
 #Block_3
 	CONST i 10
 	CONST i_forControl 20
+	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
 #ifTrue Block_2
@@ -29,6 +30,7 @@ FirstIR:
 #Block_8
 	CONST i 10
 	COPY i_forControl b
+	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
 #ifTrue Block_7
@@ -51,6 +53,7 @@ FirstIR:
 #Block_13
 	COPY i a
 	CONST i_forControl 20
+	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
 #ifTrue Block_12

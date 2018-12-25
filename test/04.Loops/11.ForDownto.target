@@ -6,6 +6,7 @@ FirstIR:
 #Block_3
 	COPY i b
 	COPY i_forControl i
+	INC i_forControl 
 	SUB i_forControl a
 	JZERO i_forControl 
 #ifTrue Block_2

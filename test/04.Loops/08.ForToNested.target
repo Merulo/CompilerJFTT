@@ -8,6 +8,7 @@ FirstIR:
 #Block_8
 	COPY i a
 	COPY i_forControl b
+	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
 #ifTrue Block_7
@@ -19,6 +20,7 @@ FirstIR:
 #Block_4
 	COPY ii c
 	COPY ii_forControl b
+	INC ii_forControl 
 	SUB ii_forControl ii
 	JZERO ii_forControl 
 #ifTrue Block_3

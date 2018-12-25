@@ -213,6 +213,10 @@ Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bo
     counterFinal.one = counterInit.one;
     counterFinal.two = iterator;
 
+    Line inclusiveFor;
+    inclusiveFor.operation = "INC";
+    inclusiveFor.one = counterInit.one;
+
     if (!isForTo)
     {
         std::swap(counterInit.two, counterFinal.two);
@@ -220,6 +224,7 @@ Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bo
 
     b.lines.push_back(iteratorInit);
     b.lines.push_back(counterInit);
+    b.lines.push_back(inclusiveFor);
     b.lines.push_back(counterFinal);
 
     Line jump;

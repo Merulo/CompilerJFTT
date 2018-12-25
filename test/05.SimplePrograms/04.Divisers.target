@@ -5,6 +5,7 @@ FirstIR:
 #Block_3
 	COPY i n
 	CONST i_forControl i
+	INC i_forControl 
 	SUB i_forControl 2
 	JZERO i_forControl 
 #ifTrue Block_2
@@ -27,6 +28,7 @@ FirstIR:
 #Block_14
 	CONST i 2
 	COPY i_forControl n
+	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
 #ifTrue Block_13
