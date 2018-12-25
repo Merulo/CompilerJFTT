@@ -75,12 +75,12 @@ command: identifier ASSIGN expression SEMICOLON
     {
         d.FIR.endDoWhile();
     }
-    | forProduction FROM value TO value DO {d.FIR.closeForBlock();} commands ENDFOR 
+    | forProduction FROM value TO value doProduction commands ENDFOR 
     {
         d.FIR.insertFor($2.name, $4, $6, true);
         d.ST->removeIterator($2.name);
     }
-    | forProduction FROM value DOWNTO value DO {d.FIR.closeForBlock();} commands ENDFOR 
+    | forProduction FROM value DOWNTO value doProduction commands ENDFOR 
     {
         d.FIR.insertFor($2.name, $4, $6, false);
         d.ST->removeIterator($2.name);
@@ -103,6 +103,10 @@ command: identifier ASSIGN expression SEMICOLON
         }
     }
 ;
+doProduction: DO
+{
+    d.FIR.closeForBlock();
+};
 
 forProduction: FOR PIDIDENTIFIER
 {
