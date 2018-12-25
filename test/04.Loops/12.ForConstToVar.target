@@ -1,0 +1,76 @@
+FirstIR:
+#Block_0
+	CONST a 10
+	CONST b 20
+#end of Block_0
+#Block_3
+	COPY i a
+	CONST i_forControl 20
+	INC i_forControl 
+	SUB i_forControl i
+	JZERO i_forControl 
+#ifTrue Block_2
+#ifFalse Block_1
+#end of Block_3
+#Block_1
+	WRITE a 
+#end of Block_1
+#Block_4
+	INC i 
+	DEC i_forControl 
+	JZERO i_forControl 
+#ifTrue Block_2
+#ifFalse Block_1
+#end of Block_4
+#Block_2
+#end of Block_2
+#Block_5
+#end of Block_5
+#Block_8
+	CONST i 10
+	COPY i_forControl a
+	INC i_forControl 
+	SUB i_forControl i
+	JZERO i_forControl 
+#ifTrue Block_7
+#ifFalse Block_6
+#end of Block_8
+#Block_6
+	WRITE a 
+#end of Block_6
+#Block_9
+	INC i 
+	DEC i_forControl 
+	JZERO i_forControl 
+#ifTrue Block_7
+#ifFalse Block_6
+#end of Block_9
+#Block_7
+#end of Block_7
+#Block_10
+#end of Block_10
+#Block_13
+	CONST i 10
+	CONST i_forControl 20
+	INC i_forControl 
+	SUB i_forControl i
+	JZERO i_forControl 
+#ifTrue Block_12
+#ifFalse Block_11
+#end of Block_13
+#Block_11
+	WRITE a 
+#end of Block_11
+#Block_14
+	INC i 
+	DEC i_forControl 
+	JZERO i_forControl 
+#ifTrue Block_12
+#ifFalse Block_11
+#end of Block_14
+#Block_12
+#end of Block_12
+#Block_15
+	WRITE b 
+	HALT  
+#end of Block_15

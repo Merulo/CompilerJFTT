@@ -217,14 +217,31 @@ Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bo
     inclusiveFor.operation = "INC";
     inclusiveFor.one = counterInit.one;
 
+    Line l;
     if (!isForTo)
     {
         std::swap(counterInit.two, counterFinal.two);
+        if (counterInit.operation == "CONST")
+        {
+            counterInit.operation = "COPY";
+            
+            std::string var = getVariable(counterFinal.two);
+            l.operation = "CONST";
+            l.one = var;
+            l.two = counterFinal.two;
+            counterFinal.two = var;
+        }
     }
 
     b.lines.push_back(iteratorInit);
     b.lines.push_back(counterInit);
     b.lines.push_back(inclusiveFor);
+
+    if (!isForTo && !l.operation.empty())
+    {
+        b.lines.push_back(l);
+    }
+    
     b.lines.push_back(counterFinal);
 
     Line jump;

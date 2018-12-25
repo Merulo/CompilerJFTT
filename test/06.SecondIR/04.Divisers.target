@@ -5,9 +5,10 @@ SecondIR:
 #end of Block_0
 #Block_3
 	COPY i n
-	CONST i_forControl i
+	COPY i_forControl i
 	INC i_forControl 
-	SUB i_forControl 2
+	CONST variable_0 2
+	SUB i_forControl variable_0
 	JZERO i_forControl 
 #ifTrue Block_14
 #ifFalse Block_1
@@ -33,8 +34,8 @@ SecondIR:
 #ifFalse Block_7
 #end of Block_14
 #Block_7
-	CONST variable_0 0
-	JNE sieve(i) variable_0
+	CONST variable_1 0
+	JNE sieve(i) variable_1
 #ifTrue Block_9
 #ifFalse Block_15
 #end of Block_7
