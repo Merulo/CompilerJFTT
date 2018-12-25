@@ -9,5 +9,4 @@ class ThirdIR : public IRBase
 
     private:
     void legalizeConstantsGeneration();
-
 };

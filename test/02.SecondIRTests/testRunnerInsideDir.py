@@ -18,7 +18,7 @@ def checkDirectory (currentPath):
 		files = [i for i in files if regex.search(i)]
 		os.chdir(path)
 		sys.stdout.write(COLORS.OK_BLUE)
-		print("Directory: ", path, COLORS.END)
+		print("\tDirectory: ", path, COLORS.END)
 		for file in files:
 			cmd = ['python', file]
 			process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -33,6 +33,7 @@ def checkDirectory (currentPath):
 			decoded = decoded.replace(b'\'', b'')
 			decoded = decoded.replace(b'\\x', b'\\x')
 			decoded = decoded.replace(b'\\x', b'\\x')
+			sys.stdout.write("\t")
 			sys.stdout.write(decoded.decode('unicode_escape'))
 		os.chdir("..")
 
