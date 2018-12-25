@@ -1,6 +1,7 @@
-FirstIR:
+SecondIR:
 #Block_0
 	CONST n 100
+#jump to Block_3
 #end of Block_0
 #Block_3
 	COPY i n
@@ -8,43 +9,39 @@ FirstIR:
 	INC i_forControl 
 	SUB i_forControl 2
 	JZERO i_forControl 
-#ifTrue Block_2
+#ifTrue Block_14
 #ifFalse Block_1
 #end of Block_3
 #Block_1
 	CONST sieve(i) 1
+#jump to Block_4
 #end of Block_1
 #Block_4
 	DEC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_2
+#ifTrue Block_14
 #ifFalse Block_1
 #end of Block_4
-#Block_2
-#end of Block_2
-#Block_5
-#end of Block_5
 #Block_14
 	CONST i 2
 	COPY i_forControl n
 	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
-#ifTrue Block_13
-#ifFalse Block_6
+#ifTrue Block_16
+#ifFalse Block_7
 #end of Block_14
-#Block_6
-#end of Block_6
 #Block_7
 	CONST variable_0 0
 	JNE sieve(i) variable_0
 #ifTrue Block_9
-#ifFalse Block_8
+#ifFalse Block_15
 #end of Block_7
 #Block_9
 	COPY j i
 	ADD j i
+#jump to Block_10
 #end of Block_9
 #Block_10
 	JLE j n
@@ -58,19 +55,15 @@ FirstIR:
 #end of Block_12
 #Block_11
 	WRITE i 
-#jump to Block_8
+#jump to Block_15
 #end of Block_11
-#Block_8
-#end of Block_8
 #Block_15
 	INC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_13
-#ifFalse Block_6
+#ifTrue Block_16
+#ifFalse Block_7
 #end of Block_15
-#Block_13
-#end of Block_13
 #Block_16
 	HALT  
 #end of Block_16

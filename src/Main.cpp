@@ -28,19 +28,19 @@ int main(int argc, char** argv)
             }
             return 0;
         }
-        // if (str == "-FIR")
-        // {
-            // d.FIR.parse(d.FIR.getLines());
-            // if (i + 1 < argc)
-            // {
-            //     d.FIR.print(argv[i+1]);
-            // }
-            // else
-            // {
-            //     d.FIR.print("");
-            // }            
-            // return 0;
-        // }        
+        if (str == "-SIR")
+        {
+            d.convertToSIR();
+            if (i + 1 < argc)
+            {
+                d.SIR->print(argv[i+1]);
+            }
+            else
+            {
+                d.SIR->print("");
+            }            
+            return 0;
+        }        
     }
     // d.compile(argv[2]);
     // d.ST.print();

@@ -5,6 +5,7 @@
 
 #include "SymbolTable.hpp"
 #include "IRs/FirstIR.hpp"
+#include "IRs/SecondIR.hpp"
 
 class Driver
 {
@@ -14,9 +15,14 @@ class Driver
         ST = std::make_shared<SymbolTable>();
     }
     std::shared_ptr<SymbolTable> ST;
-
-    // SymbolTable ST;
+    std::shared_ptr<SecondIR> SIR;
     FirstIR FIR;
+
+    void convertToSIR()
+    {
+        SIR = std::make_shared<SecondIR>();
+        SIR->parse(FIR.getBlocks());
+    }
 
     //this means that first FIR was created
     void compile(const std::string& fileName)

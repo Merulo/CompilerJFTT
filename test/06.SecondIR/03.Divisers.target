@@ -1,0 +1,65 @@
+SecondIR:
+#Block_0
+	READ n 
+	CONST divider 2
+	COPY m divider
+	MUL m divider
+#jump to Block_1
+#end of Block_0
+#Block_1
+	JME n m
+#ifTrue Block_3
+#ifFalse Block_11
+#end of Block_1
+#Block_3
+	CONST power 0
+	COPY rest n
+	MOD rest divider
+#jump to Block_4
+#end of Block_3
+#Block_4
+	CONST variable_0 0
+	JEQ rest variable_0
+#ifTrue Block_6
+#ifFalse Block_7
+#end of Block_4
+#Block_6
+	DIV n divider
+	CONST variable_1 1
+	ADD power variable_1
+	COPY rest n
+	MOD rest divider
+#jump to Block_4
+#end of Block_6
+#Block_7
+	CONST variable_2 0
+	JMR power variable_2
+#ifTrue Block_9
+#ifFalse Block_8
+#end of Block_7
+#Block_9
+	WRITE divider 
+	WRITE power 
+#jump to Block_1
+#end of Block_9
+#Block_8
+	CONST variable_3 1
+	ADD divider variable_3
+	COPY m divider
+	MUL m divider
+#jump to Block_1
+#end of Block_8
+#Block_11
+	CONST variable_4 1
+	JNE n variable_4
+#ifTrue Block_13
+#ifFalse Block_12
+#end of Block_11
+#Block_13
+	WRITE n 
+	WRITE 1 
+#jump to Block_12
+#end of Block_13
+#Block_12
+	HALT  
+#end of Block_12

@@ -16,18 +16,11 @@ class IRBase
     public:
     IRBase(std::string IRName);
     void print(cStrRef fileName = "");
-    // std::vector<Line> getLines();
     void setSymbolTable(std::shared_ptr<SymbolTable> symbolTable);
+    std::vector<Block> getBlocks();
 
     protected:
-    Block generateBlock()
-    {
-        Block block;
-        block.blockName = "Block_" + std::to_string(_blockCounter);
-        std::cerr<<"generating block "<<block.blockName<<std::endl;
-        _blockCounter++;
-        return block;
-    }
+    Block generateBlock();
 
     std::shared_ptr<SymbolTable> _symbolTable;
     std::vector<Block> _blocks;

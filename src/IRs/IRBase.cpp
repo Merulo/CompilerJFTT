@@ -5,10 +5,19 @@ IRBase::IRBase(std::string IRName) : _IRName(IRName)
     _currentBlock.push(generateBlock());
 }
 
-// std::vector<Line> IRBase::getLines()
-// {
-//     return _lines;
-// }
+std::vector<Block> IRBase::getBlocks()
+{
+    return _blocks;
+}
+
+Block IRBase::generateBlock()
+{
+    Block block;
+    block.blockName = "Block_" + std::to_string(_blockCounter);
+    std::cerr<<"generating block "<<block.blockName<<std::endl;
+    _blockCounter++;
+    return block;
+}
 
 void IRBase::setSymbolTable(std::shared_ptr<SymbolTable> symbolTable)
 {
