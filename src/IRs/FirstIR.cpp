@@ -84,15 +84,6 @@ void FirstIR::setSecondExtraParameter(cStrRef second)
     _secondExtraParameter = second;
 }
 
-std::string FirstIR::getVariable(std::string value)
-{
-    std::cerr<<"generating variable with "<<value<<std::endl;
-    std::string result = "variable_" + std::to_string(_registerCount);
-    _registerCount++;
-    _symbolTable->addConst(result, value);
-    return result;
-}
-
 void FirstIR::endElse()
 {
     Block s3 = _currentBlock.top();

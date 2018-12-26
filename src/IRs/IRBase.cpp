@@ -1,8 +1,19 @@
 #include "IRBase.hpp"
 
+unsigned int IRBase::_nextGeneratedVariableSuffix = 0;
+
 IRBase::IRBase(std::string IRName) : _IRName(IRName)
 {
     _currentBlock.push(generateBlock());
+}
+
+std::string IRBase::getVariable(std::string value)
+{
+    std::cerr<<"generating variable with "<<value<<std::endl;
+    std::string result = "variable_" + std::to_string(_nextGeneratedVariableSuffix);
+    _nextGeneratedVariableSuffix++;
+    _symbolTable->addConst(result, value);
+    return result;
 }
 
 std::vector<Block> IRBase::getBlocks()

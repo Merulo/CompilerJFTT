@@ -9,7 +9,7 @@ int main(int argc, char** argv)
         std::cout<<"Not enough arguments\n";
         return 1;
     }
-    d.FIR.setSymbolTable(d.ST);
+    d.FIR->setSymbolTable(d.ST);
     yyin = fopen(argv[1], "r");
     yyparse();
 
@@ -20,11 +20,11 @@ int main(int argc, char** argv)
         {
             if (i + 1 < argc)
             {
-                d.FIR.print(argv[i+1]);
+                d.FIR->print(argv[i+1]);
             }
             else
             {
-                d.FIR.print("");
+                d.FIR->print("");
             }
             return 0;
         }
@@ -40,7 +40,21 @@ int main(int argc, char** argv)
                 d.SIR->print("");
             }            
             return 0;
-        }        
+        }
+        if (str == "-TIR")
+        {
+            d.convertToSIR();
+            d.convertToTIR();
+            if (i + 1 < argc)
+            {
+                d.TIR->print(argv[i+1]);
+            }
+            else
+            {
+                d.TIR->print("");
+            }            
+            return 0;
+        }              
     }
     // d.compile(argv[2]);
     // d.ST.print();

@@ -8,5 +8,6 @@ class ThirdIR : public IRBase
     void parse(std::vector<Block> b);
 
     private:
-    void legalizeConstantsGeneration();
+    void legalize();
+    void legalizeIFs();
 };

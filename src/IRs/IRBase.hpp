@@ -18,6 +18,7 @@ class IRBase
     void print(cStrRef fileName = "");
     void setSymbolTable(std::shared_ptr<SymbolTable> symbolTable);
     std::vector<Block> getBlocks();
+    std::string getVariable(std::string value);
 
     protected:
     Block generateBlock();
@@ -28,7 +29,9 @@ class IRBase
     std::string forControlName = "_forControl";
 
     private:
-    unsigned int _blockCounter = 0;
     void writeToStream(std::ostream& stream);
+
     std::string _IRName;
+    unsigned int _blockCounter = 0;
+    static unsigned int _nextGeneratedVariableSuffix;
 };

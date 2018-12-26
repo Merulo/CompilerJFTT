@@ -25,8 +25,6 @@ class FirstIR : public IRBase
     void handleMathOperation(cStrRef resultName);
     //handles condition operation
     void handleConditionOperation(cStrRef operation, cStrRef one, cStrRef two);
-    //generates new variable
-    std::string getVariable(std::string value);
     
     //setters for nested operations
     void setOperation(cStrRef operation);
@@ -51,12 +49,9 @@ class FirstIR : public IRBase
     void reset();
     void handleNonCommutativeOperation(cStrRef resultName, cStrRef operation);
 
-    int _registerCount = 0;
-
     std::string _operation;
     std::string _firstExtraParameter;
     std::string _secondExtraParameter;
-    std::string _arrayValue;
     std::stack<Block> _conditionBlocks;
     std::stack<Block> _forBlocks;
 };

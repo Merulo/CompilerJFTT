@@ -1330,7 +1330,7 @@ yyreduce:
         case 2:
 #line 40 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR.addNewCode("HALT");
+        d.FIR->addNewCode("HALT");
     }
 #line 1336 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1367,7 +1367,7 @@ yyreduce:
 #line 58 "src/External/parser.y" /* yacc.c:1646  */
     {
         d.ST->setInitialized((yyvsp[-3]).name);
-        d.FIR.handleMathOperation((yyvsp[-3]).name);
+        d.FIR->handleMathOperation((yyvsp[-3]).name);
     }
 #line 1373 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1375,7 +1375,7 @@ yyreduce:
   case 9:
 #line 63 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR.endIf();
+        d.FIR->endIf();
     }
 #line 1381 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1383,7 +1383,7 @@ yyreduce:
   case 10:
 #line 67 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR.endIf();
+        d.FIR->endIf();
     }
 #line 1389 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1391,21 +1391,21 @@ yyreduce:
   case 11:
 #line 71 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR.endWhileDo();
+        d.FIR->endWhileDo();
     }
 #line 1397 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 74 "src/External/parser.y" /* yacc.c:1646  */
-    {d.FIR.closeConditionBlock();}
+    {d.FIR->closeConditionBlock();}
 #line 1403 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 75 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR.endDoWhile();
+        d.FIR->endDoWhile();
     }
 #line 1411 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1413,7 +1413,7 @@ yyreduce:
   case 14:
 #line 79 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR.insertFor((yyvsp[-6]).name, (yyvsp[-4]), (yyvsp[-2]), true);
+        d.FIR->insertFor((yyvsp[-6]).name, (yyvsp[-4]), (yyvsp[-2]), true);
         d.ST->removeIterator((yyvsp[-6]).name);
     }
 #line 1420 "src/External/Parser.cpp" /* yacc.c:1646  */
@@ -1422,7 +1422,7 @@ yyreduce:
   case 15:
 #line 84 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR.insertFor((yyvsp[-6]).name, (yyvsp[-4]), (yyvsp[-2]), false);
+        d.FIR->insertFor((yyvsp[-6]).name, (yyvsp[-4]), (yyvsp[-2]), false);
         d.ST->removeIterator((yyvsp[-6]).name);
     }
 #line 1429 "src/External/Parser.cpp" /* yacc.c:1646  */
@@ -1432,7 +1432,7 @@ yyreduce:
 #line 89 "src/External/parser.y" /* yacc.c:1646  */
     {
         checkForErrors(d.ST->checkVariableExists((yyvsp[-1]).name));
-        d.FIR.addNewCode("READ", (yyvsp[-1]).name);
+        d.FIR->addNewCode("READ", (yyvsp[-1]).name);
     }
 #line 1438 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1443,11 +1443,11 @@ yyreduce:
         if (!(yyvsp[-1]).name.empty())
         {
             checkForErrors(d.ST->checkVariableExistsAndIsInitialized((yyvsp[-1]).name));
-            d.FIR.addNewCode("WRITE", (yyvsp[-1]).name);
+            d.FIR->addNewCode("WRITE", (yyvsp[-1]).name);
         }
         else
         {
-            d.FIR.addNewCode("WRITE", std::to_string((yyvsp[-1]).value));
+            d.FIR->addNewCode("WRITE", std::to_string((yyvsp[-1]).value));
         }
     }
 #line 1454 "src/External/Parser.cpp" /* yacc.c:1646  */
@@ -1456,7 +1456,7 @@ yyreduce:
   case 18:
 #line 107 "src/External/parser.y" /* yacc.c:1646  */
     {
-    d.FIR.closeForBlock();
+    d.FIR->closeForBlock();
 }
 #line 1462 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1476,7 +1476,7 @@ yyreduce:
   case 20:
 #line 121 "src/External/parser.y" /* yacc.c:1646  */
     {
-    d.FIR.endElse();
+    d.FIR->endElse();
 }
 #line 1482 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
@@ -1487,12 +1487,12 @@ yyreduce:
         if (!(yyvsp[0]).name.empty())
         {
             checkForErrors(d.ST->checkVariableExistsAndIsInitialized((yyvsp[0]).name));
-            d.FIR.setOperation("COPY");
-            d.FIR.setFirstExtraParameter((yyvsp[0]).name);
+            d.FIR->setOperation("COPY");
+            d.FIR->setFirstExtraParameter((yyvsp[0]).name);
         }
         else
         {
-            d.FIR.setFirstExtraParameter(std::to_string((yyvsp[0]).value));
+            d.FIR->setFirstExtraParameter(std::to_string((yyvsp[0]).value));
         }
     }
 #line 1499 "src/External/Parser.cpp" /* yacc.c:1646  */
@@ -1540,7 +1540,7 @@ yyreduce:
 
   case 27:
 #line 159 "src/External/parser.y" /* yacc.c:1646  */
-    {d.FIR.closeConditionBlock();}
+    {d.FIR->closeConditionBlock();}
 #line 1545 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1554,7 +1554,7 @@ yyreduce:
 
   case 29:
 #line 163 "src/External/parser.y" /* yacc.c:1646  */
-    {d.FIR.closeConditionBlock();}
+    {d.FIR->closeConditionBlock();}
 #line 1559 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1568,7 +1568,7 @@ yyreduce:
 
   case 31:
 #line 167 "src/External/parser.y" /* yacc.c:1646  */
-    {d.FIR.closeConditionBlock();}
+    {d.FIR->closeConditionBlock();}
 #line 1573 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1582,7 +1582,7 @@ yyreduce:
 
   case 33:
 #line 171 "src/External/parser.y" /* yacc.c:1646  */
-    {d.FIR.closeConditionBlock();}
+    {d.FIR->closeConditionBlock();}
 #line 1587 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1596,7 +1596,7 @@ yyreduce:
 
   case 35:
 #line 175 "src/External/parser.y" /* yacc.c:1646  */
-    {d.FIR.closeConditionBlock();}
+    {d.FIR->closeConditionBlock();}
 #line 1601 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 
@@ -1610,7 +1610,7 @@ yyreduce:
 
   case 37:
 #line 179 "src/External/parser.y" /* yacc.c:1646  */
-    {d.FIR.closeConditionBlock();}
+    {d.FIR->closeConditionBlock();}
 #line 1615 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 

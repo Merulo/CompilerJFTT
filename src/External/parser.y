@@ -38,7 +38,7 @@ Driver d;
 %%
 program: DECLARE declarations IN commands END
     {
-        d.FIR.addNewCode("HALT");
+        d.FIR->addNewCode("HALT");
     }
 ;
 declarations: declarations PIDIDENTIFIER SEMICOLON 
@@ -57,55 +57,55 @@ commands: commands command {}
 command: identifier ASSIGN expression SEMICOLON 
     {
         d.ST->setInitialized($1.name);
-        d.FIR.handleMathOperation($1.name);
+        d.FIR->handleMathOperation($1.name);
     }
     | IF condition THEN commands elseProduction commands ENDIF 
     {
-        d.FIR.endIf();
+        d.FIR->endIf();
     }
     | IF condition THEN commands ENDIF 
     {
-        d.FIR.endIf();
+        d.FIR->endIf();
     }
     | WHILE condition DO commands ENDWHILE 
     {
-        d.FIR.endWhileDo();
+        d.FIR->endWhileDo();
     }
-    | DO {d.FIR.closeConditionBlock();} commands WHILE condition ENDDO 
+    | DO {d.FIR->closeConditionBlock();} commands WHILE condition ENDDO 
     {
-        d.FIR.endDoWhile();
+        d.FIR->endDoWhile();
     }
     | forProduction FROM value TO value doProduction commands ENDFOR 
     {
-        d.FIR.insertFor($2.name, $4, $6, true);
+        d.FIR->insertFor($2.name, $4, $6, true);
         d.ST->removeIterator($2.name);
     }
     | forProduction FROM value DOWNTO value doProduction commands ENDFOR 
     {
-        d.FIR.insertFor($2.name, $4, $6, false);
+        d.FIR->insertFor($2.name, $4, $6, false);
         d.ST->removeIterator($2.name);
     }
     | READ identifier SEMICOLON 
     {
         checkForErrors(d.ST->checkVariableExists($2.name));
-        d.FIR.addNewCode("READ", $2.name);
+        d.FIR->addNewCode("READ", $2.name);
     }
     | WRITE value SEMICOLON
     {
         if (!$2.name.empty())
         {
             checkForErrors(d.ST->checkVariableExistsAndIsInitialized($2.name));
-            d.FIR.addNewCode("WRITE", $2.name);
+            d.FIR->addNewCode("WRITE", $2.name);
         }
         else
         {
-            d.FIR.addNewCode("WRITE", std::to_string($2.value));
+            d.FIR->addNewCode("WRITE", std::to_string($2.value));
         }
     }
 ;
 doProduction: DO
 {
-    d.FIR.closeForBlock();
+    d.FIR->closeForBlock();
 };
 
 forProduction: FOR PIDIDENTIFIER
@@ -119,7 +119,7 @@ forProduction: FOR PIDIDENTIFIER
 
 elseProduction: ELSE
 {
-    d.FIR.endElse();
+    d.FIR->endElse();
 };
 
 expression: value 
@@ -127,12 +127,12 @@ expression: value
         if (!$1.name.empty())
         {
             checkForErrors(d.ST->checkVariableExistsAndIsInitialized($1.name));
-            d.FIR.setOperation("COPY");
-            d.FIR.setFirstExtraParameter($1.name);
+            d.FIR->setOperation("COPY");
+            d.FIR->setFirstExtraParameter($1.name);
         }
         else
         {
-            d.FIR.setFirstExtraParameter(std::to_string($1.value));
+            d.FIR->setFirstExtraParameter(std::to_string($1.value));
         }
     }
     | value ADDITION value 
@@ -156,27 +156,27 @@ expression: value
             handleOperation(d, "MOD", $1, $3);            
         }
 ;
-condition: value EQUAL value {d.FIR.closeConditionBlock();}
+condition: value EQUAL value {d.FIR->closeConditionBlock();}
     {    
         handleConditionOperation(d, "JEQ", $1, $3);
     }
-    | value NOT_EQUAL value {d.FIR.closeConditionBlock();}
+    | value NOT_EQUAL value {d.FIR->closeConditionBlock();}
     {
         handleConditionOperation(d, "JNE", $1, $3);
     }
-    | value LESS value {d.FIR.closeConditionBlock();}
+    | value LESS value {d.FIR->closeConditionBlock();}
     {
         handleConditionOperation(d, "JLS", $1, $3);
     }
-    | value MORE value {d.FIR.closeConditionBlock();}
+    | value MORE value {d.FIR->closeConditionBlock();}
     {
         handleConditionOperation(d, "JMR", $1, $3);
     }
-    | value LESS_EQUAL value {d.FIR.closeConditionBlock();}
+    | value LESS_EQUAL value {d.FIR->closeConditionBlock();}
     {
         handleConditionOperation(d, "JLE", $1, $3);
     }
-    | value MORE_EQUAL value {d.FIR.closeConditionBlock();}
+    | value MORE_EQUAL value {d.FIR->closeConditionBlock();}
     {
         handleConditionOperation(d, "JME", $1, $3);
     }
