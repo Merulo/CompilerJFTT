@@ -61,7 +61,7 @@ void IRBase::print(cStrRef fileName)
 
 void IRBase::writeToStream(std::ostream& stream)
 {
-    stream<<_IRName<<":"<<std::endl;
+    stream<<"#"<<_IRName<<":"<<std::endl;
     for(auto& b : _blocks)
     {
         stream << b;

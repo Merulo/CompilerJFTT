@@ -1,4 +1,4 @@
-FirstIR:
+#FirstIR:
 #Block_0
 	CONST arr(0) 10
 	COPY arr(10) arr(0)

@@ -49,7 +49,7 @@ for i in filtered:
 		# keep result file for reference
 		# os.remove(result)
 		sys.stdout.write(COLORS.FAIL)
-		print("\tTest: ", i, " failed", COLORS.END)
+		print("\t\tTest: ", i, " failed", COLORS.END)
 	else:									# files are the same
 		testPassed += 1
 		# sys.stdout.write(COLORS.OK_GREEN)

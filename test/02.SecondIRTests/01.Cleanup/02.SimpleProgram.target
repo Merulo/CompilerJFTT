@@ -1,4 +1,4 @@
-SecondIR:
+#SecondIR:
 #Block_0
 	READ a 
 #jump to Block_1

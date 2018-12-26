@@ -1,4 +1,4 @@
-FirstIR:
+#FirstIR:
 #Block_0
 	CONST a 1
 	CONST b 2

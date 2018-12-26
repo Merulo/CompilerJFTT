@@ -1,4 +1,4 @@
-SecondIR:
+#SecondIR:
 #Block_0
 	CONST n 100
 #jump to Block_3

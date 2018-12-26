@@ -33,7 +33,6 @@ def checkDirectory (currentPath):
 			decoded = decoded.replace(b'\'', b'')
 			decoded = decoded.replace(b'\\x', b'\\x')
 			decoded = decoded.replace(b'\\x', b'\\x')
-			sys.stdout.write("\t")
 			sys.stdout.write(decoded.decode('unicode_escape'))
 		os.chdir("..")
 
