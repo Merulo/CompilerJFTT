@@ -3,7 +3,7 @@ DECLARE
 IN
   a := 10;
   b := 20;
-  IF a > b THEN
+  IF a < b THEN
     a := 100;
   ENDIF
   WRITE a;

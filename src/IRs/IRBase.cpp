@@ -12,6 +12,11 @@ std::string IRBase::getVariable(std::string value)
     std::cerr<<"generating variable with "<<value<<std::endl;
     std::string result = "variable_" + std::to_string(_nextGeneratedVariableSuffix);
     _nextGeneratedVariableSuffix++;
+    if (!_symbolTable)
+    {
+        std::cout<<"SYMBOL TABLE NOT INITALIZED"<<std::endl;
+        exit(2);
+    }
     _symbolTable->addConst(result, value);
     return result;
 }

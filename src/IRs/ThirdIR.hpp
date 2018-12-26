@@ -9,5 +9,6 @@ class ThirdIR : public IRBase
 
     private:
     void legalize();
-    void legalizeIFs();
+    void legalizeJumps();
+    void legalizeJLS(Block& b);
 };

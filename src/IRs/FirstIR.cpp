@@ -297,8 +297,7 @@ void FirstIR::reset()
 
 void FirstIR::handleNonCommutativeOperation(cStrRef resultName, cStrRef operation)
 {
-    std::cout<<"TEST="<<resultName<<std::endl;
-    std::string reg = getVariable(resultName);
+    std::string reg = getVariable("NAN");
     addNewCode("COPY", reg, resultName);
     addNewCode("COPY", resultName, _firstExtraParameter);
     addNewCode(operation, resultName, reg);

@@ -24,12 +24,14 @@ class Driver
     void convertToSIR()
     {
         SIR = std::make_shared<SecondIR>();
+        SIR->setSymbolTable(ST);
         SIR->parse(FIR->getBlocks());
     }
 
     void convertToTIR()
     {
         TIR = std::make_shared<ThirdIR>();
+        TIR->setSymbolTable(ST);
         TIR->parse(SIR->getBlocks());
     }
 
