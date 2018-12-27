@@ -54,6 +54,22 @@ class SymbolTable
         _currentIterators.erase(name);
     }
 
+    bool isItTable(std::string var)
+    {
+        std::string table = var.substr(0, var.find('('));
+        return _tables.find(table) != _tables.end();
+    }
+
+    bool isItVariable(std::string var)
+    {
+        return _variables.find(var) != _variables.end();
+    }
+
+    unsigned long long getTableShift(std::string var)
+    {
+        return _tables[var].beginIndex;
+    }
+
     void print();
     bool isNameTaken(std::string name);
     

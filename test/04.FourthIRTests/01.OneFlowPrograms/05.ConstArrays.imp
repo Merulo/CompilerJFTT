@@ -1,0 +1,10 @@
+DECLARE
+  array(100:110); arrayy(10:20); arrayyy(5:15); 
+IN
+  array(105) := 10;
+  WRITE array(105);
+  arrayy(15) := 10;
+  WRITE arrayy(15);
+  arrayyy(10) := 10;
+  WRITE arrayyy(10);
+END

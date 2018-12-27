@@ -89,7 +89,7 @@ for i in filtered:
 			sys.stdout.write(COLORS.OK_GREEN)
 			# print("\t\tTest: ", i, " passed")
 			sys.stdout.write(COLORS.FAIL)
-			print("\t\tTest increased cost from", targetInts[-1], " to", resultInts[-1], COLORS.END)
+			print("\t\tTest: ", i," increased cost from", targetInts[-1], " to", resultInts[-1], COLORS.END)
 		# remove rm file, test passed
 		else:
 			# os.remove(rm)

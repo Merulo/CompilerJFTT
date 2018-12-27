@@ -40,6 +40,11 @@ unsigned long long SymbolTable::getMemoryCell(std::string name)
     {
         return _variables[name].memoryCell;
     }
+
+    if (_tables.find(name) != _tables.end())
+    {
+        return _tables[name].memoryCellStart;
+    }
     std::cerr<<"ADDRESS OF "<<name<<" WAS NOT FOUND"<<std::endl;
     return 0;
 }
@@ -52,7 +57,13 @@ void SymbolTable::assignMemory()
         v.second.memoryCell = index;
         index++;
     }
-    //TODO: allocate memory for tables
+
+    for(auto& t : _tables)
+    {
+        std::cout<<t.first<<" allocated at "<<index<<std::endl;
+        t.second.memoryCellStart = index;
+        index += t.second.endIndex - t.second.beginIndex + 1;
+    }
 }
 
 void SymbolTable::addConst(std::string key, std::string value)
@@ -80,6 +91,8 @@ std::string SymbolTable::addTable(std::string name, ull beginIndex, ull endIndex
         return "wrong " + name + " table size!";
     }
     Table t;
+    t.beginIndex = beginIndex;
+    t.endIndex = endIndex;
     _tables[name] = t;
     return "";
 }

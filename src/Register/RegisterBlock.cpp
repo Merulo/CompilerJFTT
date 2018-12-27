@@ -15,20 +15,27 @@ void RegisterBlock::createRegisters()
     }
 }
 
-std::vector<Line> RegisterBlock::loadVariableToRegister(Register& r, std::string varName)
+std::vector<Line> RegisterBlock::performTableMemoryOperation(std::string operation, std::string varName, Register& r)
 {
-    if (_symbolTable->checkVariableIsVariable(varName).empty())
+    std::string array = varName.substr(0, varName.find("("));
+
+    unsigned long long memoryCell = _symbolTable->getMemoryCell(array);
+    std::cout<<"memory cell is "<<memoryCell<<std::endl;
+    std::string rest = varName.substr(varName.find("(") + 1, std::string::npos);
+    rest.pop_back();
+    std::cout<<"Searching for= "<<rest<<std::endl;
+    unsigned long long shift = _symbolTable->getTableShift(array);
+    std::cout<<"Shift= "<<shift<<std::endl;
+
+    if (isDigits(rest))
     {
-        // std::cerr<<"loading variable"<<std::endl;
-        return performMemoryOperation("LOAD", r, _symbolTable->getMemoryCell(varName));
-    }
-    else if (_symbolTable->checkVariableIsTable(varName).empty())
-    {
-        std::cerr<<"loading table"<<std::endl;
+        memoryCell = std::stoull(rest) - shift;
+        std::cout<<"real memory cell="<<memoryCell<<std::endl;
+        return performMemoryOperation(operation, r, memoryCell);
     }
     else
     {
-        std::cerr<<"SOMETHING WENT WRONG"<<std::endl;
+        std::cout<<"not yet implemented"<<std::endl;
     }
     return {};
 }
@@ -61,7 +68,7 @@ Register& RegisterBlock::getRegisterForVariable(std::string name)
 {
     for(auto& r : _registers)
     {
-        if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE)
+        if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE || r.state == RegisterState::TABLE)
         {
             if (r.variableName == name)
             {
@@ -72,7 +79,7 @@ Register& RegisterBlock::getRegisterForVariable(std::string name)
 
     for(auto&r : _registers)
     {
-        if (r.state == RegisterState::UNKNOWN || r.state == RegisterState::TABLE)
+        if (r.state == RegisterState::UNKNOWN)
         {
             return r;
         }
