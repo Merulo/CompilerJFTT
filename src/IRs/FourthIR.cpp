@@ -28,6 +28,10 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
         {
             handleWrite(registerBlock, resultBlock, l);
         }
+        if (l.operation == "READ")
+        {
+            handleRead(registerBlock, resultBlock, l);
+        }
         if (l.operation == "HALT")
         {
             resultBlock.lines.push_back({"HALT"});

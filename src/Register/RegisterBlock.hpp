@@ -28,7 +28,7 @@ class RegisterBlock
     {
         if (_symbolTable->checkVariableIsVariable(varName).empty())
         {
-            std::cerr<<"loading variable"<<std::endl;
+            // std::cerr<<"loading variable"<<std::endl;
             return performMemoryOperation("LOAD", r, _symbolTable->getMemoryCell(varName));
         }
         else if (_symbolTable->checkVariableIsTable(varName).empty())
@@ -96,7 +96,6 @@ class RegisterBlock
         }
         Register& r = _registers[_currentRegister];
         _currentRegister++;
-        std::cerr<<"SHOULD SAVE CURRENT CONTENT OF REGISTER "<<r<<std::endl;
         if (_currentRegister == _registers.size())
         {
             _currentRegister = 0;

@@ -1,0 +1,8 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l;
+IN
+  READ a;
+  READ b;
+  WRITE a;
+  WRITE b;
+END

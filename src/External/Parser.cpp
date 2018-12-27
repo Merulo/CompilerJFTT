@@ -1896,12 +1896,14 @@ yyreturn:
 int yyerror(char *s)
 {
     std::cout << "Line: " << yylineno << ": " << s << std::endl;
+    exit(1);
     return 1;
 }
 
 int yyerror(const char *s)
 {
     std::cout << "Line: " << yylineno << ": " << s << std::endl;
+    exit(1);
     return 1;
 }
 
