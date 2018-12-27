@@ -16,49 +16,43 @@ int main(int argc, char** argv)
     for(int i = 0; i < argc; i++)
     {
         std::string str = argv[i];
+        std::string output;
+        if (i + 1 < argc)
+        {
+            output = argv[i+1];
+        }
         if (str == "-FIR")
         {
-            if (i + 1 < argc)
-            {
-                d.FIR->print(argv[i+1]);
-            }
-            else
-            {
-                d.FIR->print("");
-            }
+            d.FIR->print(output);
             return 0;
         }
         if (str == "-SIR")
         {
             d.convertToSIR();
-            if (i + 1 < argc)
-            {
-                d.SIR->print(argv[i+1]);
-            }
-            else
-            {
-                d.SIR->print("");
-            }            
+            d.SIR->print(output);   
             return 0;
         }
         if (str == "-TIR")
         {
             d.convertToSIR();
             d.convertToTIR();
-            if (i + 1 < argc)
-            {
-                d.TIR->print(argv[i+1]);
-            }
-            else
-            {
-                d.TIR->print("");
-            }            
+            d.TIR->print(output);
             return 0;
-        }              
+        }
+        if (str == "-FOIR")
+        {
+            d.convertToSIR();
+            d.convertToTIR();
+            d.convertToFOIR();
+            d.FOIR->print(output);
+            return 0;
+        }                   
     }
-    // d.compile(argv[2]);
-    // d.ST.print();
 
+    d.convertToSIR();
+    d.convertToTIR();
+    d.convertToFOIR();
+    d.FOIR->print(argv[2]);
 
     return 0;
 }

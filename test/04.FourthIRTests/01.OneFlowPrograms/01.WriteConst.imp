@@ -1,0 +1,9 @@
+DECLARE
+  a; b;
+IN
+  a:= 20;
+  b:= 10;
+  
+  WRITE a;
+  WRITE b;
+END

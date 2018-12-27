@@ -7,6 +7,7 @@
 #include "IRs/FirstIR.hpp"
 #include "IRs/SecondIR.hpp"
 #include "IRs/ThirdIR.hpp"
+#include "IRs/FourthIR.hpp"
 
 class Driver
 {
@@ -17,9 +18,10 @@ class Driver
         ST = std::make_shared<SymbolTable>();
     }
     std::shared_ptr<SymbolTable> ST;
+    std::shared_ptr<FirstIR> FIR;
     std::shared_ptr<SecondIR> SIR;
     std::shared_ptr<ThirdIR> TIR;
-    std::shared_ptr<FirstIR> FIR;
+    std::shared_ptr<FourthIR> FOIR;
 
     void convertToSIR()
     {
@@ -35,10 +37,11 @@ class Driver
         TIR->parse(SIR->getBlocks());
     }
 
-    //this means that first FIR was created
-    void compile(const std::string& fileName)
+    void convertToFOIR()
     {
-        ST->assignMemory();
+        FOIR = std::make_shared<FourthIR>();
+        FOIR->setSymbolTable(ST);
+        FOIR->parse(TIR->getBlocks());
     }
     
 

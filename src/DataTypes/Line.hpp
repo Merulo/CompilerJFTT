@@ -6,6 +6,13 @@
 
 struct Line
 {
+    Line(){};
+    Line(std::string operationInit, std::string oneInit= "", std::string twoInit = "")
+    {
+        operation = operationInit;
+        one = oneInit;
+        two = twoInit;
+    }
     std::string operation;
     std::string one;
     std::string two;

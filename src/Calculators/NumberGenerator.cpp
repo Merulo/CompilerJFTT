@@ -1,13 +1,13 @@
 #include "NumberGenerator.hpp"
 
-std::vector<std::string> NumberGenerator::_result;
+std::vector<Line> NumberGenerator::_result;
 
-std::vector<std::string> NumberGenerator::generateConstFrom(
+std::vector<Line> NumberGenerator::generateConstFrom(
     unsigned long long target, 
     std::vector<std::pair<std::string, unsigned long long>> values)
 {
     _result.clear();
-    getCostWithIncAndAdd(target);
+    getCostWithIncAndAdd(target); //c1
     //if c1 is min;
     generateWithIncAndAdd(target, values[0].first);
 
@@ -40,19 +40,19 @@ void NumberGenerator::generateWithIncAndAdd(unsigned long long target, std::stri
     {
         if (target % 2 == 0)
         {
-            _result.push_back("ADD " + name + " " + name);
+            _result.push_back({"ADD", name, name});
             target = target / 2;
         }
         else
         {
-            _result.push_back("INC " + name);
+            _result.push_back({"INC", name});
             target--;
         }
     }
     for(size_t i = 0; i < target; i++)
     {
-        _result.push_back("INC " + name);
+        _result.push_back({"INC", name});
     }
-    _result.push_back("SUB " + name + " " + name);
+    _result.push_back({"SUB", name, name});
     std::reverse(_result.begin(), _result.end());
 }
