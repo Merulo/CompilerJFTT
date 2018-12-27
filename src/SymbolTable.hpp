@@ -45,12 +45,13 @@ class SymbolTable
     void addToIterators(std::string name)
     {
         Iterator i;
-        _iterators[name] = i;
+        _currentIterators[name] = i;
+        _allIterators[name] = i;
     }
 
     void removeIterator(std::string name)
     {
-        _iterators.erase(name);
+        _currentIterators.erase(name);
     }
 
     void print();
@@ -60,5 +61,6 @@ class SymbolTable
     std::map<std::string, Variable> _variables;
     std::map<std::string, Table> _tables;
     std::map<std::string, std::string> _consts;
-    std::map<std::string, Iterator> _iterators;
+    std::map<std::string, Iterator> _currentIterators;
+    std::map<std::string, Iterator> _allIterators;
 };
