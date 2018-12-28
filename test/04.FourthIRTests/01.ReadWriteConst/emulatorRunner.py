@@ -30,12 +30,19 @@ testCounter = 0
 for i in filtered:
 	# sys.stdout.write(COLORS.HEADER)
 	# somefile.result
-	rm = i.replace(".imp", ".rm")
+	rm 		= i.replace(".imp", ".rm")
+	result 	= i.replace(".imp", ".result")
+	target 	= i.replace(".imp", ".target")
+	data 	= i.replace(".imp", ".data")
 	# somefile.target
-	target = i.replace(".imp", ".target")
 	fNull = open(os.devnull, 'w')	
 	testCounter += 1
-	
+
+	if os.path.isfile(rm):
+		os.remove(rm)
+	if os.path.isfile(result):
+		os.remove(result)
+
 	# print("\tTesting: ", i, COLORS.END)
 	# assuming main is in the same directory
 	cmd = ['./main.exe', i, rm]
@@ -43,8 +50,6 @@ for i in filtered:
 	process = subprocess.Popen(cmd, stdout=fNull, stderr=fNull)
 	process.wait()
 	
-	result = i.replace(".imp", ".result")
-	data = i.replace(".imp", ".data")
 	fIn = open(os.devnull, 'r')
 	if os.path.isfile(data):
 		fIn =  open(data, "r")

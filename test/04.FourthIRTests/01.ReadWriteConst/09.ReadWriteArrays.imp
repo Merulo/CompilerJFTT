@@ -1,0 +1,11 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; arrayy(200:300);
+IN
+  f := 233;
+  arrayy(f) := 123;
+  arrayy(234) := 124;
+
+  WRITE arrayy(233);
+  WRITE arrayy(234);
+
+END

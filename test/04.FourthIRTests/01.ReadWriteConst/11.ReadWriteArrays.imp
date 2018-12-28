@@ -1,0 +1,14 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; arrayy(200:300); array(0:100);
+IN
+  a := 5;
+  array(a) := 5;
+  a := 6;
+  array(a) := 6;
+  array(7) := 7;
+  array(a) := 8;
+
+  WRITE array(5);
+  WRITE array(6);
+  WRITE array(7);
+END

@@ -20,6 +20,7 @@ class FourthIR : public IRBase
     void handleRead(RegisterBlock& rb, Block& b, Line& l);
 
     void updateRegisterState(Block& b, RegisterBlock rb, Register& r, Line l);
+    void updateRegisterStateWithConst(Block& b, RegisterBlock rb, Register& r, Line l);
 
     void prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, Line l);
     void prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, Line l);

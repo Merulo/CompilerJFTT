@@ -25,6 +25,15 @@ struct Register
     std::string name;
     std::string variableName;
 
+    bool operator==(const Register& rhs)
+    {
+        return name == rhs.name;
+    }
+    bool operator!=(const Register& rhs)
+    {
+        return !(*this == rhs);
+    }
+
     friend std::ostream& operator<<(std::ostream& os, const Register& r)
     {
         os << r.name << " ";

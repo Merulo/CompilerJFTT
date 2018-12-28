@@ -54,12 +54,8 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
     b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 
     b.lines.push_back({"#end of generating number"});
 
-    updateRegisterState(b, rb, r, l);
+    updateRegisterStateWithConst(b, rb, r, l);
 
-    if (_symbolTable->isItVariable(l.one))
-    {
-        r.state = RegisterState::CONSTVARIABLE;
-    }
     b.lines.push_back({"#end of performing const"});
 }
 
@@ -94,6 +90,22 @@ void FourthIR::updateRegisterState(Block& b, RegisterBlock rb, Register& r, Line
     if (_symbolTable->isItVariable(l.one))
     {
         r.state = RegisterState::VARIABLE;
+    }
+    else if (_symbolTable->isItTable(l.one))
+    {
+        r.state = RegisterState::TABLE;
+    }
+    else
+    {
+        r.state = RegisterState::CONST;
+    }       
+}
+
+void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock rb, Register& r, Line l)
+{
+    if (_symbolTable->isItVariable(l.one))
+    {
+        r.state = RegisterState::CONSTVARIABLE;
     }
     else if (_symbolTable->isItTable(l.one))
     {

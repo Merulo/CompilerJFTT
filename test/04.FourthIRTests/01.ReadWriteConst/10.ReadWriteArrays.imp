@@ -1,0 +1,32 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; [declaring variables]
+  arrayy(200:300); array(0:100); [declaring arrayy with size 101 and array with size 101]
+IN
+  f := 233; [variables must be initialized before using]
+  g := 50;
+  arrayy(f) := 233; [you can assign value to variable]
+  array(g)  := 50;
+  array(51) := 51;
+  arrayy(234) := 234;
+  g := 52;
+  array(52) := 52;
+
+  WRITE array(g); [write what is stored]
+  WRITE arrayy(234);
+  WRITE arrayy(233);
+  WRITE array(50);
+  WRITE array(51);
+  WRITE array(g);
+  g:= 51;
+  WRITE array(g);
+END
+[
+  expected results:
+52
+234
+233
+50
+51
+52
+51
+]
