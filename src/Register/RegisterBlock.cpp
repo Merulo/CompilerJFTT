@@ -7,6 +7,7 @@ RegisterBlock::RegisterBlock(std::shared_ptr<SymbolTable> symbolTable)
 }
 void RegisterBlock::createRegisters()
 {
+    _addressRegister.name = "A";
     for(size_t i = 1; i < 8; i++){
         Register r;
         char c =  'A' + i;
@@ -29,18 +30,27 @@ std::vector<Line> RegisterBlock::performTableMemoryOperation(std::string operati
 
     if (isDigits(rest))
     {
-        memoryCell = std::stoull(rest) - shift;
+        memoryCell = memoryCell + std::stoull(rest) - shift;
         std::cout<<"real memory cell="<<memoryCell<<std::endl;
         return performMemoryOperation(operation, r, memoryCell);
     }
     else
     {
-        std::cout<<"not yet implemented"<<std::endl;
+        auto lines = prepareAddressRegister(memoryCell);
+        Block b;
+        Register registerForShift = getRegisterForVariable(rest, b); 
+        if (registerForShift.variableName != rest)
+        {
+            std::cout<<"ARRAY(A) - A NOT STORED IN REGISTER!"<<std::endl;
+        }
+        _addressRegister.state = RegisterState::UNKNOWN;
+        lines.push_back({"ADD", "A", registerForShift.name});
+        lines.push_back({operation, r.name});
+        return lines;
     }
-    return {};
 }
 
-std::vector<Line> RegisterBlock::performMemoryOperation(std::string operation, Register& r, unsigned long long memoryCell)
+std::vector<Line> RegisterBlock::prepareAddressRegister(unsigned long long memoryCell)
 {
     std::vector<Line> lines;
     if (_addressRegister.state == RegisterState::UNKNOWN)
@@ -60,12 +70,21 @@ std::vector<Line> RegisterBlock::performMemoryOperation(std::string operation, R
         lines.push_back({"DEC", "A", ""});
         _addressRegister.constValue--;
     }
+    return lines;    
+}
+
+std::vector<Line> RegisterBlock::performMemoryOperation(std::string operation, Register& r, unsigned long long memoryCell)
+{
+    std::vector<Line> lines = prepareAddressRegister(memoryCell);
+
     lines.push_back({operation , r.name});
     return lines;
 }
 
-Register& RegisterBlock::getRegisterForVariable(std::string name)
+Register& RegisterBlock::getRegisterForVariable(std::string name, Block& b)
 {
+    saveTablesIfNeeded(name, b);
+
     for(auto& r : _registers)
     {
         if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE || r.state == RegisterState::TABLE)

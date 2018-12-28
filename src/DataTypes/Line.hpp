@@ -21,6 +21,10 @@ struct Line
         os << l.operation<< " " << l.one << " " << l.two;
         return os;
     };    
+    std::string toString()
+    {
+        return operation + " " + one + " " + two;
+    }
 };
 
 

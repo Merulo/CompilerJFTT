@@ -1,0 +1,8 @@
+DECLARE
+  array(0:20); a;
+IN
+  a := 10;
+  array(a) := 20;
+
+  WRITE array(a);
+END

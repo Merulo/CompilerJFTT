@@ -33,22 +33,27 @@ struct Register
             case RegisterState::UNKNOWN:
             {
                 os << "unknown state";
+                break;
             }
             case RegisterState::VARIABLE:
             {
                 os << "variable="<<r.variableName;
+                break;
             }
             case RegisterState::CONST:
             {
                 os << "const="<<r.constValue;
+                break;
             }
             case RegisterState::TABLE:
             {
                 os << "table="<<r.variableName;
+                break;
             }
             case RegisterState::CONSTVARIABLE:
             {
                 os << "variable="<<r.variableName<<" with value="<<r.constValue;
+                break;
             }
         }
         return os;
