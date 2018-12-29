@@ -1,0 +1,22 @@
+DECLARE
+  a; b; c; d; e;
+IN
+  a:= 20;
+  b:= a;
+  a:= b;
+  b:= 50;
+  a:= b;
+  e:= a;
+  b:= e;
+  e:= e;
+  d:= 100;
+  c:= e;
+  c:= d;
+  d:= d;
+
+  WRITE a;
+  WRITE b;
+  WRITE c;
+  WRITE d;
+  WRITE e;
+END

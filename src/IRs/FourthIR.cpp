@@ -20,6 +20,7 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
     resultBlock.blockName = block.blockName;
     for(auto& l : block.lines)
     {
+        resultBlock.lines.push_back({"#performing " + l.toString()});     
         if (l.operation == "CONST")
         {
             handleConst(registerBlock, resultBlock, l);
@@ -31,6 +32,10 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
         if (l.operation == "READ")
         {
             handleRead(registerBlock, resultBlock, l);
+        }
+        if (l.operation == "COPY")
+        {
+            handleCopy(registerBlock, resultBlock, l);
         }
         if (l.operation == "HALT")
         {
@@ -44,9 +49,8 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
 
 void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 {
-    b.lines.push_back({"#performing " + l.toString()});
     Register& r = rb.getUniqueRegisterForVariable(l.one, b, {});
-    prepareRegisterWithoutLoading(rb, r, b, l);
+    prepareRegisterWithoutLoading(rb, r, b, l.one);
     r.variableName = l.one;
     
     b.lines.push_back({"#generating number"});
@@ -54,50 +58,65 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
     b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 
     b.lines.push_back({"#end of generating number"});
 
-    updateRegisterStateWithConst(b, rb, r, l);
+    updateRegisterStateWithConst(b, rb, r, l.one);
     r.constValue = std::stoull(l.two);
 
     b.lines.push_back({"#end of performing const"});
 }
 
 void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
-{
-    b.lines.push_back({"#performing " + l.toString()});    
+{    
     Register& r = rb.getUniqueRegisterForVariable(l.one, b, {});
-    prepareRegisterWithLoading(rb, r, b, l);
+    prepareRegisterWithLoading(rb, r, b, l.one);
 
     b.lines.push_back({"PUT", r.name});     
 
-    updateRegisterStateWithConst(b, rb, r, l);
+    updateRegisterStateWithConst(b, rb, r, l.one);
     b.lines.push_back({"#end of performing write"});    
 }
 
 
 void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
-{
-    b.lines.push_back({"#performing " + l.toString()});   
+{   
     Register& r = rb.getUniqueRegisterForVariable(l.one, b, {});
-    prepareRegisterWithoutLoading(rb, r, b, l);
+    prepareRegisterWithoutLoading(rb, r, b, l.one);
     r.variableName = l.one;
 
     b.lines.push_back({"GET", r.name});   
 
-    updateRegisterState(b, rb, r, l);
+    updateRegisterState(b, rb, r, l.one);
     b.lines.push_back({"#end of performing write"});    
 }
 
 void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
-{
+{   
+    Register& regOne = rb.getUniqueRegisterForVariable(l.one, b, {});
+    prepareRegisterWithoutLoading(rb, regOne, b, l.one);
+    updateRegisterState(b, rb, regOne, l.one);
+    regOne.variableName = l.one;
 
+    Register& regTwo = rb.getUniqueRegisterForVariable(l.two, b, {regOne});
+    prepareRegisterWithLoading(rb, regTwo, b, l.two);
+    updateRegisterState(b, rb, regTwo, l.two);
+
+    b.lines.push_back({"COPY", regOne.name, regTwo.name});  
+
+    std::cout<<l<<std::endl; 
+    std::cout<<regOne<<std::endl; 
+    std::cout<<regTwo<<std::endl; 
+
+
+    regOne.constValue = regTwo.constValue;
+    b.lines.push_back({"#end of performing copy"});   
 }
 
-void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, Line l)
+void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name)
 {
-    if (_symbolTable->isItVariable(l.one))
+    if (_symbolTable->isItVariable(name))
     {
         r.state = RegisterState::VARIABLE;
     }
-    else if (_symbolTable->isItTable(l.one))
+    else if (_symbolTable->isItTable(name))
     {
         r.state = RegisterState::TABLE;
     }
@@ -107,13 +126,13 @@ void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, Lin
     }       
 }
 
-void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, Line l)
+void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, std::string name)
 {
-    if (_symbolTable->isItVariable(l.one))
+    if (_symbolTable->isItVariable(name))
     {
         r.state = RegisterState::CONSTVARIABLE;
     }
-    else if (_symbolTable->isItTable(l.one))
+    else if (_symbolTable->isItTable(name))
     {
         r.state = RegisterState::TABLE;
     }
@@ -123,33 +142,33 @@ void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Registe
     }       
 }
 
-void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, Line l)
+void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name)
 {
-    b.lines.push_back({"#loading " + l.one + " from memory"}); 
-    prepareRegisterWithoutLoading(rb, r, b, l);
+    b.lines.push_back({"#loading " + name + " from memory"}); 
+    prepareRegisterWithoutLoading(rb, r, b, name);
 
-    if(r.variableName != l.one)
+    if(r.variableName != name)
     {
-        if (_symbolTable->isItVariable(l.one))
+        if (_symbolTable->isItVariable(name))
         {
-            auto lines = rb.performMemoryOperation("LOAD", r, _symbolTable->getMemoryCell(l.one));
+            auto lines = rb.performMemoryOperation("LOAD", r, _symbolTable->getMemoryCell(name));
             b.lines.insert(b.lines.end(), lines.begin(), lines.end());
         }
         else
         {
-            auto lines = rb.performTableMemoryOperation("LOAD", l.one, r);
+            auto lines = rb.performTableMemoryOperation("LOAD", name, r);
             b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 
         }
     }
-    r.variableName = l.one;
-    b.lines.push_back({"#end of loading " + l.one + " from memory"});       
+    r.variableName = name;
+    b.lines.push_back({"#end of loading " + name + " from memory"});       
 }
 
 
-void FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, Line l)
+void FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name)
 {
     b.lines.push_back({"#storing " + r.variableName + " to memory"});    
-    if (r.variableName != l.one)
+    if (r.variableName != name)
     {
         if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE)
         {

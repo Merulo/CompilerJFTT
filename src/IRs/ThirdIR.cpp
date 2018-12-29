@@ -8,9 +8,25 @@ void ThirdIR::parse(std::vector<Block> b)
 
 void ThirdIR::legalize()
 {
+    removeCopyWithSameArguments();
     legalizeJumps();
 
 
+}
+
+void ThirdIR::removeCopyWithSameArguments()
+{
+    for(auto& b : _blocks)
+    {
+        for(auto i = b.lines.begin(); i != b.lines.end(); i++)
+        {
+            if (i->operation == "COPY" && i->one == i->two)
+            {
+                i = b.lines.erase(i);
+                i--;
+            }
+        }
+    }
 }
 
 void ThirdIR::legalizeJumps()

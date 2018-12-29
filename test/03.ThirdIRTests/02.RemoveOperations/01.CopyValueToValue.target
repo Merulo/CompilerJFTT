@@ -1,0 +1,10 @@
+#ThirdIR:
+#Block_0
+	CONST a 10
+	CONST b 20
+	COPY a b
+	COPY b a
+	WRITE a 
+	WRITE b 
+	HALT  
+#end of Block_0

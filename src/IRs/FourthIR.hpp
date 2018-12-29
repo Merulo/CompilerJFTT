@@ -20,9 +20,9 @@ class FourthIR : public IRBase
     void handleRead(RegisterBlock& rb, Block& b, Line& l);
     void handleCopy(RegisterBlock& rb, Block& b, Line& l);
 
-    void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, Line l);
-    void updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, Line l);
+    void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name);
+    void updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, std::string name);
 
-    void prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, Line l);
-    void prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, Line l);
+    void prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name);
+    void prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name);
 };
