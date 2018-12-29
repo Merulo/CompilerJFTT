@@ -30,6 +30,21 @@ void ThirdIR::removeCopyWithSameArguments()
     }
 }
 
+bool ThirdIR::checkVariablesAreSameTable(std::string one, std::string two)
+{
+    if (one.find("(") == std::string::npos)
+    {
+        return false;
+    }
+    if (two.find("(") == std::string::npos)
+    {
+        return false;
+    }
+    std::string oneArray = one.substr(0, one.find("("));
+    std::string twoArray = two.substr(0, two.find("("));
+    return oneArray == twoArray;
+}
+
 void ThirdIR::searchForTwoTablesWithSameOperation()
 {
     for(auto& b : _blocks)
