@@ -1,0 +1,8 @@
+[Out of lower bound]
+DECLARE
+  a; b(5:10);
+IN
+  b(5) := 5;
+  b(10) := 17;
+  b(4) := 12;
+END

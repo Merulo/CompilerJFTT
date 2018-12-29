@@ -38,6 +38,7 @@ class SymbolTable
     std::string checkVariableExistsAndIsInitialized(std::string name);
     std::string checkVariableIsTable(std::string name);
     std::string checkVariableIsVariable(std::string name);
+    std::string checkConstTableAccess(std::string tableName, unsigned long long value);
     void setInitialized(std::string name);
 
     unsigned long long getMemoryCell(std::string name);

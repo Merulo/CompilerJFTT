@@ -196,7 +196,8 @@ identifier: PIDIDENTIFIER
     }
     | PIDIDENTIFIER LEFT_BRACKET NUMBER RIGHT_BRACKET 
     {
-        checkForErrors(d.ST->checkVariableIsTable($1.name));  
+        checkForErrors(d.ST->checkVariableIsTable($1.name));
+        checkForErrors(d.ST->checkConstTableAccess($1.name, $3.value));
         $$.name = $1.name + "(" + std::to_string($3.value) + ")";       
     }
 ;

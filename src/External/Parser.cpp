@@ -1655,14 +1655,15 @@ yyreduce:
   case 43:
 #line 198 "src/External/parser.y" /* yacc.c:1646  */
     {
-        checkForErrors(d.ST->checkVariableIsTable((yyvsp[-3]).name));  
+        checkForErrors(d.ST->checkVariableIsTable((yyvsp[-3]).name));
+        checkForErrors(d.ST->checkConstTableAccess((yyvsp[-3]).name, (yyvsp[-1]).value));
         (yyval).name = (yyvsp[-3]).name + "(" + std::to_string((yyvsp[-1]).value) + ")";       
     }
-#line 1662 "src/External/Parser.cpp" /* yacc.c:1646  */
+#line 1663 "src/External/Parser.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1666 "src/External/Parser.cpp" /* yacc.c:1646  */
+#line 1667 "src/External/Parser.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1890,7 +1891,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 203 "src/External/parser.y" /* yacc.c:1906  */
+#line 204 "src/External/parser.y" /* yacc.c:1906  */
 
 
 int yyerror(char *s)

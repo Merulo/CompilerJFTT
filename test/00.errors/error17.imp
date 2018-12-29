@@ -1,0 +1,8 @@
+[Out of upper bound]
+DECLARE
+  a; b(0:10);
+IN
+  b(0) := 5;
+  b(10) := 17;
+  b(11) := 12;
+END

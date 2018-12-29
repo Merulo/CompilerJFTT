@@ -34,7 +34,7 @@ std::vector<Line> RegisterBlock::performTableMemoryOperation(std::string operati
     {
         std::vector<Line> lines;
         Block b;
-        b.blockName = "TEMPORARYASDAADSADADSADASD";
+        b.blockName = "TEMPORARYASDAADSADADSADASD"; //TODO: change this
         Register& registerForShift = getUniqueRegisterForVariable(rest, b, r); 
         if (registerForShift.variableName != rest)
         {
@@ -91,7 +91,7 @@ std::vector<Line> RegisterBlock::performMemoryOperation(std::string operation, R
     lines.push_back({operation , r.name});
     return lines;
 }
-
+//todo change this
 Register& RegisterBlock::getRegisterForVariable(std::string name, Block& b)
 {
     if (b.blockName != "TEMPORARYASDAADSADADSADASD")

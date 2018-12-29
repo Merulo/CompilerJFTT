@@ -155,6 +155,21 @@ std::string SymbolTable::checkVariableExistsAndIsInitialized(std::string name)
     return "";
 }
 
+std::string SymbolTable::checkConstTableAccess(std::string tableName, unsigned long long value)
+{
+    auto table = _tables[tableName];
+    if (value < table.beginIndex)
+    {
+        return std::to_string(value) + " out of lower bound of " + tableName;
+    }
+    if (value > table.endIndex)
+    {
+        return std::to_string(value) + " out of upper bound of " + tableName;
+    }
+
+    return "";
+}
+
 void SymbolTable::setInitialized(std::string name)
 {
     if (_variables.find(name) != _variables.end())

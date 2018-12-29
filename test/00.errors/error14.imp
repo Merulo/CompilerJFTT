@@ -1,4 +1,4 @@
-[ Błąd w linii 8: niezadeklarowana zmienna i ]
+[Shadowing declaration]
 DECLARE
   a; b(10:10);
 IN
