@@ -19,6 +19,7 @@ class FourthIR : public IRBase
     void handleWrite(RegisterBlock& rb, Block& b, Line& l);
     void handleRead(RegisterBlock& rb, Block& b, Line& l);
     void handleCopy(RegisterBlock& rb, Block& b, Line& l);
+    void handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l);
 
     void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name);
     void updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, std::string name);

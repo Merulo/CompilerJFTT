@@ -108,7 +108,10 @@ bool checkRegisterHasState(RegisterState state, Register& r, std::vector<std::re
 
 bool checkRegisterHasVariable(std::string name, Register& r, std::vector<std::reference_wrapper<Register>> usedRegisters)
 {
-    if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE || r.state == RegisterState::TABLE)
+    if  (r.state == RegisterState::CONSTVARIABLE 
+        || r.state == RegisterState::VARIABLE 
+        || r.state == RegisterState::TABLE 
+        || r.state == RegisterState::CONST)
     {
         if (r.variableName == name && std::find_if(usedRegisters.begin(), usedRegisters.end(), [r](auto i)
             {

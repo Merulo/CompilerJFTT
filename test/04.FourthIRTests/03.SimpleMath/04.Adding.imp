@@ -1,0 +1,9 @@
+DECLARE
+  array(0:100);
+IN
+  array(0) := 1;
+  array(4) := 6 + array(0);
+
+  WRITE array(0);
+  WRITE array(4);
+END

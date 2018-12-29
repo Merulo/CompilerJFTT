@@ -37,6 +37,10 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
         {
             handleCopy(registerBlock, resultBlock, l);
         }
+        if (l.operation == "ADD")
+        {
+            handleDirectTranslation(registerBlock, resultBlock, l);
+        }        
         if (l.operation == "HALT")
         {
             resultBlock.lines.push_back({"HALT"});
@@ -90,21 +94,37 @@ void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
 {   
-    Register& regOne = rb.getUniqueRegisterForVariable(l.one, b, {});
+    //TODO: prevent regTwo from being the register containing variable needed by l.one
+    Register& regTwo = rb.getUniqueRegisterForVariable(l.two, b, {});
+    prepareRegisterWithLoading(rb, regTwo, b, l.two);
+    updateRegisterState(b, rb, regTwo, l.two);
+    regTwo.variableName = l.two;
+
+    Register& regOne = rb.getUniqueRegisterForVariable(l.one, b, {regTwo});
     prepareRegisterWithoutLoading(rb, regOne, b, l.one);
     updateRegisterState(b, rb, regOne, l.one);
     regOne.variableName = l.one;
 
-    Register& regTwo = rb.getUniqueRegisterForVariable(l.two, b, {regOne});
-    prepareRegisterWithLoading(rb, regTwo, b, l.two);
-    updateRegisterState(b, rb, regTwo, l.two);
-
     b.lines.push_back({"COPY", regOne.name, regTwo.name});  
 
-    std::cout<<l<<std::endl; 
-    std::cout<<regOne<<std::endl; 
-    std::cout<<regTwo<<std::endl; 
+    regOne.constValue = regTwo.constValue;
+    b.lines.push_back({"#end of performing copy"});   
+}
 
+void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
+{   
+    //TODO: prevent regTwo from being the register containing variable needed by l.one
+    Register& regTwo = rb.getUniqueRegisterForVariable(l.two, b, {});
+    prepareRegisterWithLoading(rb, regTwo, b, l.two);
+    updateRegisterState(b, rb, regTwo, l.two);
+    regTwo.variableName = l.two;
+
+    Register& regOne = rb.getUniqueRegisterForVariable(l.one, b, {regTwo});
+    prepareRegisterWithLoading(rb, regOne, b, l.one);
+    updateRegisterState(b, rb, regOne, l.one);
+    regOne.variableName = l.one;
+
+    b.lines.push_back({l.operation, regOne.name, regTwo.name});  
 
     regOne.constValue = regTwo.constValue;
     b.lines.push_back({"#end of performing copy"});   
@@ -154,7 +174,7 @@ void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block&
             auto lines = rb.performMemoryOperation("LOAD", r, _symbolTable->getMemoryCell(name));
             b.lines.insert(b.lines.end(), lines.begin(), lines.end());
         }
-        else
+        else if (_symbolTable->isItTable(name))
         {
             auto lines = rb.performTableMemoryOperation("LOAD", name, r);
             b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 

@@ -1,0 +1,25 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j;
+IN
+  a := 1;
+  b := 2;
+  c := 3 + 4;
+  d := a + 5;
+  e := 6 + a;
+  f := a + b;
+  g := b + a;
+  h := a + b;
+  h := h + a;
+  i := a + b;
+  i := a + i;
+
+  WRITE a;
+  WRITE b;
+  WRITE c;
+  WRITE d;
+  WRITE e;
+  WRITE f;
+  WRITE g;
+  WRITE h;
+  WRITE i;
+END
