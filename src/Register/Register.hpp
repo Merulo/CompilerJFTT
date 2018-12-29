@@ -61,7 +61,7 @@ struct Register
             }
             case RegisterState::CONSTVARIABLE:
             {
-                os << "variable="<<r.variableName<<" with value="<<r.constValue;
+                os << "constvariable="<<r.variableName<<" with value="<<r.constValue;
                 break;
             }
         }

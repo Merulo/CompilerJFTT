@@ -45,7 +45,7 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
 void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 {
     b.lines.push_back({"#performing " + l.toString()});
-    Register& r = rb.getRegisterForVariable(l.one, b);
+    Register& r = rb.getUniqueRegisterForVariable(l.one, b, {});
     prepareRegisterWithoutLoading(rb, r, b, l);
     r.variableName = l.one;
     
@@ -55,6 +55,7 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"#end of generating number"});
 
     updateRegisterStateWithConst(b, rb, r, l);
+    r.constValue = std::stoull(l.two);
 
     b.lines.push_back({"#end of performing const"});
 }
@@ -62,12 +63,12 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
 {
     b.lines.push_back({"#performing " + l.toString()});    
-    Register& r = rb.getRegisterForVariable(l.one, b);
+    Register& r = rb.getUniqueRegisterForVariable(l.one, b, {});
     prepareRegisterWithLoading(rb, r, b, l);
 
     b.lines.push_back({"PUT", r.name});     
 
-    updateRegisterState(b, rb, r, l);
+    updateRegisterStateWithConst(b, rb, r, l);
     b.lines.push_back({"#end of performing write"});    
 }
 
@@ -75,7 +76,7 @@ void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
 void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
 {
     b.lines.push_back({"#performing " + l.toString()});   
-    Register& r = rb.getRegisterForVariable(l.one, b);
+    Register& r = rb.getUniqueRegisterForVariable(l.one, b, {});
     prepareRegisterWithoutLoading(rb, r, b, l);
     r.variableName = l.one;
 
@@ -85,7 +86,12 @@ void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"#end of performing write"});    
 }
 
-void FourthIR::updateRegisterState(Block& b, RegisterBlock rb, Register& r, Line l)
+void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
+{
+
+}
+
+void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, Line l)
 {
     if (_symbolTable->isItVariable(l.one))
     {
@@ -101,7 +107,7 @@ void FourthIR::updateRegisterState(Block& b, RegisterBlock rb, Register& r, Line
     }       
 }
 
-void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock rb, Register& r, Line l)
+void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, Line l)
 {
     if (_symbolTable->isItVariable(l.one))
     {

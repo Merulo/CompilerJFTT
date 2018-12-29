@@ -16,8 +16,7 @@ class RegisterBlock
     std::vector<Line> performMemoryOperation(std::string operation, Register& r, unsigned long long memoryCell);
     std::vector<Line> performTableMemoryOperation(std::string operation, std::string varName, Register& r);
     
-    Register& getRegisterForVariable(std::string name, Block& b);
-    Register& getUniqueRegisterForVariable(std::string name, Block& b, Register& r);
+    Register& getUniqueRegisterForVariable(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
     
     void print();
 

@@ -34,8 +34,7 @@ std::vector<Line> RegisterBlock::performTableMemoryOperation(std::string operati
     {
         std::vector<Line> lines;
         Block b;
-        b.blockName = "TEMPORARYASDAADSADADSADASD"; //TODO: change this
-        Register& registerForShift = getUniqueRegisterForVariable(rest, b, r); 
+        Register& registerForShift = getUniqueRegisterForVariable(rest, b, {r}); 
         if (registerForShift.variableName != rest)
         {
             lines = performMemoryOperation("STORE", registerForShift, _symbolTable->getMemoryCell(registerForShift.variableName));
@@ -91,71 +90,55 @@ std::vector<Line> RegisterBlock::performMemoryOperation(std::string operation, R
     lines.push_back({operation , r.name});
     return lines;
 }
-//todo change this
-Register& RegisterBlock::getRegisterForVariable(std::string name, Block& b)
+
+bool checkRegisterHasState(RegisterState state, Register& r, std::vector<std::reference_wrapper<Register>> usedRegisters)
 {
-    if (b.blockName != "TEMPORARYASDAADSADADSADASD")
+    if (r.state == state)
     {
-        saveTablesIfNeeded(name, b);
-    }
-
-    for(auto& r : _registers)
-    {
-        if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE || r.state == RegisterState::TABLE)
-        {
-            if (r.variableName == name)
+        if(std::find_if(usedRegisters.begin(), usedRegisters.end(), [r](auto i)
             {
-                return r;
-            }
-        }
-    }
-
-    for(auto&r : _registers)
-    {
-        if (r.state == RegisterState::UNKNOWN)
+                return i.get() == r;
+            }) == usedRegisters.end())
         {
-            return r;
+            return true;
         }
     }
-
-    for(auto& r : _registers)
-    {
-        if (r.state == RegisterState::CONST)
-        {
-            return r;
-        }
-    }
-
-    Register& r = _registers[_currentRegister];
-    _currentRegister++;
-    if (_currentRegister == _registers.size())
-    {
-        _currentRegister = 0;
-    }
-    return r;  
+    return false;
 }
 
-Register& RegisterBlock::getUniqueRegisterForVariable(std::string name, Block& b, Register& usedRegister)
+bool checkRegisterHasVariable(std::string name, Register& r, std::vector<std::reference_wrapper<Register>> usedRegisters)
 {
-    if (b.blockName != "TEMPORARYASDAADSADADSADASD")
+    if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE || r.state == RegisterState::TABLE)
+    {
+        if (r.variableName == name && std::find_if(usedRegisters.begin(), usedRegisters.end(), [r](auto i)
+            {
+                return i.get() == r;
+            }) == usedRegisters.end())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+Register& RegisterBlock::getUniqueRegisterForVariable(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters)
+{
+    if (!b.lines.empty())
     {
         saveTablesIfNeeded(name, b);
     }
 
     for(auto& r : _registers)
     {
-        if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE || r.state == RegisterState::TABLE)
+        if (checkRegisterHasVariable(name, r, usedRegisters))
         {
-            if (r.variableName == name && usedRegister != r)
-            {
-                return r;
-            }
+            return r;
         }
     }
 
     for(auto&r : _registers)
     {
-        if (r.state == RegisterState::UNKNOWN && usedRegister != r)
+        if (checkRegisterHasState(RegisterState::UNKNOWN, r, usedRegisters))
         {
             return r;
         }
@@ -163,7 +146,7 @@ Register& RegisterBlock::getUniqueRegisterForVariable(std::string name, Block& b
 
     for(auto& r : _registers)
     {
-        if (r.state == RegisterState::CONST && usedRegister != r)
+        if (checkRegisterHasState(RegisterState::CONST, r, usedRegisters))
         {
             return r;
         }
@@ -175,11 +158,14 @@ Register& RegisterBlock::getUniqueRegisterForVariable(std::string name, Block& b
     {
         _currentRegister = 0;
     }
-    if (usedRegister != r)
+    if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [r](auto i)
+            {
+                return i.get() == r;
+            }) == usedRegisters.end())
     {
         return r;
     }
-    return getUniqueRegisterForVariable(name, b, usedRegister); 
+    return getUniqueRegisterForVariable(name, b, usedRegisters); 
 }
 
 void RegisterBlock::saveTablesIfNeeded(std::string name, Block& b)
