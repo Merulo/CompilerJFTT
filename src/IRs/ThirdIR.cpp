@@ -9,6 +9,7 @@ void ThirdIR::parse(std::vector<Block> b)
 void ThirdIR::legalize()
 {
     removeCopyWithSameArguments();
+    searchForTwoTablesWithSameOperation();
     legalizeJumps();
 
 
@@ -24,6 +25,23 @@ void ThirdIR::removeCopyWithSameArguments()
             {
                 i = b.lines.erase(i);
                 i--;
+            }
+        }
+    }
+}
+
+void ThirdIR::searchForTwoTablesWithSameOperation()
+{
+    for(auto& b : _blocks)
+    {
+        for(auto i = b.lines.begin(); i != b.lines.end(); i++)
+        {
+            if (checkVariablesAreSameTable(i->one, i->two))
+            {
+                std::string var = getVariable("NAN");
+                i = b.lines.insert(i, {"COPY", var, i->two});
+                i++;
+                i->two = var;
             }
         }
     }

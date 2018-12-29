@@ -10,7 +10,7 @@ def checkDirectory (currentPath):
 	onlyDirectories.sort()
 
 	# filter only .input files
-	regex = re.compile(r".py")
+	regex = re.compile(r"\.py")
 
 	for directory in onlyDirectories:
 		path = directory

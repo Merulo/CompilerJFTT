@@ -63,7 +63,8 @@ This can be easily translated to a directed cycle graph.
 This is the part where optimization happens (to be done).
 
 ### ThirdIR
-Should legalize all the code, meaning translating it directly into the assembler
+Should legalize all the code, meaning translating it directly into the assembler.
+TODO: remove empty blocks
 
 ### FourthIR + RegisterAllocator
 Should create executable code.
