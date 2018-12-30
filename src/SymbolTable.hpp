@@ -42,6 +42,10 @@ class SymbolTable
     void setInitialized(std::string name);
 
     unsigned long long getMemoryCell(std::string name);
+    std::string getConstValue(std::string name)
+    {
+        return _consts[name];
+    }
 
     void addToIterators(std::string name)
     {

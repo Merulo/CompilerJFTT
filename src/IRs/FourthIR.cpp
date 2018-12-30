@@ -37,7 +37,7 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
         {
             handleCopy(registerBlock, resultBlock, l);
         }
-        if (l.operation == "ADD")
+        if (l.operation == "ADD" || l.operation == "SUB")
         {
             handleDirectTranslation(registerBlock, resultBlock, l);
         }        
@@ -178,6 +178,13 @@ void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block&
         {
             auto lines = rb.performTableMemoryOperation("LOAD", name, r);
             b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 
+        }
+        else if (_symbolTable->isConst(name))
+        {
+            b.lines.push_back({"#USELESS OPERATION WAS PERFORMED, PLEASE FIX"});       
+            std::string value = _symbolTable->getConstValue(name);
+            auto lines = NumberGenerator::generateConstFrom(std::stoull(value), {{r.name, 0}});
+            b.lines.insert(b.lines.end(), lines.begin(), lines.end());     
         }
     }
     r.variableName = name;
