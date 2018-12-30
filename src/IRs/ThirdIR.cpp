@@ -72,7 +72,6 @@ void ThirdIR::legalizeJumps()
             l.operation = "JUMP";
             l.two = "#" + b.blockJump;
             b.lines.push_back(l);
-            b.blockJump = "";
             continue;
         }
         if (b.lines.back().operation == "JLS")
@@ -112,7 +111,5 @@ void ThirdIR::legalizeJLS(Block& b)
     b.lines.push_back(subLine);
     b.lines.push_back(jzero);
     b.lines.push_back(jump);
-    b.blockIfFalse = "";
-    b.blockIfTrue = "";
 }
 

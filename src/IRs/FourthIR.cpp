@@ -47,7 +47,8 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
         }
     }
     _blocks.push_back(resultBlock);
-    registerBlock.print();
+    // registerBlock.print();
+    findNextBlock(block, registerBlock);
 }
 
 

@@ -1,0 +1,13 @@
+DECLARE
+  a; b; c;
+IN
+  a := 10;
+  b := 20;
+  WRITE a;
+  IF a < b THEN
+    c := 30;
+  ENDIF
+  WRITE b;
+  WRITE c;
+
+END
