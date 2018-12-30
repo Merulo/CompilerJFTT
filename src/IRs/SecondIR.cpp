@@ -66,16 +66,3 @@ void SecondIR::removeEmptyBlocks()
         }
     }
 }
-
-Block& SecondIR::getBlockByName(std::string name)
-{
-    for(auto& b : _blocks)
-    {
-        if(b.blockName == name)
-        {
-            return b;
-        }
-    }
-    std::cout<<"BLOCK NOT FOUND"<<std::endl;
-    return *_blocks.begin();
-}

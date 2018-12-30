@@ -11,10 +11,10 @@ void FourthIR::convertToAssembler()
 {
     RegisterBlock registerBlock(_symbolTable);
     registerBlock.createRegisters();
-    convertBlockToAssembler(_notYetConvertedBlocks.front(), registerBlock);
+    convertBlockToAssembler(_notYetConvertedBlocks.front(), registerBlock, _notYetConvertedBlocks.back());
 }
 
-void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock)
+Block& FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBlock, Block& lastBlock)
 {
     Block resultBlock;
     resultBlock.blockName = block.blockName;
@@ -45,10 +45,18 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock registerBlock
         {
             resultBlock.lines.push_back({"HALT"});
         }
+        if (l.operation == "JUMP")
+        {
+            resultBlock.lines.push_back(l);
+        }
+        if (l.operation == "JZERO" || l.operation == "JODD")
+        {
+            handleJumpTranslation(registerBlock, resultBlock, l);
+        }
     }
     _blocks.push_back(resultBlock);
-    // registerBlock.print();
-    findNextBlock(block, registerBlock);
+
+    return continueConverting(block, registerBlock, lastBlock);
 }
 
 
@@ -131,6 +139,17 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"#end of performing copy"});   
 }
 
+void FourthIR::handleJumpTranslation(RegisterBlock& rb, Block& b, Line& l)
+{    
+    Register& r = rb.getUniqueRegisterForVariable(l.one, b, {});
+    prepareRegisterWithLoading(rb, r, b, l.one);
+
+    b.lines.push_back({l.operation, r.name, l.two});     
+
+    updateRegisterStateWithConst(b, rb, r, l.one);
+    b.lines.push_back({"#end of performing write"});    
+}
+
 void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name)
 {
     if (_symbolTable->isItVariable(name))
@@ -165,8 +184,8 @@ void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Registe
 
 void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name)
 {
-    b.lines.push_back({"#loading " + name + " from memory"}); 
     prepareRegisterWithoutLoading(rb, r, b, name);
+    b.lines.push_back({"#loading " + name + " from memory"}); 
 
     if(r.variableName != name)
     {
@@ -193,7 +212,7 @@ void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block&
 }
 
 
-void FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name)
+std::vector<Line> FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name)
 {
     b.lines.push_back({"#storing " + r.variableName + " to memory"});    
     if (r.variableName != name)
@@ -202,12 +221,184 @@ void FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Blo
         {
             auto lines = rb.performMemoryOperation("STORE", r, _symbolTable->getMemoryCell(r.variableName));
             b.lines.insert(b.lines.end(), lines.begin(), lines.end());
+            return lines;
         }
         else if (r.state == RegisterState::TABLE)
         {
             auto lines = rb.performTableMemoryOperation("STORE", r.variableName, r);
             b.lines.insert(b.lines.end(), lines.begin(), lines.end());
+            return lines;
         }
     }
-    b.lines.push_back({"#end of storing " + r.variableName + " to memory"});    
+    b.lines.push_back({"#end of storing " + r.variableName + " to memory"});  
+    return {};  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Block FourthIR::getMeetingBlock(Block&b)
+{
+    //find the meeting block
+    std::vector<Block> ls;
+    std::vector<Block> rs;
+    traverse(getBlockByName(b.blockIfTrue, _notYetConvertedBlocks), ls);
+    traverse(getBlockByName(b.blockIfFalse, _notYetConvertedBlocks), rs);
+    
+    for(auto& l : ls)
+    {
+        for(auto& r : rs)
+        {
+            if (l == r)
+            {
+                std::cout<<"meeting block is "<<r.blockName<<std::endl;
+                return r;
+            }
+        }
+    }
+    return b;
+}
+
+void FourthIR::traverse(Block& b, std::vector<Block>& blocks)
+{
+    blocks.push_back(b);
+    if (!b.blockJump.empty())
+    {
+        traverse(getBlockByName(b.blockJump, _notYetConvertedBlocks), blocks);
+        return;
+    }
+    else if (!b.blockIfFalse.empty() && !b.blockIfTrue.empty())
+    {
+        //find the meeting block
+        std::vector<Block> ls;
+        std::vector<Block> rs;
+        traverse(getBlockByName(b.blockIfTrue, _notYetConvertedBlocks), ls);
+        traverse(getBlockByName(b.blockIfFalse, _notYetConvertedBlocks), rs);
+        
+        for(auto& l : ls)
+        {
+            for(auto& r : rs)
+            {
+                if (l == r)
+                {
+                    blocks.push_back(r);
+                    traverse(r, blocks);
+                    return;
+                }
+            }
+        }
+        std::cout<<"PROBLEM in traverse, no matching found"<<std::endl;
+    }
+}
+
+void FourthIR::appendSaveOfVariable(Block& target, Block& meeting, RegisterBlock& copy, Register& reg, Block& last)
+{
+    if (target != meeting)
+    {
+        auto lines = prepareRegisterWithoutLoading(copy, reg, last, "");
+        Block& toInsertT = getBlockByName(last.blockName, _blocks);
+        lines.insert(lines.begin(), {"#saving register" + reg.name + " content"});
+        lines.push_back({"#end of saving register" + reg.name + " content"});
+        toInsertT.lines.insert(toInsertT.lines.end() - 1, lines.begin(), lines.end());
+    }    
+}
+
+void FourthIR::mergeRegisters(
+    std::vector<Register>& regT, std::vector<Register>& regF, 
+    Block& t, Block& f, 
+    RegisterBlock& copyForT, RegisterBlock& copyForF,
+    Block& lastT, Block& lastF,
+    Block& meeting, RegisterBlock& rb)
+{
+    for(size_t i = 0; i < regT.size(); i++)
+    {
+        std::cout<<"comparing "<<regT[i] <<" and "<<regF[i]<<std::endl;
+        if (regT[i].shouldSave(regF[i]))
+        {
+            std::cout<<"should save"<<std::endl;
+            appendSaveOfVariable(t, meeting, copyForT, regT[i], lastT);
+            appendSaveOfVariable(f, meeting, copyForF, regF[i], lastF);
+            rb.setUnkown(i);
+        }
+        else
+        {
+            rb.setRegister(i, regF[i]);
+        }
+    }
+}
+
+Block& FourthIR::handleSplit(Block& b, RegisterBlock rb, Block& lastBlock)
+{
+    Block meeting = getMeetingBlock(b);
+    if (meeting == b)
+    {
+        std::cout<<"MEETING BLOCK WAS NOT FOUND!"<<std::endl;
+        return b;
+    }
+    Block& t = getBlockByName(b.blockIfTrue, _notYetConvertedBlocks);
+    Block& f = getBlockByName(b.blockIfFalse, _notYetConvertedBlocks);
+
+    RegisterBlock copyForT(rb);
+    RegisterBlock copyForF(rb);
+    Block lastT = meeting;
+    Block lastF = meeting;
+
+    if (t != meeting)
+    {
+        lastT = convertBlockToAssembler(t, copyForT, meeting);
+    }
+    if (f != meeting)
+    {
+        lastF = convertBlockToAssembler(f, copyForF, meeting);
+    }
+
+    std::cout<<"merge of registers"<<std::endl;
+
+    copyForT.print();
+    copyForF.print();
+    auto regT = copyForT.getRegisters();
+    auto regF = copyForF.getRegisters();
+
+    mergeRegisters(regT, regF, t, f, copyForT, copyForF, lastT, lastF, meeting, rb);
+
+    rb.setAddressRegisterAsUnkown();
+    return convertBlockToAssembler(meeting, rb, lastBlock);
+}
+
+Block& FourthIR::continueConverting(Block& b, RegisterBlock rb, Block& lastBlock)
+{
+    if (!b.blockJump.empty())
+    {
+        Block next = getBlockByName(b.blockJump, _notYetConvertedBlocks);
+        if (next == lastBlock)
+        {
+            return b;
+        }
+        return convertBlockToAssembler(next, rb, lastBlock);
+    }
+    else if (!b.blockIfFalse.empty() && !b.blockIfTrue.empty())
+    {
+        return handleSplit(b, rb, lastBlock);
+    }
+    return b;
 }

@@ -1,5 +1,5 @@
 DECLARE
-  a; b; c; d; e; f;
+  a; b; c; d; e; f; g; h; i; j; k; l; m; n; o; p;
 IN
   a := 10;
   b := 20;
@@ -11,6 +11,16 @@ IN
     d := 40;
     c := 30;
     WRITE f;
+    g:=10;
+    h:=10;
+    i:=10;
+    j:=10;
+    k:=10;
+    l:=10;
+    m:=10;
+    n:=10;
+    o:=10;
+    p:=10;
   ENDIF
   WRITE c;
   WRITE d;

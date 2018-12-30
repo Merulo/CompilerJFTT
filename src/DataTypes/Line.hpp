@@ -16,6 +16,7 @@ struct Line
     std::string operation;
     std::string one;
     std::string two;
+    unsigned int operationNumber;
     friend std::ostream& operator<<(std::ostream& os, const Line& l)
     {
         os << l.operation<< " " << l.one << " " << l.two;
@@ -36,6 +37,7 @@ struct Block
     std::string blockIfFalse;
     std::string blockJump;
     inline bool operator==(const Block& rhs){ return blockName == rhs.blockName; }
+    inline bool operator!=(const Block& rhs){ return !(*this == rhs); }
 
     friend std::ostream& operator<<(std::ostream& os, const Block& b)
     {

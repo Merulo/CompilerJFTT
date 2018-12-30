@@ -52,7 +52,8 @@ int main(int argc, char** argv)
     d.convertToSIR();
     d.convertToTIR();
     d.convertToFOIR();
-    d.FOIR->print(argv[2]);
+    d.converToFIIR();
+    d.FIIR->print(argv[2]);
 
     return 0;
 }

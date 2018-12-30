@@ -1,5 +1,3 @@
-#include <algorithm>
-
 #include "IRBase.hpp"
 #include "Register/RegisterBlock.hpp"
 
@@ -15,91 +13,34 @@ class FourthIR : public IRBase
     private:
     std::vector<Block> _notYetConvertedBlocks;
 
-    Block& getBlockByName(std::string searched)
-    {
-        auto result = std::find_if(_notYetConvertedBlocks.begin(), _notYetConvertedBlocks.end(),
-        [&searched](auto& tested){
-            return searched == tested.blockName;
-        });     
-        return *result;
-    }
+    //related to mergin registers
+    Block getMeetingBlock(Block&b);
+    void traverse(Block& b, std::vector<Block>& blocks);
+    void appendSaveOfVariable(Block& target, Block& meeting, RegisterBlock& copy, Register& reg, Block& last);
+    void mergeRegisters(
+        std::vector<Register>& regT, std::vector<Register>& regF, 
+        Block& t, Block& f, 
+        RegisterBlock& copyForT, RegisterBlock& copyForF,
+        Block& lastT, Block& lastF,
+        Block& meeting, RegisterBlock& rb);
 
-    void findNextBlock(Block& b, RegisterBlock rb)
-    {
-        if (!b.blockJump.empty())
-        {
-            convertBlockToAssembler(getBlockByName(b.blockJump), rb);
-            return;
-        }
-        else if (!b.blockIfFalse.empty() && !b.blockIfTrue.empty())
-        {
-            //find the meeting block
-            std::vector<Block> ls;
-            std::vector<Block> rs;
-            traverse(getBlockByName(b.blockIfTrue), ls);
-            traverse(getBlockByName(b.blockIfFalse), rs);
-            
-            for(auto& l : ls)
-            {
-                for(auto& r : rs)
-                {
-                    if (l == r)
-                    {
-                        std::cout<<"meeting block is "<<r.blockName<<std::endl;
-                        break;
-                    }
-                }
-            }
-            return;
-        }
 
-    }
-
-    void traverse(Block& b, std::vector<Block>& blocks)
-    {
-        blocks.push_back(b);
-        if (!b.blockJump.empty())
-        {
-            traverse(getBlockByName(b.blockJump), blocks);
-            return;
-        }
-        else if (!b.blockIfFalse.empty() && !b.blockIfTrue.empty())
-        {
-            //find the meeting block
-            std::vector<Block> ls;
-            std::vector<Block> rs;
-            traverse(getBlockByName(b.blockIfTrue), ls);
-            traverse(getBlockByName(b.blockIfFalse), rs);
-            
-            for(auto& l : ls)
-            {
-                for(auto& r : rs)
-                {
-                    if (l == r)
-                    {
-                        blocks.push_back(r);
-                        traverse(r, blocks);
-                        return;
-                    }
-                }
-            }
-            std::cout<<"PROBLEM in traverse, no matching found"<<std::endl;
-        }
-        
-    }
+    Block& handleSplit(Block& b, RegisterBlock rb, Block& lastBlock);
+    Block& continueConverting(Block& b, RegisterBlock rb, Block& lastBlock);
 
     void convertToAssembler();
-    void convertBlockToAssembler(Block& block, RegisterBlock registerBlock);
+    Block& convertBlockToAssembler(Block& block, RegisterBlock& registerBlock, Block& lastBlock);
 
     void handleConst(RegisterBlock& rb, Block& b, Line& l);
     void handleWrite(RegisterBlock& rb, Block& b, Line& l);
     void handleRead(RegisterBlock& rb, Block& b, Line& l);
     void handleCopy(RegisterBlock& rb, Block& b, Line& l);
     void handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l);
+    void handleJumpTranslation(RegisterBlock& rb, Block& b, Line& l);
 
     void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name);
     void updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, std::string name);
 
     void prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name);
-    void prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name);
+    std::vector<Line> prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name);
 };

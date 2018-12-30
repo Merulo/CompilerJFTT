@@ -24,6 +24,7 @@ struct Register
     unsigned long long constValue;
     std::string name;
     std::string variableName;
+    bool shouldSave(Register one);
 
     bool operator==(const Register& rhs)
     {
@@ -33,7 +34,6 @@ struct Register
     {
         return !(*this == rhs);
     }
-
     friend std::ostream& operator<<(std::ostream& os, const Register& r)
     {
         os << r.name << " ";

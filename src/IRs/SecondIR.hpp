@@ -13,6 +13,4 @@ class SecondIR : public IRBase
 
     void optimize();
 
-    Block& getBlockByName(std::string name);
-
 };

@@ -11,6 +11,38 @@ class RegisterBlock
 {
     public:
     RegisterBlock(std::shared_ptr<SymbolTable> symbolTable);
+    RegisterBlock(const RegisterBlock &rb){
+        for(auto r : rb._registers)
+        {
+            Register copy = r;
+            _registers.push_back(copy);
+        }
+        _addressRegister = rb._addressRegister;
+        _currentRegister = rb._currentRegister;
+        _symbolTable = rb._symbolTable;
+    }
+
+    std::vector<Register> getRegisters()
+    {
+        return _registers;
+    }
+    void setAddressRegisterAsUnkown()
+    {
+        _addressRegister.constValue = rand();
+        _addressRegister.variableName = "";
+        _addressRegister.state = RegisterState::UNKNOWN;       
+    }
+    void setUnkown(unsigned int i)
+    {
+        _registers[i].constValue = rand();
+        _registers[i].variableName = "";
+        _registers[i].state = RegisterState::UNKNOWN;
+    }
+    void setRegister(unsigned int i, Register r)
+    {
+        _registers[i] = r;
+    }
+
     void createRegisters();
 
     std::vector<Line> performMemoryOperation(std::string operation, Register& r, unsigned long long memoryCell);

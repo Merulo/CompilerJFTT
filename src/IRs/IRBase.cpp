@@ -1,5 +1,7 @@
 #include "IRBase.hpp"
 
+#include <algorithm>
+
 unsigned int IRBase::_nextGeneratedVariableSuffix = 0;
 
 IRBase::IRBase(std::string IRName) : _IRName(IRName)
@@ -34,6 +36,19 @@ Block IRBase::generateBlock()
     _blockCounter++;
     return block;
 }
+
+Block& IRBase::getBlockByName(std::string searched, std::vector<Block>& blocks)
+{
+    auto result = std::find_if(blocks.begin(), blocks.end(),
+    [&searched](auto& tested){
+        return searched == tested.blockName;
+    });     
+    if (result == blocks.end())
+    {
+        std::cout<<"problem with getBlockByName"<<std::endl;
+    }
+    return *result;
+}    
 
 void IRBase::setSymbolTable(std::shared_ptr<SymbolTable> symbolTable)
 {

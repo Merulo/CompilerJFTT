@@ -22,7 +22,8 @@ class IRBase
 
     protected:
     Block generateBlock();
-
+    Block& getBlockByName(std::string searched, std::vector<Block>& blocks);
+    
     std::shared_ptr<SymbolTable> _symbolTable;
     std::vector<Block> _blocks;
     std::stack<Block> _currentBlock;

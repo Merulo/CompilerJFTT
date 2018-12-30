@@ -8,6 +8,7 @@
 #include "IRs/SecondIR.hpp"
 #include "IRs/ThirdIR.hpp"
 #include "IRs/FourthIR.hpp"
+#include "IRs/FifthIR.hpp"
 
 class Driver
 {
@@ -22,6 +23,7 @@ class Driver
     std::shared_ptr<SecondIR> SIR;
     std::shared_ptr<ThirdIR> TIR;
     std::shared_ptr<FourthIR> FOIR;
+    std::shared_ptr<FifthIR> FIIR;
 
     void convertToSIR()
     {
@@ -42,6 +44,12 @@ class Driver
         FOIR = std::make_shared<FourthIR>();
         FOIR->setSymbolTable(ST);
         FOIR->parse(TIR->getBlocks());
+    }
+
+    void converToFIIR()
+    {
+        FIIR = std::make_shared<FifthIR>();
+        FIIR->parse(FOIR->getBlocks());
     }
     
 
