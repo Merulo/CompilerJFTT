@@ -1,0 +1,23 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; array(0:100);
+IN
+  a:= 50;
+  b:= 3;
+  array(50) := 100;
+  array(b) := 2;
+  c:=1;
+  d:=1;
+  e:=1;
+  f:=1;
+  g:=1;
+  h:=1;
+  i:=1;
+  j:=1;
+  k:=1;
+  l:=1;
+
+  array(a) := a;
+
+  WRITE array(a);
+
+END
