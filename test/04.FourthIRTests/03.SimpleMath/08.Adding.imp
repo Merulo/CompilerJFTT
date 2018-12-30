@@ -1,0 +1,14 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; array(0:100);
+IN
+  array(10) := 20;
+  array(20) := 30;
+  array(30) := 40;
+  array(40) := 5;
+  a := 10;
+  
+  a := array(a) + array(a);
+
+  WRITE a;
+
+END

@@ -17,7 +17,19 @@ void FirstIR::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 
 void FirstIR::handleMathOperation(cStrRef resultName)
 {
-    // std::cerr<<"Math="<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
+    std::cerr<<"Math="<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
+    
+    if (_firstExtraParameter == _secondExtraParameter && _symbolTable->isItTable(_firstExtraParameter))
+    {
+        std::string res = _firstExtraParameter.substr(_firstExtraParameter.find("(") + 1, std::string::npos);
+        res.pop_back();
+        if (res == resultName)
+        {
+            std::string var = getVariable("NAN");
+            addNewCode("COPY", var, _secondExtraParameter);
+            _secondExtraParameter = var;
+        }
+    }
     if (_operation.empty())
     {
         addNewCode("CONST", resultName, _firstExtraParameter);
