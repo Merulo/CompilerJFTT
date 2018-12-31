@@ -75,10 +75,16 @@ class SymbolTable
         return _tables[var].beginIndex;
     }
 
+    std::string getExtraVariable()
+    {
+        return extraVariable;
+    }
+
     void print();
     bool isNameTaken(std::string name);
     
     private:
+    std::string extraVariable = "IF_CONTROL_VARIABLE";
     std::map<std::string, Variable> _variables;
     std::map<std::string, Table> _tables;
     std::map<std::string, std::string> _consts;

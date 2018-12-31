@@ -51,12 +51,18 @@ unsigned long long SymbolTable::getMemoryCell(std::string name)
 
 void SymbolTable::assignMemory()
 {
-    ull index = 0;
+    ull index = 1;
+    
+    //special if control variable!
+    Variable v;
+    v.memoryCell = 0;
+
     for (auto& v : _variables)
     {
         v.second.memoryCell = index;
         index++;
     }
+    _variables[extraVariable] = v;   
 
     for(auto& t : _tables)
     {
