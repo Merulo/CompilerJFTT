@@ -11,11 +11,17 @@ void FourthIR::convertToAssembler()
 {
     RegisterBlock registerBlock(_symbolTable);
     registerBlock.createRegisters();
+    Block b = generateBlock();
+    _notYetConvertedBlocks.push_back(b);
     convertBlockToAssembler(_notYetConvertedBlocks.front(), registerBlock, _notYetConvertedBlocks.back());
 }
 
 Block& FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBlock, Block& lastBlock)
 {
+    if (block == lastBlock)
+    {
+        return block;
+    }
     Block resultBlock;
     resultBlock.blockName = block.blockName;
     for(auto& l : block.lines)
@@ -332,10 +338,10 @@ void FourthIR::mergeRegisters(
 {
     for(size_t i = 0; i < regT.size(); i++)
     {
-        std::cout<<"comparing "<<regT[i] <<" and "<<regF[i]<<std::endl;
+        // std::cout<<"comparing "<<regT[i] <<" and "<<regF[i]<<std::endl;
         if (regT[i].shouldSave(regF[i]))
         {
-            std::cout<<"should save"<<std::endl;
+            // std::cout<<"should save"<<std::endl;
             appendSaveOfVariable(t, meeting, copyForT, regT[i], lastT);
             appendSaveOfVariable(f, meeting, copyForF, regF[i], lastF);
             rb.setUnkown(i);
@@ -372,10 +378,10 @@ Block& FourthIR::handleSplit(Block& b, RegisterBlock rb, Block& lastBlock)
         lastF = convertBlockToAssembler(f, copyForF, meeting);
     }
 
-    std::cout<<"merge of registers"<<std::endl;
+    // std::cout<<"merge of registers"<<std::endl;
 
-    copyForT.print();
-    copyForF.print();
+    // copyForT.print();
+    // copyForF.print();
     auto regT = copyForT.getRegisters();
     auto regF = copyForF.getRegisters();
 

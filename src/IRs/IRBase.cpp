@@ -3,6 +3,7 @@
 #include <algorithm>
 
 unsigned int IRBase::_nextGeneratedVariableSuffix = 0;
+unsigned int IRBase::_blockCounter = 0;
 
 IRBase::IRBase(std::string IRName) : _IRName(IRName)
 {

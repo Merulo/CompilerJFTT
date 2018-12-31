@@ -33,6 +33,6 @@ class IRBase
     void writeToStream(std::ostream& stream);
 
     std::string _IRName;
-    unsigned int _blockCounter = 0;
+    static unsigned int _blockCounter;
     static unsigned int _nextGeneratedVariableSuffix;
 };

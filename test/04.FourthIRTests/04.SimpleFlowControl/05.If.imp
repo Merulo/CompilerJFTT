@@ -1,0 +1,14 @@
+DECLARE
+  a; b; c; d; e; f;
+IN
+  IF 100 < 100 THEN
+    d := 40;
+    c := 30;
+  ELSE
+    d := 50;
+    c := 30;
+  ENDIF
+  WRITE c;
+  WRITE d;
+
+END

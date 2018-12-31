@@ -1,0 +1,29 @@
+DECLARE
+  a; b; c; d; e; f;
+IN
+  READ a;
+  READ b;
+  READ c;
+  READ d;
+
+  IF a < b THEN
+    IF c < d THEN
+      f := 0;
+      e := 1;
+    ELSE
+      f := 2;
+      e := 3;
+    ENDIF
+  ELSE
+    IF c < d THEN
+      f := 4;
+      e := 5;
+    ELSE
+      f := 6;
+      e := 7;
+    ENDIF
+  ENDIF
+  WRITE f;
+  WRITE e;
+
+END
