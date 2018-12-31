@@ -1,0 +1,9 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; m; n; o; p;
+IN
+  a := 100;
+  IF 100 != 100 THEN
+    WRITE a;
+  ENDIF
+  WRITE a;
+END

@@ -92,8 +92,13 @@ void ThirdIR::legalizeJumps()
         }
         if(_blocks[i].lines.back().operation == "JEQ")
         {
-            Block newBlock = legalizeEquality(_blocks[i]);
-        }        
+            legalizeEquality(_blocks[i]);
+        }
+        if(_blocks[i].lines.back().operation == "JNE")
+        {
+            std::swap(_blocks[i].blockIfFalse, _blocks[i].blockIfTrue);
+            legalizeEquality(_blocks[i]);
+        }              
     }
 }
 
@@ -156,14 +161,11 @@ void ThirdIR::legalizeJMR(Block& b, bool inc)
     insertJumps(b, var);
 }
 
-Block ThirdIR::legalizeEquality(Block& b)
+void ThirdIR::legalizeEquality(Block& b)
 {
     Line lastLine = b.lines.back();
     legalizeJLS(b, true);
     b.lines.back().one = lastLine.one;
     b.lines.back().two = lastLine.two;
     legalizeJMR(b, true);
-
-    Block newBlock = generateBlock();
-    return newBlock;
 }
