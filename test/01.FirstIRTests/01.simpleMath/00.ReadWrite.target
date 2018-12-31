@@ -1,0 +1,8 @@
+#FirstIR:
+#Block_0
+	CONST variable_0 123
+	WRITE variable_0 
+	CONST variable_1 1000000
+	WRITE variable_1 
+	HALT  
+#end of Block_0

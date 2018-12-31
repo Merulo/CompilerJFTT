@@ -57,7 +57,8 @@
 #end of Block_11
 #Block_13
 	WRITE n 
-	WRITE 1 
+	CONST variable_5 1
+	WRITE variable_5 
 #jump to Block_12
 #end of Block_13
 #Block_12

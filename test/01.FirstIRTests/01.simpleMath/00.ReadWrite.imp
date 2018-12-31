@@ -1,0 +1,6 @@
+DECLARE
+  a; b;
+IN
+  WRITE 123;
+  WRITE 1000000;
+END

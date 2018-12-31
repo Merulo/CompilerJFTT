@@ -1,0 +1,6 @@
+DECLARE
+  a; b;
+IN
+  WRITE 100;
+  WRITE 2000;
+END

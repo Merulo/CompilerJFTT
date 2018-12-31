@@ -99,7 +99,9 @@ command: identifier ASSIGN expression SEMICOLON
         }
         else
         {
-            d.FIR->addNewCode("WRITE", std::to_string($2.value));
+            std::string reg = d.FIR->getVariable(std::to_string($2.value));
+            d.FIR->addNewCode("CONST", reg, std::to_string($2.value));
+            d.FIR->addNewCode("WRITE", reg);
         }
     }
 ;
