@@ -14,9 +14,9 @@ class ThirdIR : public IRBase
     void searchForTwoTablesWithSameOperation();
     void legalize();
     void legalizeJumps();
-    void legalizeJLS(Block& b);
-    void legalizeJMR(Block& b);
+    void legalizeJLS(Block& b, bool inc = false);
+    void legalizeJMR(Block& b, bool inc = false);
 
-    std::string calculateDiff(Block& b, std::string one, std::string two);
+    std::string calculateDiff(Block& b, std::string one, std::string two, bool inc = false);
     void insertJumps(Block&b, std::string var);
 };

@@ -30,5 +30,5 @@ bool Register::shouldSave(Register one)
             return one.variableName != this->variableName || one.constValue != this->constValue;
         }
     }
-    return false;
+    return true;
 }

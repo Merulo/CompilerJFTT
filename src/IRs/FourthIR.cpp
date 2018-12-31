@@ -55,9 +55,9 @@ Block& FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBl
         {
             resultBlock.lines.push_back(l);
         }
-        if (l.operation == "JZERO" || l.operation == "JODD")
+        if (l.operation == "JZERO" || l.operation == "JODD" || l.operation == "INC" || l.operation == "DEC")
         {
-            handleJumpTranslation(registerBlock, resultBlock, l);
+            handleSimpleOperation(registerBlock, resultBlock, l);
         }
     }
     _blocks.push_back(resultBlock);
@@ -145,7 +145,7 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"#end of performing copy"});   
 }
 
-void FourthIR::handleJumpTranslation(RegisterBlock& rb, Block& b, Line& l)
+void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 {    
     Register& r = rb.getUniqueRegisterForVariable(l.one, b, {});
     prepareRegisterWithLoading(rb, r, b, l.one);
@@ -153,7 +153,7 @@ void FourthIR::handleJumpTranslation(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({l.operation, r.name, l.two});     
 
     updateRegisterStateWithConst(b, rb, r, l.one);
-    b.lines.push_back({"#end of performing write"});    
+    b.lines.push_back({"#end of performing simple operation"});    
 }
 
 void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name)
@@ -338,10 +338,10 @@ void FourthIR::mergeRegisters(
 {
     for(size_t i = 0; i < regT.size(); i++)
     {
-        // std::cout<<"comparing "<<regT[i] <<" and "<<regF[i]<<std::endl;
+        std::cout<<"comparing "<<regT[i] <<" and "<<regF[i]<<std::endl;
         if (regT[i].shouldSave(regF[i]))
         {
-            // std::cout<<"should save"<<std::endl;
+            std::cout<<"should save"<<std::endl;
             appendSaveOfVariable(t, meeting, copyForT, regT[i], lastT);
             appendSaveOfVariable(f, meeting, copyForF, regF[i], lastF);
             rb.setUnkown(i);
@@ -378,10 +378,10 @@ Block& FourthIR::handleSplit(Block& b, RegisterBlock rb, Block& lastBlock)
         lastF = convertBlockToAssembler(f, copyForF, meeting);
     }
 
-    // std::cout<<"merge of registers"<<std::endl;
+    std::cout<<"merge of registers"<<std::endl;
 
-    // copyForT.print();
-    // copyForF.print();
+    copyForT.print();
+    copyForF.print();
     auto regT = copyForT.getRegisters();
     auto regF = copyForF.getRegisters();
 

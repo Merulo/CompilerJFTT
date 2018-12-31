@@ -76,16 +76,24 @@ void ThirdIR::legalizeJumps()
         }
         if (b.lines.back().operation == "JLS")
         {
-            legalizeJLS(b);
+            legalizeJLS(b, false);
         }
         if(b.lines.back().operation == "JMR")
         {
-            legalizeJMR(b);
+            legalizeJMR(b, false);
         }
+        if (b.lines.back().operation == "JLE")
+        {
+            legalizeJLS(b, true);
+        }
+        if(b.lines.back().operation == "JME")
+        {
+            legalizeJMR(b, true);
+        }        
     }
 }
 
-std::string ThirdIR::calculateDiff(Block& b, std::string one, std::string two)
+std::string ThirdIR::calculateDiff(Block& b, std::string one, std::string two, bool inc)
 {
     std::string var = _symbolTable->getExtraVariable();
     
@@ -93,14 +101,22 @@ std::string ThirdIR::calculateDiff(Block& b, std::string one, std::string two)
     copyLine.operation = "COPY";
     copyLine.one = var;
     copyLine.two = one;
+    b.lines.push_back(copyLine);
     
+    if (inc)
+    {
+        Line incLine;
+        incLine.operation = "INC";
+        incLine.one = var;
+        b.lines.push_back(incLine);
+    }
+
     Line subLine;
     subLine.operation = "SUB";
     subLine.one = var;
     subLine.two = two;
-
-    b.lines.push_back(copyLine);
     b.lines.push_back(subLine);    
+
     return var;
 }
 
@@ -110,30 +126,29 @@ void ThirdIR::insertJumps(Block&b, std::string var)
     jzero.operation = "JZERO";
     jzero.one = var;
     jzero.two = "#"+b.blockIfFalse;
+    b.lines.push_back(jzero);
 
     Line jump;
     jump.operation = "JUMP";
     jump.two = "#"+b.blockIfTrue;
-
-    b.lines.push_back(jzero);
     b.lines.push_back(jump);
 }
 
-void ThirdIR::legalizeJLS(Block& b)
+void ThirdIR::legalizeJLS(Block& b, bool inc)
 {
     Line lastLine = b.lines.back();
     b.lines.pop_back();
 
-    std::string var = calculateDiff(b, lastLine.two, lastLine.one);
+    std::string var = calculateDiff(b, lastLine.two, lastLine.one, inc);
     insertJumps(b, var);
 }
 
-void ThirdIR::legalizeJMR(Block& b)
+void ThirdIR::legalizeJMR(Block& b, bool inc)
 {
     Line lastLine = b.lines.back();
     b.lines.pop_back();
 
-    std::string var = calculateDiff(b, lastLine.one, lastLine.two);
+    std::string var = calculateDiff(b, lastLine.one, lastLine.two, inc);
     insertJumps(b, var);
 }
 
