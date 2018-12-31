@@ -64,31 +64,35 @@ void ThirdIR::searchForTwoTablesWithSameOperation()
 
 void ThirdIR::legalizeJumps()
 {
-    for (auto& b : _blocks)
+    for (size_t i = 0; i < _blocks.size(); i++)
     {
-        if (!b.blockJump.empty())
+        if (!_blocks[i].blockJump.empty())
         {
             Line l;
             l.operation = "JUMP";
-            l.two = "#" + b.blockJump;
-            b.lines.push_back(l);
+            l.two = "#" + _blocks[i].blockJump;
+            _blocks[i].lines.push_back(l);
             continue;
         }
-        if (b.lines.back().operation == "JLS")
+        if (_blocks[i].lines.back().operation == "JLS")
         {
-            legalizeJLS(b, false);
+            legalizeJLS(_blocks[i], false);
         }
-        if(b.lines.back().operation == "JMR")
+        if(_blocks[i].lines.back().operation == "JMR")
         {
-            legalizeJMR(b, false);
+            legalizeJMR(_blocks[i], false);
         }
-        if (b.lines.back().operation == "JLE")
+        if (_blocks[i].lines.back().operation == "JLE")
         {
-            legalizeJLS(b, true);
+            legalizeJLS(_blocks[i], true);
         }
-        if(b.lines.back().operation == "JME")
+        if(_blocks[i].lines.back().operation == "JME")
         {
-            legalizeJMR(b, true);
+            legalizeJMR(_blocks[i], true);
+        }
+        if(_blocks[i].lines.back().operation == "JEQ")
+        {
+            Block newBlock = legalizeEquality(_blocks[i]);
         }        
     }
 }
@@ -152,3 +156,14 @@ void ThirdIR::legalizeJMR(Block& b, bool inc)
     insertJumps(b, var);
 }
 
+Block ThirdIR::legalizeEquality(Block& b)
+{
+    Line lastLine = b.lines.back();
+    legalizeJLS(b, true);
+    b.lines.back().one = lastLine.one;
+    b.lines.back().two = lastLine.two;
+    legalizeJMR(b, true);
+
+    Block newBlock = generateBlock();
+    return newBlock;
+}

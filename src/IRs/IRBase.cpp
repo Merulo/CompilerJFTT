@@ -46,7 +46,7 @@ Block& IRBase::getBlockByName(std::string searched, std::vector<Block>& blocks)
     });     
     if (result == blocks.end())
     {
-        std::cout<<"problem with getBlockByName"<<std::endl;
+        std::cout<<"problem with getBlockByName, searching for="<<searched<<std::endl;
     }
     return *result;
 }    

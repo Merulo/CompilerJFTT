@@ -18,6 +18,7 @@ void FourthIR::convertToAssembler()
 
 Block& FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBlock, Block& lastBlock)
 {
+    std::cout<<"converting "<<block.blockName<<" with "<<lastBlock.blockName<<" as last"<<std::endl;
     if (block == lastBlock)
     {
         return block;
@@ -319,7 +320,7 @@ void FourthIR::traverse(Block& b, std::vector<Block>& blocks)
 
 void FourthIR::appendSaveOfVariable(Block& target, Block& meeting, RegisterBlock& copy, Register& reg, Block& last)
 {
-    if (target != meeting)
+    if (target != meeting && meeting != last)
     {
         auto lines = prepareRegisterWithoutLoading(copy, reg, last, "");
         Block& toInsertT = getBlockByName(last.blockName, _blocks);
@@ -338,10 +339,10 @@ void FourthIR::mergeRegisters(
 {
     for(size_t i = 0; i < regT.size(); i++)
     {
-        std::cout<<"comparing "<<regT[i] <<" and "<<regF[i]<<std::endl;
+        // std::cout<<"comparing "<<regT[i] <<" and "<<regF[i]<<std::endl;
         if (regT[i].shouldSave(regF[i]))
         {
-            std::cout<<"should save"<<std::endl;
+            // std::cout<<"should save"<<std::endl;
             appendSaveOfVariable(t, meeting, copyForT, regT[i], lastT);
             appendSaveOfVariable(f, meeting, copyForF, regF[i], lastF);
             rb.setUnkown(i);
@@ -380,8 +381,8 @@ Block& FourthIR::handleSplit(Block& b, RegisterBlock rb, Block& lastBlock)
 
     std::cout<<"merge of registers"<<std::endl;
 
-    copyForT.print();
-    copyForF.print();
+    // copyForT.print();
+    // copyForF.print();
     auto regT = copyForT.getRegisters();
     auto regF = copyForF.getRegisters();
 

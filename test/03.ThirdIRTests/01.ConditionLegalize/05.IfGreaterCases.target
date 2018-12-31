@@ -1,0 +1,29 @@
+#ThirdIR:
+#Block_0
+	CONST a 10
+	CONST b 20
+	JUMP  #Block_1
+#jump to Block_1
+#end of Block_0
+#Block_1
+	COPY IF_CONTROL_VARIABLE b
+	INC IF_CONTROL_VARIABLE 
+	SUB IF_CONTROL_VARIABLE a
+	JZERO IF_CONTROL_VARIABLE #Block_2
+	COPY IF_CONTROL_VARIABLE a
+	INC IF_CONTROL_VARIABLE 
+	SUB IF_CONTROL_VARIABLE b
+	JZERO IF_CONTROL_VARIABLE #Block_2
+	JUMP  #Block_3
+#ifTrue Block_3
+#ifFalse Block_2
+#end of Block_1
+#Block_3
+	CONST a 100
+	JUMP  #Block_2
+#jump to Block_2
+#end of Block_3
+#Block_2
+	WRITE a 
+	HALT  
+#end of Block_2

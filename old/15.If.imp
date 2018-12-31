@@ -1,0 +1,25 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; m; n; o; p;
+IN
+  a := 10;
+  b := 20;
+  c := 10;
+  d := 10;
+  g:=10;
+  h:=10;
+  i:=10;
+  j:=10;
+  k:=10;
+  l:=10;
+  m:=10;
+  n:=10;
+  o:=10;
+  p:=10;
+  IF 19 = 20 THEN
+    d := 100;
+    c := 200;
+  ENDIF
+  WRITE c;
+  WRITE d;
+
+END
