@@ -1,0 +1,20 @@
+DECLARE
+a;b;c(2:3);
+ 
+IN
+  a := 2;
+  b := 10;
+  c(a) := 10;
+  c(3) := 10;
+  IF c(a)<=c(3) THEN
+    WRITE a;
+  ENDIF
+  IF a>=c(a) THEN
+    WRITE c(a);
+  ELSE
+    WRITE b;
+  ENDIF
+  IF 5=4 THEN
+    WRITE c(3);
+  ENDIF
+END
