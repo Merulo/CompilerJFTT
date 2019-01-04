@@ -1,0 +1,14 @@
+DECLARE
+  a; b;
+IN
+  a := 10;
+  b := 0;
+  DO
+    DO
+      WRITE b;
+      b := b + 1;
+    WHILE b != 100 ENDDO
+    b := 0;
+    a := a - 1;
+  WHILE a > 0 ENDDO
+END
