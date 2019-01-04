@@ -10,9 +10,24 @@ void ThirdIR::legalize()
 {
     removeCopyWithSameArguments();
     searchForTwoTablesWithSameOperation();
+    legalizeSpecificJumps();
     legalizeJumps();
+}
 
-
+void ThirdIR::legalizeSpecificJumps()
+{
+    for(auto& b : _blocks)
+    {
+        for(auto i = b.lines.begin(); i != b.lines.end(); i++)
+        {
+            if (i->operation == "JZERO")
+            {
+                i->two = "#" + b.blockIfTrue;
+                b.lines.push_back({"JUMP", "", "#" + b.blockIfFalse});
+                break;
+            }
+        }
+    }    
 }
 
 void ThirdIR::removeCopyWithSameArguments()
@@ -98,7 +113,7 @@ void ThirdIR::legalizeJumps()
         {
             std::swap(_blocks[i].blockIfFalse, _blocks[i].blockIfTrue);
             legalizeEquality(_blocks[i]);
-        }              
+        }           
     }
 }
 

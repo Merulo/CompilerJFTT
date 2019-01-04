@@ -35,8 +35,8 @@ void FifthIR::calculateJumps()
                 || line.operation == "JODD")
             {
                 std::string argument = line.two;
+                std::cout<<line<<std::endl;
                 argument = argument.substr(1, std::string::npos);
-                // std::cout<<line<<std::endl;
                 int jumpTarget = getFirstInstructionInBlock(getBlockByName(argument, _blocks));
                 line.two = std::to_string(jumpTarget) + " " + line.two;
             }

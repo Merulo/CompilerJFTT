@@ -17,6 +17,7 @@ class ThirdIR : public IRBase
     void legalizeJLS(Block& b, bool inc = false);
     void legalizeJMR(Block& b, bool inc = false);
     void legalizeEquality(Block& b);
+    void legalizeSpecificJumps();
 
     std::string calculateDiff(Block& b, std::string one, std::string two, bool inc = false);
     void insertJumps(Block&b, std::string var);
