@@ -1,0 +1,27 @@
+            //registers states in p should be the same as in next
+            // Block b = IRBase::getBlockByName(p.block.blockName, _blocks);
+            // std::cout<<"add store/load to "<<b.blockName<<std::endl;
+
+
+
+            // auto regToChange = p.registerBlock.getRegisters();
+            // auto regTargeted = next.registerBlock.getRegisters();
+
+            //     for(size_t i = 0; i < regToChange.size(); i++)
+            //     {
+            //         std::cout<<"\tcomparing "<<regToChange[i] <<" and "<<regTargeted[i]<<std::endl;
+            //         if (regToChange[i].shouldSave(regTargeted[i]))
+            //         {
+            //             std::cout<<"\tshould save"<<std::endl;
+            //             // appendSaveOfVariable(t, meeting, copyForT, regToChange[i], lastT);
+            //             // appendSaveOfVariable(f, meeting, copyForF, regTargeted[i], lastF);
+            //             rb.setUnkown(i);
+            //         }
+            //         else
+            //         {
+            //             rb.setRegister(i, regTargeted[i]);
+            //         }
+            //     }
+
+
+

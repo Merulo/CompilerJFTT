@@ -1,0 +1,9 @@
+DECLARE
+  a; b;
+IN
+  a := 20;
+  WHILE a = 20 DO
+    WRITE a;
+    a := a + 1;
+  ENDWHILE
+END

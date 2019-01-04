@@ -270,91 +270,82 @@ std::vector<Line> FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Reg
 
 
 
+void FourthIR::handleSinglePath(Pair&p, RegisterBlock rb)
+{
+    Pair& next = getBlockByName(p.block.blockJump);
+    if (next.registerBlockIsSet)
+    {
+        std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
+    }
+    else
+    {
+        std::cout<<"parsing single jump "<<next.block.blockName<<std::endl;
+        next.registerBlockIsSet = true;
+        convertBlockToAssembler(next, rb);
+    }
+}
 
+void FourthIR::handleBranchSimple(std::string name, RegisterBlock rb)
+{
+    // std::cout<<"parsing first jump "<<next.block.blockName<<std::endl;
+    Pair& next = getBlockByName(name);
+    next.registerBlockIsSet = true;
+    convertBlockToAssembler(next, rb); 
+}
 
+void FourthIR::alignRegisters(Pair& p, Pair& next)
+{
+    auto regToChange = p.registerBlock.getRegisters();
+    auto regTargeted = next.registerBlock.getRegisters();
+    Block tmp = generateBlock();
+    tmp.blockName+= " for register values update!";
+
+        for(size_t i = 0; i < regToChange.size(); i++)
+        {
+            // std::cout<<"\tcomparing "<<regToChange[i] <<" and "<<regTargeted[i]<<std::endl;
+            if (regToChange[i].shouldSave(regTargeted[i]))
+            {
+                // std::cout<<"\tshould save"<<std::endl;
+                prepareRegisterWithLoading(p.registerBlock, regToChange[i], tmp, regTargeted[i].variableName);
+            }
+        }
+    tmp.lines.push_back({"JUMP", "", "#" + next.block.blockName});
+    _blocks.push_back(tmp);
+
+    Block& b = IRBase::getBlockByName(p.block.blockName, _blocks);
+
+    for(auto& line : b.lines)
+    {
+        if (line.two == "#" + next.block.blockName)
+        {
+            line.two = "#" + tmp.blockName;
+        }
+    }
+}
 
 
 void FourthIR::continueConverting(Pair& p, RegisterBlock rb)
 {
     p.registerBlock = rb;
-    // std::cout<<p.block.blockName<<std::endl;
-    // rb.print();
-
-
     if (!p.block.blockJump.empty())
     {
-        Pair& next = getBlockByName(p.block.blockJump, _notYetConvertedBlocks);
-        if (next.registerBlockIsSet)
-        {
-            std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
-        }
-        else
-        {
-            std::cout<<"parsing single jump "<<next.block.blockName<<std::endl;
-            next.registerBlockIsSet = true;
-            convertBlockToAssembler(next, rb);
-        }
+        handleSinglePath(p, rb);
     }
     else if (!p.block.blockIfFalse.empty() && !p.block.blockIfTrue.empty())
     {
         std::cout<<"handling split"<<std::endl;
+
+        handleBranchSimple(p.block.blockIfTrue, rb);
+        Pair& next = getBlockByName(p.block.blockIfFalse);
+
+        if (next.registerBlockIsSet)
         {
-            Pair& next = getBlockByName(p.block.blockIfTrue, _notYetConvertedBlocks);
-            std::cout<<"parsing first jump "<<next.block.blockName<<std::endl;
-            next.registerBlockIsSet = true;
-            convertBlockToAssembler(next, rb);
+            std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
+            alignRegisters(p, next);
         }
+        else
         {
-            Pair& next = getBlockByName(p.block.blockIfFalse, _notYetConvertedBlocks);
-            if (next.registerBlockIsSet)
-            {
-                std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
-                // std::cout<<"add store/load to "<<b.blockName<<std::endl;
-                
-                // std::cout<<p.block.blockName<<std::endl;
-                // p.registerBlock.print();
-                // std::cout<<next.block.blockName<<std::endl;
-                // next.registerBlock.print();
-
-
-                auto regToChange = p.registerBlock.getRegisters();
-                auto regTargeted = next.registerBlock.getRegisters();
-                Block tmp = generateBlock();
-                tmp.blockName+= " for register values update!";
-
-                    for(size_t i = 0; i < regToChange.size(); i++)
-                    {
-                        std::cout<<"\tcomparing "<<regToChange[i] <<" and "<<regTargeted[i]<<std::endl;
-                        if (regToChange[i].shouldSave(regTargeted[i]))
-                        {
-                            std::cout<<"\tshould save"<<std::endl;
-                            prepareRegisterWithLoading(p.registerBlock, regToChange[i], tmp, regTargeted[i].variableName);
-                            // std::cout<<tmp<<std::endl;
-
-
-                        }
-                    }
-                tmp.lines.push_back({"JUMP", "", "#" + next.block.blockName});
-                _blocks.push_back(tmp);
-
-
-                Block& b = IRBase::getBlockByName(p.block.blockName, _blocks);
-                // b.lines.push_back({"ASS"});
-                for(auto& line : b.lines)
-                {
-                    if (line.two == "#" + next.block.blockName)
-                    {
-                        line.two = "#" + tmp.blockName;
-                    }
-                }
-                }
-            else
-            {
-                std::cout<<"parsing second jump "<<next.block.blockName<<std::endl;
-                next.registerBlock = rb;
-                next.registerBlockIsSet = true;
-                convertBlockToAssembler(next, rb);
-            }
+            handleBranchSimple(p.block.blockIfFalse, rb);
         }
 
     }
