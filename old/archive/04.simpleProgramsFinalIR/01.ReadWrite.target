@@ -1,6 +1,0 @@
-FinalIR:
-READ: a  
-READ: b  
-WRITE: a  
-WRITE: b  
-HALT:   

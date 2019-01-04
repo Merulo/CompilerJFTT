@@ -1,6 +1,0 @@
-DECLARE
-  a; b;
-IN
-  a := 1;
-  b := 2;
-END

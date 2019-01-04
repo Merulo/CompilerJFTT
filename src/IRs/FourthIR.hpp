@@ -1,6 +1,7 @@
 #include "IRBase.hpp"
-#include "Register/RegisterBlock.hpp"
 
+#include "Register/Pair.hpp"
+#include "Register/RegisterBlock.hpp"
 #include "Calculators/NumberGenerator.hpp"
 
 class FourthIR : public IRBase
@@ -11,25 +12,40 @@ class FourthIR : public IRBase
     void parse(std::vector<Block> b);
 
     private:
-    std::vector<Block> _notYetConvertedBlocks;
+    std::vector<Pair> _notYetConvertedBlocks;
 
-    //related to mergin registers
-    Block getMeetingBlock(Block&b);
-    void traverse(Block& b, std::vector<Block>& blocks);
-    void appendSaveOfVariable(Block& target, Block& meeting, RegisterBlock& copy, Register& reg, Block& last);
-    void mergeRegisters(
-        std::vector<Register>& regT, std::vector<Register>& regF, 
-        Block& t, Block& f, 
-        RegisterBlock& copyForT, RegisterBlock& copyForF,
-        Block& lastT, Block& lastF,
-        Block& meeting, RegisterBlock& rb);
+    Pair& getBlockByName(std::string searched, std::vector<Pair>& blocks)
+    {
+        auto result = std::find_if(blocks.begin(), blocks.end(),
+        [&searched](auto& tested){
+            return searched == tested.block.blockName;
+        });     
+        if (result == blocks.end())
+        {
+            std::cout<<"problem with getBlockByName, searching for="<<searched<<std::endl;
+        }
+        return *result;
+    }    
 
 
-    Block& handleSplit(Block& b, RegisterBlock rb, Block& lastBlock);
-    Block& continueConverting(Block& b, RegisterBlock rb, Block& lastBlock);
+    // //related to mergin registers
+    // Block getMeetingBlock(Block&b);
+    // void traverse(Block& b, std::vector<Block>& blocks, std::vector<std::string>& visited);
+    // void appendSaveOfVariable(Block& target, Block& meeting, RegisterBlock& copy, Register& reg, Block& last);
+    // void mergeRegisters(
+    //     std::vector<Register>& regT, std::vector<Register>& regF, 
+    //     Block& t, Block& f, 
+    //     RegisterBlock& copyForT, RegisterBlock& copyForF,
+    //     Block& lastT, Block& lastF,
+    //     Block& meeting, RegisterBlock& rb);
+
+
+    // Block& handleSplit(Block& b, RegisterBlock rb, Block& lastBlock);
+    // Block& continueConverting(Block& b, RegisterBlock rb, Block& lastBlock);
 
     void convertToAssembler();
-    Block& convertBlockToAssembler(Block& block, RegisterBlock& registerBlock, Block& lastBlock);
+    void convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock);
+    void continueConverting(Pair& p, RegisterBlock rb);
 
     void handleConst(RegisterBlock& rb, Block& b, Line& l);
     void handleWrite(RegisterBlock& rb, Block& b, Line& l);

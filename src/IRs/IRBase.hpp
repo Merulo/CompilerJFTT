@@ -7,7 +7,7 @@
 #include <stack>
 
 #include "SymbolTable.hpp"
-#include "DataTypes/Line.hpp"
+#include "DataTypes/Block.hpp"
 
 typedef const std::string & cStrRef;
 

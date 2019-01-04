@@ -2,6 +2,7 @@
 
 void FifthIR::parse(std::vector<Block> b)
 {
+    std::cout<<"FifthIR WORKING"<<std::endl;
     _blocks = b;
     //todo: remove jumps if the block is the next block
     // removeUnneededJumps()

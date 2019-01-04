@@ -6,10 +6,15 @@
 
 #include "Register.hpp"
 #include "SymbolTable.hpp"
+#include "DataTypes/Block.hpp"
 
 class RegisterBlock
 {
     public:
+    RegisterBlock()
+    {
+        
+    }
     RegisterBlock(std::shared_ptr<SymbolTable> symbolTable);
     RegisterBlock(const RegisterBlock &rb){
         for(auto r : rb._registers)

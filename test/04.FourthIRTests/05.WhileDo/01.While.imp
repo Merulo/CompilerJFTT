@@ -1,0 +1,14 @@
+DECLARE
+  a; b;
+IN
+  a := 10;
+  WHILE a>0 DO
+    WRITE a;
+    IF a > 5 THEN
+      WRITE 0;
+    ELSE
+      WRITE 1;
+    ENDIF
+    a := a - 1;
+  ENDWHILE
+END

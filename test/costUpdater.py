@@ -13,9 +13,12 @@ for path, subdirs, files in os.walk("."):
 		result = os.path.join(path, name)
 		if regex1.search(result):
 			with open(result) as f:
-				value = [i for i in f.read().split('\n') if i][-1]
-				target = result.replace(".result", ".target")
-				lines = open(target).read().splitlines()
-				lines[-1] = value
-				open(target,'w').write('\n'.join(lines))
+				values = [i for i in f.read().split('\n') if i]
+				# print(values)
+				if (len(values) != 0):
+					value = values[-1]
+					target = result.replace(".result", ".target")
+					lines = open(target).read().splitlines()
+					lines[-1] = value
+					open(target,'w').write('\n'.join(lines))
 

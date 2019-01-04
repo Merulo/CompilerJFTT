@@ -30,12 +30,19 @@ testCounter = 0
 for i in filtered:
 	# sys.stdout.write(COLORS.HEADER)
 	# somefile.result
-	rm = i.replace(".imp", ".rm")
+	rm 		= i.replace(".imp", ".rm")
+	result 	= i.replace(".imp", ".result")
+	target 	= i.replace(".imp", ".target")
+	data 	= i.replace(".imp", ".data")
 	# somefile.target
-	target = i.replace(".imp", ".target")
 	fNull = open(os.devnull, 'w')	
 	testCounter += 1
-	
+
+	if os.path.isfile(rm):
+		os.remove(rm)
+	if os.path.isfile(result):
+		os.remove(result)
+
 	# print("\tTesting: ", i, COLORS.END)
 	# assuming main is in the same directory
 	cmd = ['./main.exe', i, rm]
@@ -43,8 +50,7 @@ for i in filtered:
 	process = subprocess.Popen(cmd, stdout=fNull, stderr=fNull)
 	process.wait()
 	
-	result = i.replace(".imp", ".result")
-	data = i.replace(".imp", ".data")
+	fIn = open(os.devnull, 'r')
 	if os.path.isfile(data):
 		fIn =  open(data, "r")
 	fOut = open(result, "w")
@@ -81,14 +87,14 @@ for i in filtered:
 		# keep rm file for reference
 		# os.remove(rm)
 		sys.stdout.write(COLORS.FAIL)
-		print("\tTest: ", i, " failed", COLORS.END)
+		print("\t\tTest: ", i, " failed", COLORS.END)
 	else:									# files are the same
 		testPassed += 1
 		if (resultInts[-1] > targetInts[-1]):
 			sys.stdout.write(COLORS.OK_GREEN)
-			print("\tTest: ", i, " passed")
+			# print("\t\tTest: ", i, " passed")
 			sys.stdout.write(COLORS.FAIL)
-			print("\t\tTest increased cost from", targetInts[-1], " to", resultInts[-1], COLORS.END)
+			print("\t\tTest: ", i," increased cost from", targetInts[-1], " to", resultInts[-1], COLORS.END)
 		# remove rm file, test passed
 		else:
 			# os.remove(rm)

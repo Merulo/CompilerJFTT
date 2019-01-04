@@ -1,13 +1,8 @@
 #include "FourthIR.hpp"
 
-void FourthIR::parse(std::vector<Block> bs)
+void FourthIR::parse(std::vector<Block> b)
 {
-    for (auto& b : bs)
-    {
-        Pair p;
-        p.block = b;
-        _notYetConvertedBlocks.push_back(p);
-    }
+    _notYetConvertedBlocks = b;
     _symbolTable->assignMemory();
     convertToAssembler();
 }
@@ -16,26 +11,23 @@ void FourthIR::convertToAssembler()
 {
     RegisterBlock registerBlock(_symbolTable);
     registerBlock.createRegisters();
-    // Block b = generateBlock();
-    // _notYetConvertedBlocks.push_back(b);
-    Pair p = _notYetConvertedBlocks.front();
-    convertBlockToAssembler(p, registerBlock);
+    Block b = generateBlock();
+    _notYetConvertedBlocks.push_back(b);
+    convertBlockToAssembler(_notYetConvertedBlocks.front(), registerBlock, _notYetConvertedBlocks.back());
 }
 
-void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
+Block& FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBlock, Block& lastBlock)
 {
-    std::cout<<"converting "<<pair.block.blockName<<std::endl;
-    // std::cout<<"converting "<<block.blockName<<" with "<<lastBlock.blockName<<" as last"<<std::endl;
-    // if (block == lastBlock)
-    // {
-    //     std::cout<<"TEST"<<std::endl;
-    //     std::cout<<block<<std::endl;
-    //     return block;
-    // }
-
+    std::cout<<"converting "<<block.blockName<<" with "<<lastBlock.blockName<<" as last"<<std::endl;
+    if (block == lastBlock)
+    {
+        std::cout<<"TEST"<<std::endl;
+        std::cout<<block<<std::endl;
+        return block;
+    }
     Block resultBlock;
-    resultBlock.blockName = pair.block.blockName;
-    for(auto& l : pair.block.lines)
+    resultBlock.blockName = block.blockName;
+    for(auto& l : block.lines)
     {
         resultBlock.lines.push_back({"#performing " + l.toString()});     
         if (l.operation == "CONST")
@@ -73,7 +65,7 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
     }
     _blocks.push_back(resultBlock);
 
-    continueConverting(pair, registerBlock);
+    return continueConverting(block, registerBlock, lastBlock);
 }
 
 
@@ -274,89 +266,173 @@ std::vector<Line> FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Reg
 
 
 
-void FourthIR::continueConverting(Pair& p, RegisterBlock rb)
+Block FourthIR::getMeetingBlock(Block&b)
 {
-    p.registerBlock = rb;
-    // std::cout<<p.block.blockName<<std::endl;
-    // rb.print();
-
-
-    if (!p.block.blockJump.empty())
+    //find the meeting block
+    std::vector<Block> ls;
+    std::vector<Block> rs;
+    std::vector<std::string> lv = {b.blockName};
+    std::vector<std::string> rv = {b.blockName};
+    traverse(getBlockByName(b.blockIfTrue, _notYetConvertedBlocks), ls, lv);
+    traverse(getBlockByName(b.blockIfFalse, _notYetConvertedBlocks), rs, rv);
+    
+    for(auto& l : ls)
     {
-        Pair& next = getBlockByName(p.block.blockJump, _notYetConvertedBlocks);
-        if (next.registerBlockIsSet)
+        for(auto& r : rs)
         {
-            std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
+            if (l == r)
+            {
+                std::cout<<"meeting block is "<<r.blockName<<std::endl;
+                return r;
+            }
+        }
+    }
+    std::cout<<"PROBLEM1 in traverse, no matching found"<<std::endl;
+    if (lv.front() == lv.back())
+    {
+        std::cout<<"loop starting in "<<lv.front()<< " via "<<lv[1]<<std::endl;
+    }
+    if (rv.front() == rv.back())
+    {
+        std::cout<<"loop starting in "<<rv.front()<< " via "<<rv[1]<<std::endl;
+    }
+
+    return b;
+}
+
+void FourthIR::traverse(Block& b, std::vector<Block>& blocks, std::vector<std::string>& visited)
+{
+    std::cout<<"\tADDING "<<b.blockName<<std::endl;
+    if (visited.front() == b.blockName)
+    {
+        blocks.push_back(b);
+        visited.push_back(b.blockName);
+        return;
+    }
+    
+    visited.push_back(b.blockName);
+
+    blocks.push_back(b);
+    if (!b.blockJump.empty())
+    {
+        traverse(getBlockByName(b.blockJump, _notYetConvertedBlocks), blocks, visited);
+        return;
+    }
+    else if (!b.blockIfFalse.empty() && !b.blockIfTrue.empty())
+    {
+        //find the meeting block
+        std::vector<Block> ls;
+        std::vector<Block> rs;
+        traverse(getBlockByName(b.blockIfTrue, _notYetConvertedBlocks), ls, visited);
+        traverse(getBlockByName(b.blockIfFalse, _notYetConvertedBlocks), rs, visited);
+        
+        for(auto& l : ls)
+        {
+            for(auto& r : rs)
+            {
+                if (l == r)
+                {
+                    blocks.push_back(r);
+                    traverse(r, blocks, visited);
+                    return;
+                }
+            }
+        }
+        std::cout<<"PROBLEM2 in traverse, no matching found"<<std::endl; 
+    }
+}
+
+void FourthIR::appendSaveOfVariable(Block& target, Block& meeting, RegisterBlock& copy, Register& reg, Block& last)
+{
+    if (target != meeting && meeting != last)
+    {
+        auto lines = prepareRegisterWithoutLoading(copy, reg, last, "");
+        Block& toInsertT = getBlockByName(last.blockName, _blocks);
+        lines.insert(lines.begin(), {"#saving register" + reg.name + " content"});
+        lines.push_back({"#end of saving register" + reg.name + " content"});
+        toInsertT.lines.insert(toInsertT.lines.end() - 1, lines.begin(), lines.end());
+    }    
+}
+
+void FourthIR::mergeRegisters(
+    std::vector<Register>& regT, std::vector<Register>& regF, 
+    Block& t, Block& f, 
+    RegisterBlock& copyForT, RegisterBlock& copyForF,
+    Block& lastT, Block& lastF,
+    Block& meeting, RegisterBlock& rb)
+{
+    for(size_t i = 0; i < regT.size(); i++)
+    {
+        // std::cout<<"comparing "<<regT[i] <<" and "<<regF[i]<<std::endl;
+        if (regT[i].shouldSave(regF[i]))
+        {
+            // std::cout<<"should save"<<std::endl;
+            appendSaveOfVariable(t, meeting, copyForT, regT[i], lastT);
+            appendSaveOfVariable(f, meeting, copyForF, regF[i], lastF);
+            rb.setUnkown(i);
         }
         else
         {
-            std::cout<<"parsing single jump "<<next.block.blockName<<std::endl;
-            next.registerBlockIsSet = true;
-            convertBlockToAssembler(next, rb);
+            rb.setRegister(i, regF[i]);
         }
     }
-    else if (!p.block.blockIfFalse.empty() && !p.block.blockIfTrue.empty())
+}
+
+Block& FourthIR::handleSplit(Block& b, RegisterBlock rb, Block& lastBlock)
+{
+    std::cout<<"meeting block= "<<std::endl;
+    Block meeting = getMeetingBlock(b);
+    if (meeting == b)
     {
-        std::cout<<"handling split"<<std::endl;
-        {
-            Pair& next = getBlockByName(p.block.blockIfTrue, _notYetConvertedBlocks);
-            std::cout<<"parsing first jump "<<next.block.blockName<<std::endl;
-            next.registerBlockIsSet = true;
-            convertBlockToAssembler(next, rb);
-        }
-        {
-            Pair& next = getBlockByName(p.block.blockIfFalse, _notYetConvertedBlocks);
-            if (next.registerBlockIsSet)
-            {
-                std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
-                // std::cout<<"add store/load to "<<b.blockName<<std::endl;
-                
-                // std::cout<<p.block.blockName<<std::endl;
-                // p.registerBlock.print();
-                // std::cout<<next.block.blockName<<std::endl;
-                // next.registerBlock.print();
-
-
-                auto regToChange = p.registerBlock.getRegisters();
-                auto regTargeted = next.registerBlock.getRegisters();
-                Block tmp = generateBlock();
-                tmp.blockName+= " for register values update!";
-
-                    for(size_t i = 0; i < regToChange.size(); i++)
-                    {
-                        std::cout<<"\tcomparing "<<regToChange[i] <<" and "<<regTargeted[i]<<std::endl;
-                        if (regToChange[i].shouldSave(regTargeted[i]))
-                        {
-                            std::cout<<"\tshould save"<<std::endl;
-                            prepareRegisterWithLoading(p.registerBlock, regToChange[i], tmp, regTargeted[i].variableName);
-                            // std::cout<<tmp<<std::endl;
-
-
-                        }
-                    }
-                tmp.lines.push_back({"JUMP", "", "#" + next.block.blockName});
-                _blocks.push_back(tmp);
-
-
-                Block& b = IRBase::getBlockByName(p.block.blockName, _blocks);
-                // b.lines.push_back({"ASS"});
-                for(auto& line : b.lines)
-                {
-                    if (line.two == "#" + next.block.blockName)
-                    {
-                        line.two = "#" + tmp.blockName;
-                    }
-                }
-                }
-            else
-            {
-                std::cout<<"parsing second jump "<<next.block.blockName<<std::endl;
-                next.registerBlock = rb;
-                next.registerBlockIsSet = true;
-                convertBlockToAssembler(next, rb);
-            }
-        }
-
+        std::cout<<"MEETING BLOCK WAS NOT FOUND! for "<<b.blockName<<std::endl;
+        return b;
     }
 
+    std::cout<<"meeting block= "<<meeting.blockName<<std::endl;
+    Block& t = getBlockByName(b.blockIfTrue, _notYetConvertedBlocks);
+    Block& f = getBlockByName(b.blockIfFalse, _notYetConvertedBlocks);
+
+    RegisterBlock copyForT(rb);
+    RegisterBlock copyForF(rb);
+    Block lastT = meeting;
+    Block lastF = meeting;
+
+    if (t != meeting)
+    {
+        lastT = convertBlockToAssembler(t, copyForT, meeting);
+    }
+    if (f != meeting)
+    {
+        lastF = convertBlockToAssembler(f, copyForF, meeting);
+    }
+
+    std::cout<<"merge of registers"<<std::endl;
+
+    // copyForT.print();
+    // copyForF.print();
+    auto regT = copyForT.getRegisters();
+    auto regF = copyForF.getRegisters();
+
+    mergeRegisters(regT, regF, t, f, copyForT, copyForF, lastT, lastF, meeting, rb);
+
+    rb.setAddressRegisterAsUnkown();
+    return convertBlockToAssembler(meeting, rb, lastBlock);
+}
+
+Block& FourthIR::continueConverting(Block& b, RegisterBlock rb, Block& lastBlock)
+{
+    if (!b.blockJump.empty())
+    {
+        Block next = getBlockByName(b.blockJump, _notYetConvertedBlocks);
+        if (next == lastBlock)
+        {
+            return b;
+        }
+        return convertBlockToAssembler(next, rb, lastBlock);
+    }
+    else if (!b.blockIfFalse.empty() && !b.blockIfTrue.empty())
+    {
+        return handleSplit(b, rb, lastBlock);
+    }
+    return b;
 }
