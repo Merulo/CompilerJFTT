@@ -8,7 +8,7 @@ class MathOperations
         std::string registerB, std::string registerC, 
         std::string registerD, Line l);
     static std::vector<Line> generateDivision(
-        std::string registerB, std::string regsiterC,
+        std::string registerB, std::string registerC,
         std::string registerD, std::string registerE,
         std::string registerG, Line l
     );

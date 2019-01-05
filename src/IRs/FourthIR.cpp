@@ -71,6 +71,10 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
         {
             handleMul(registerBlock, resultBlock, l);
         }
+        if (l.operation == "DIV")
+        {
+            handleDiv(registerBlock, resultBlock, l);
+        }        
     }
     _blocks.push_back(resultBlock);
 
@@ -195,6 +199,53 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
     registerC.variableName = "";
     registerD.state = RegisterState::UNKNOWN;
     registerD.variableName = "";
+
+    b.lines.push_back({"\t#end of performing MUL operation"});    
+}
+
+void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
+{    
+    Register& registerB = rb.getUniqueRegisterForVariable(l.one, b, {});
+    prepareRegisterWithLoading(rb, registerB, b, l.one);
+
+    Register& registerC = rb.getUniqueRegisterForVariable(l.two, b, {registerB});
+    if (registerC.variableName == l.two)
+    {
+        prepareRegisterWithoutLoading(rb, registerC, b, "");
+    }
+    else
+    {
+        prepareRegisterWithLoading(rb, registerC, b, l.two);
+    }
+
+    Register& registerD = rb.getUniqueRegisterForVariable("TEMPORARY_1", b, {registerB, registerC});
+    prepareRegisterWithoutLoading(rb, registerD, b, "TEMPORARY_1");
+
+    Register& registerE = rb.getUniqueRegisterForVariable("TEMPORARY_2", b, {registerB, registerC, registerD});
+    prepareRegisterWithoutLoading(rb, registerE, b, "TEMPORARY_2");
+
+    Register& registerF = rb.getUniqueRegisterForVariable("TEMPORARY_3", b, {registerB, registerC, registerD, registerE});
+    prepareRegisterWithoutLoading(rb, registerF, b, "TEMPORARY_3");    
+
+    auto lines = MathOperations::generateDivision(
+        registerB.name, registerC.name, 
+        registerD.name, registerE.name,
+        registerF.name, l);
+
+    b.lines.insert(b.lines.end(), lines.begin(), lines.end());
+
+    updateRegisterState(b, rb, registerB, l.one);
+    registerB.variableName = l.one;
+    registerC.state = RegisterState::UNKNOWN;
+    registerC.variableName = "";
+    registerD.state = RegisterState::UNKNOWN;
+    registerD.variableName = "";
+    registerE.state = RegisterState::UNKNOWN;
+    registerE.variableName = "";
+    registerF.state = RegisterState::UNKNOWN;
+    registerF.variableName = "";    
+
+    b.lines.push_back({"\t#end of performing DIV operation"});    
 }
 
 void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name)

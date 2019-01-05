@@ -48,7 +48,75 @@ std::vector<Line> MathOperations::generateMultiplication(std::string registerB, 
     lines.push_back({labelInCaseOfZero});
     lines.push_back({"SUB", registerD, registerD});
     lines.push_back({exitLabel});
-    lines.push_back({"\t#end of performing MUL operation"});    
+    lines.push_back({"COPY", registerB, registerD});
+
+    return lines;
+}
+
+std::vector<Line> MathOperations::generateDivision(
+    std::string registerB, std::string registerC,
+    std::string registerD, std::string registerE,
+    std::string registerF, Line l
+)
+{
+    std::vector<Line> lines;
+
+    lines.push_back({"COPY", registerD, registerB});
+    lines.push_back({"INC", registerD});
+    lines.push_back({"SUB", registerD, registerC});
+    
+    std::string label32 = generateLabel();
+    lines.push_back({"JZERO", registerD, label32});
+
+    lines.push_back({"SUB", registerD, registerD});
+    lines.push_back({"SUB", registerE, registerE});
+
+    std::string label31 = generateLabel();
+    lines.push_back({"JZERO", registerC, label31});    
+
+    std::string label9 = generateLabel();
+    lines.push_back({label9});      
+
+    lines.push_back({"COPY", registerF, registerB});
+    lines.push_back({"INC", registerF});
+    lines.push_back({"SUB", registerF, registerC});
+
+    std::string label16 = generateLabel();
+    lines.push_back({"JZERO", registerF, label16});    
+
+    lines.push_back({"ADD", registerC, registerC});
+    lines.push_back({"INC", registerE});
+
+    lines.push_back({"JUMP", "", label9});
+    lines.push_back({label16});  
+
+    lines.push_back({"INC", registerD});
+    lines.push_back({"DEC", registerE});
+    lines.push_back({"HALF", registerC});
+    lines.push_back({"SUB", registerB, registerC});
+
+    std::string label20 = generateLabel();
+    lines.push_back({label20}); 
+
+    lines.push_back({"JZERO", registerE, label32});  
+
+    lines.push_back({"ADD", registerD, registerD});
+    lines.push_back({"HALF", registerC});
+    lines.push_back({"DEC", registerE});
+    lines.push_back({"COPY", registerF, registerB});
+    lines.push_back({"INC", registerF});
+    lines.push_back({"SUB", registerF, registerC});
+
+    lines.push_back({"JZERO", registerF, label20});  
+    lines.push_back({"INC", registerD});
+    lines.push_back({"SUB", registerB, registerC});
+    lines.push_back({"JUMP", "", label20});  
+
+    lines.push_back({label31});    
+    lines.push_back({"SUB", registerB, registerB});
+
+    lines.push_back({label32});    
+
     lines.push_back({"COPY", registerB, registerD});
 
     return lines;
