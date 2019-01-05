@@ -34,6 +34,7 @@ class FourthIR : public IRBase
         void handleSinglePath(Pair& p, RegisterBlock rb);
         void handleBranchSimple(std::string name, RegisterBlock rb);
         void alignRegisters(Pair& p, Pair& next);
+        void handleBranch(Pair& p, RegisterBlock& rb, std::string next);
 
     //handles translating operations
     void handleConst(RegisterBlock& rb, Block& b, Line& l);
@@ -48,6 +49,6 @@ class FourthIR : public IRBase
     void updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, std::string name);
 
     //handles memory management
-    void prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name);
+    void prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name, bool save = true);
     std::vector<Line> prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name);
 };

@@ -41,6 +41,11 @@ unsigned long long SymbolTable::getMemoryCell(std::string name)
         return _variables[name].memoryCell;
     }
 
+    if(_allIterators.find(name) != _allIterators.end())
+    {
+        return _allIterators[name].memoryCell;
+    }
+
     if (_tables.find(name) != _tables.end())
     {
         return _tables[name].memoryCellStart;
@@ -57,6 +62,7 @@ void SymbolTable::assignMemory()
     Variable v;
     v.memoryCell = 0;
 
+    //variables
     for (auto& v : _variables)
     {
         v.second.memoryCell = index;
@@ -64,6 +70,15 @@ void SymbolTable::assignMemory()
     }
     _variables[extraVariable] = v;   
 
+    //iterators
+    for(auto& i : _allIterators)
+    {
+        i.second.memoryCell = index;
+        index++;
+    }
+
+    //tables
+    //TODO: use heuristic
     for(auto& t : _tables)
     {
         std::cout<<t.first<<" allocated at "<<index<<std::endl;

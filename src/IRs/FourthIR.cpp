@@ -33,7 +33,7 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
     //     return block;
     // }
     pair.startRegisterBlock = registerBlock;
-    registerBlock.print();
+    // registerBlock.print();
 
     Block resultBlock;
     resultBlock.blockName = pair.block.blockName;
@@ -201,9 +201,12 @@ void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Registe
     }       
 }
 
-void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name)
+void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name, bool save)
 {
-    prepareRegisterWithoutLoading(rb, r, b, name);
+    if (save)
+    {
+        prepareRegisterWithoutLoading(rb, r, b, name);
+    }
     b.lines.push_back({"#loading " + name + " from memory"}); 
 
     if(r.variableName != name)
@@ -308,12 +311,43 @@ void FourthIR::alignRegisters(Pair& p, Pair& next)
             std::cout<<"\tcomparing "<<regToChange[i] <<" and "<<regTargeted[i]<<std::endl;
             if (regToChange[i].shouldSave(regTargeted[i]))
             {
-                std::cout<<"\tshould save"<<std::endl;
-                prepareRegisterWithLoading(p.registerBlock, regToChange[i], tmp, regTargeted[i].variableName);
+                std::cout<<"\t\tshould save "<<regToChange[i]<<std::endl;
+                prepareRegisterWithoutLoading(p.registerBlock, regToChange[i], tmp, regTargeted[i].variableName);
+            }
+            else if (regToChange[i].state == RegisterState::VARIABLE || regToChange[i].state == RegisterState::CONSTVARIABLE)
+            {
+                std::string variable = regToChange[i].variableName;
+                for(size_t j = 0; j < regToChange.size(); j++)
+                {
+                    if (regTargeted[j].state == RegisterState::VARIABLE || regTargeted[j].state == RegisterState::CONSTVARIABLE)
+                    {
+                        if (variable == regTargeted[j].variableName)
+                        {
+                        std::cout<<"\t\t\tShould save "<<regToChange[i]<<std::endl;
+
+                        prepareRegisterWithoutLoading(p.registerBlock, regToChange[i], tmp, "");
+
+                        }
+                    }
+                }
             }
         }
+
+        for(size_t i = 0; i < regToChange.size(); i++)
+        {
+            std::cout<<"\tcomparing "<<regToChange[i] <<" and "<<regTargeted[i]<<std::endl;
+            if (regToChange[i].shouldSave(regTargeted[i]))
+            {
+                std::cout<<"\t\tshould load "<<regTargeted[i]<<std::endl;
+                prepareRegisterWithLoading(p.registerBlock, regToChange[i], tmp, regTargeted[i].variableName, false);
+            }
+        }
+
+
+
     tmp.lines.push_back({"JUMP", "", "#" + next.block.blockName});
     _blocks.push_back(tmp);
+    //TODO: COPY ADDRESS REGISTER STATE
     p.registerBlock.setAddressRegisterAsUnkown();
 
     Block& b = IRBase::getBlockByName(p.block.blockName, _blocks);
@@ -328,10 +362,24 @@ void FourthIR::alignRegisters(Pair& p, Pair& next)
 }
 
 
+void FourthIR::handleBranch(Pair& p, RegisterBlock& rb, std::string nextName)
+{
+    Pair& next = getBlockByName(nextName);
+    if (next.registerBlockIsSet)
+    {
+        std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
+        alignRegisters(p, next);
+    }
+    else
+    {
+        handleBranchSimple(nextName, rb);
+    }
+}
+
 void FourthIR::continueConverting(Pair& p, RegisterBlock rb)
 {
-    std::cout<<p.block.blockName<<std::endl;
-    rb.print();
+    // std::cout<<p.block.blockName<<std::endl;
+    // rb.print();
     p.registerBlock = rb;
 
     if (!p.block.blockJump.empty())
@@ -342,31 +390,8 @@ void FourthIR::continueConverting(Pair& p, RegisterBlock rb)
     {
         std::cout<<"handling split"<<std::endl;
         
-        {
-            Pair& next = getBlockByName(p.block.blockIfTrue);
-            if (next.registerBlockIsSet)
-            {
-                std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
-                alignRegisters(p, next);
-            }
-            else
-            {
-                handleBranchSimple(p.block.blockIfTrue, rb);
-            }
-        }
-
-        {
-            Pair& next = getBlockByName(p.block.blockIfFalse);
-            if (next.registerBlockIsSet)
-            {
-                std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
-                alignRegisters(p, next);
-            }
-            else
-            {
-                handleBranchSimple(p.block.blockIfFalse, rb);
-            }
-        }
+        handleBranch(p, rb, p.block.blockIfTrue);
+        handleBranch(p, rb, p.block.blockIfFalse);
 
     }
 

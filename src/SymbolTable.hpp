@@ -52,6 +52,9 @@ class SymbolTable
         Iterator i;
         _currentIterators[name] = i;
         _allIterators[name] = i;
+        Iterator iForControl;
+        std::string newName = name + forControlName;
+        _allIterators[newName] = iForControl;
     }
 
     void removeIterator(std::string name)
@@ -67,7 +70,16 @@ class SymbolTable
 
     bool isItVariable(std::string var)
     {
-        return _variables.find(var) != _variables.end();
+        if (_variables.find(var) != _variables.end())
+        {
+            return true;
+        }
+        if (_allIterators.find(var) != _allIterators.end())
+        {
+            return true;
+        }
+
+        return false;
     }
 
     unsigned long long getTableShift(std::string var)
@@ -85,6 +97,7 @@ class SymbolTable
     
     private:
     std::string extraVariable = "IF_CONTROL_VARIABLE";
+    std::string forControlName = "_forControl";
     std::map<std::string, Variable> _variables;
     std::map<std::string, Table> _tables;
     std::map<std::string, std::string> _consts;
