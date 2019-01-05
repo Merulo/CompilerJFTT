@@ -32,6 +32,8 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
     //     std::cout<<block<<std::endl;
     //     return block;
     // }
+    pair.startRegisterBlock = registerBlock;
+    registerBlock.print();
 
     Block resultBlock;
     resultBlock.blockName = pair.block.blockName;
@@ -275,7 +277,8 @@ void FourthIR::handleSinglePath(Pair&p, RegisterBlock rb)
     Pair& next = getBlockByName(p.block.blockJump);
     if (next.registerBlockIsSet)
     {
-        std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
+        std::cout<<"perform operation to fit registerBlock in blockaaaaaa "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
+        alignRegisters(p, next);
     }
     else
     {
@@ -296,21 +299,22 @@ void FourthIR::handleBranchSimple(std::string name, RegisterBlock rb)
 void FourthIR::alignRegisters(Pair& p, Pair& next)
 {
     auto regToChange = p.registerBlock.getRegisters();
-    auto regTargeted = next.registerBlock.getRegisters();
+    auto regTargeted = next.startRegisterBlock.getRegisters();
     Block tmp = generateBlock();
     tmp.blockName+= " for register values update!";
 
         for(size_t i = 0; i < regToChange.size(); i++)
         {
-            // std::cout<<"\tcomparing "<<regToChange[i] <<" and "<<regTargeted[i]<<std::endl;
+            std::cout<<"\tcomparing "<<regToChange[i] <<" and "<<regTargeted[i]<<std::endl;
             if (regToChange[i].shouldSave(regTargeted[i]))
             {
-                // std::cout<<"\tshould save"<<std::endl;
+                std::cout<<"\tshould save"<<std::endl;
                 prepareRegisterWithLoading(p.registerBlock, regToChange[i], tmp, regTargeted[i].variableName);
             }
         }
     tmp.lines.push_back({"JUMP", "", "#" + next.block.blockName});
     _blocks.push_back(tmp);
+    p.registerBlock.setAddressRegisterAsUnkown();
 
     Block& b = IRBase::getBlockByName(p.block.blockName, _blocks);
 
@@ -326,7 +330,10 @@ void FourthIR::alignRegisters(Pair& p, Pair& next)
 
 void FourthIR::continueConverting(Pair& p, RegisterBlock rb)
 {
+    std::cout<<p.block.blockName<<std::endl;
+    rb.print();
     p.registerBlock = rb;
+
     if (!p.block.blockJump.empty())
     {
         handleSinglePath(p, rb);
@@ -334,18 +341,31 @@ void FourthIR::continueConverting(Pair& p, RegisterBlock rb)
     else if (!p.block.blockIfFalse.empty() && !p.block.blockIfTrue.empty())
     {
         std::cout<<"handling split"<<std::endl;
-
-        handleBranchSimple(p.block.blockIfTrue, rb);
-        Pair& next = getBlockByName(p.block.blockIfFalse);
-
-        if (next.registerBlockIsSet)
+        
         {
-            std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
-            alignRegisters(p, next);
+            Pair& next = getBlockByName(p.block.blockIfTrue);
+            if (next.registerBlockIsSet)
+            {
+                std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
+                alignRegisters(p, next);
+            }
+            else
+            {
+                handleBranchSimple(p.block.blockIfTrue, rb);
+            }
         }
-        else
+
         {
-            handleBranchSimple(p.block.blockIfFalse, rb);
+            Pair& next = getBlockByName(p.block.blockIfFalse);
+            if (next.registerBlockIsSet)
+            {
+                std::cout<<"perform operation to fit registerBlock in block "<<p.block.blockName<< " and "<<next.block.blockName<<std::endl;
+                alignRegisters(p, next);
+            }
+            else
+            {
+                handleBranchSimple(p.block.blockIfFalse, rb);
+            }
         }
 
     }

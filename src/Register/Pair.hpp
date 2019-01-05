@@ -7,5 +7,6 @@ struct Pair
 {
     Block block;
     RegisterBlock registerBlock;
+    RegisterBlock startRegisterBlock;
     bool registerBlockIsSet = false;
 };

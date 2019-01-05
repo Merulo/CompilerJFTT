@@ -1,10 +1,9 @@
 DECLARE
-  a; b; c; d; e; f; g; h; i; j; k; l; m; n; o; p; r;
+  a; b; c; d; e; f; g; h; j; k; l; m; n; o; p; r;
 IN
-  a := 15;
-  WHILE a < 20 DO
-    WRITE a;
-    a := a + 1;
+  a := 10;
+  FOR i FROM 0 TO 10 DO
+    WRITE i;
     b:= 10;
     c:= 10;
     d:= 10;
@@ -12,7 +11,6 @@ IN
     f:= 10;
     g:= 10;
     h:= 10;
-    i:= 10;
     j:= 10;
     k:= 10;
     l:= 10;
@@ -20,6 +18,6 @@ IN
     n:= 10;
     o:= 10;
     p:= 10;
-    r:= 10;
-  ENDWHILE
+    r:= 10;    
+  ENDFOR
 END
