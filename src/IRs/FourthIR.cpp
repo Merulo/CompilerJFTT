@@ -64,6 +64,10 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
         {
             handleSimpleOperation(registerBlock, resultBlock, l);
         }
+        if (l.operation == "MUL")
+        {
+            handleMul(registerBlock, resultBlock, l);
+        }
     }
     _blocks.push_back(resultBlock);
 
@@ -161,6 +165,66 @@ void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"\t#end of performing simple operation"});    
 }
 
+void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
+{    
+    Register& registerB = rb.getUniqueRegisterForVariable(l.one, b, {});
+    prepareRegisterWithLoading(rb, registerB, b, l.one);
+
+    Register& registerC = rb.getUniqueRegisterForVariable(l.two, b, {registerB});
+    prepareRegisterWithLoading(rb, registerC, b, l.two);
+
+    Register& registerD = rb.getUniqueRegisterForVariable("TEMPORARY_2", b, {registerB, registerC});
+    prepareRegisterWithoutLoading(rb, registerD, b, "TEMPORARY_2");
+
+    std::string labelInCaseOfZero = generateLabel();
+    //check if either registerB or registerC is zero.
+    b.lines.push_back({"JZERO", registerB.name, labelInCaseOfZero});
+    b.lines.push_back({"JZERO", registerC.name, labelInCaseOfZero});
+
+    //compare so that we multiply by smaller
+    b.lines.push_back({"COPY", registerD.name, registerC.name});
+    b.lines.push_back({"COPY", registerD.name, registerB.name});
+    std::string labelInCaseNoSwapNeeded = generateLabel();
+
+    b.lines.push_back({"JZERO", registerD.name, labelInCaseNoSwapNeeded});
+    
+    //swap
+    b.lines.push_back({"COPY", registerD.name, registerC.name});
+    b.lines.push_back({"COPY", registerC.name, registerB.name});
+    b.lines.push_back({"COPY", registerB.name, registerD.name});
+
+    b.lines.push_back({labelInCaseNoSwapNeeded});
+    b.lines.push_back({"SUB", registerD.name, registerD.name});
+
+    std::string skipOddC = generateLabel();
+    std::string mainLoopLabel = generateLabel();
+
+    b.lines.push_back({mainLoopLabel});
+    b.lines.push_back({"JODD", registerC.name, skipOddC});
+
+    std::string handleOddC = generateLabel();
+    b.lines.push_back({handleOddC});
+    
+    b.lines.push_back({"ADD", registerB.name, registerB.name});
+    b.lines.push_back({"HALF", registerC.name});
+
+    std::string exitLabel = generateLabel();
+    b.lines.push_back({"JZERO", registerC.name, exitLabel});
+    b.lines.push_back({"JUMP", "",mainLoopLabel});
+
+    b.lines.push_back({skipOddC});
+    b.lines.push_back({"ADD", registerD.name, registerB.name});
+    b.lines.push_back({"JUMP", "", handleOddC});
+
+    //in case this is zero
+    b.lines.push_back({labelInCaseOfZero});
+    b.lines.push_back({"SUB", registerD.name, registerD.name});
+    b.lines.push_back({exitLabel});
+    b.lines.push_back({"\t#end of performing MUL operation"});    
+
+    b.lines.push_back({"COPY", registerB.name, registerD.name});
+}
+
 void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name)
 {
     if (_symbolTable->isItVariable(name))
@@ -199,7 +263,7 @@ void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block&
     {
         prepareRegisterWithoutLoading(rb, r, b, name);
     }
-    b.lines.push_back({"\t#loading " + name + " from memory"}); 
+    b.lines.push_back({"\t\t#loading " + name + " from memory"}); 
 
     if(r.variableName != name)
     {
@@ -222,13 +286,13 @@ void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block&
         }
     }
     r.variableName = name;
-    b.lines.push_back({"\t#end of loading " + name + " from memory"});       
+    b.lines.push_back({"\t\t#end of loading " + name + " from memory"});       
 }
 
 
 std::vector<Line> FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name)
 {
-    b.lines.push_back({"\t#storing " + r.variableName + " to memory"});    
+    b.lines.push_back({"\t\t#storing " + r.variableName + " to memory"});    
     if (r.variableName != name)
     {
         if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE)
@@ -244,7 +308,7 @@ std::vector<Line> FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Reg
             return lines;
         }
     }
-    b.lines.push_back({"\t#end of storing " + r.variableName + " to memory"});  
+    b.lines.push_back({"\t\t#end of storing " + r.variableName + " to memory"});  
     return {};  
 }
 

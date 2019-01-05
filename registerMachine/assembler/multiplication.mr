@@ -2,7 +2,7 @@ GET B
 GET C
 JZERO B 18  #jump to EXIT_LOOP_ONLY_ZERO if 0 in B
 JZERO C 18  #jump to EXIT_LOOP_ONLY_ZERO if 0 in C
-COPY D C    #comparee B and C
+COPY D C    #compare B and C
 SUB D B
 JZERO D 10  #C is smaller than B
 COPY D C    #swap B and C

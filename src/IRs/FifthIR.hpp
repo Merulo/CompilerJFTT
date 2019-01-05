@@ -10,5 +10,6 @@ class FifthIR : public IRBase
     private:
     void calculateJumps();
     int getFirstInstructionInBlock(Block& b);
+    int getFirstInstructionAfter(Block& b, std::string name);
 
 };
