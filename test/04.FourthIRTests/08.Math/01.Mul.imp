@@ -1,0 +1,9 @@
+DECLARE
+  a; b; c;
+IN
+  a := 11;
+  b := 12;
+  c := a * b;
+  WRITE c;
+
+END

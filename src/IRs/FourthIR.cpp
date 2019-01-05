@@ -16,8 +16,6 @@ void FourthIR::convertToAssembler()
 {
     RegisterBlock registerBlock(_symbolTable);
     registerBlock.createRegisters();
-    // Block b = generateBlock();
-    // _notYetConvertedBlocks.push_back(b);
     Pair p = _notYetConvertedBlocks.front();
     convertBlockToAssembler(p, registerBlock);
 }
@@ -26,12 +24,6 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
 {
     std::cout<<"converting "<<pair.block.blockName<<std::endl;
     // std::cout<<"converting "<<block.blockName<<" with "<<lastBlock.blockName<<" as last"<<std::endl;
-    // if (block == lastBlock)
-    // {
-    //     std::cout<<"TEST"<<std::endl;
-    //     std::cout<<block<<std::endl;
-    //     return block;
-    // }
     pair.startRegisterBlock = registerBlock;
     // registerBlock.print();
 
@@ -39,7 +31,7 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
     resultBlock.blockName = pair.block.blockName;
     for(auto& l : pair.block.lines)
     {
-        resultBlock.lines.push_back({"#performing " + l.toString()});     
+        resultBlock.lines.push_back({"\t#performing " + l.toString()});     
         if (l.operation == "CONST")
         {
             handleConst(registerBlock, resultBlock, l);
@@ -85,15 +77,15 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
     prepareRegisterWithoutLoading(rb, r, b, l.one);
     r.variableName = l.one;
     
-    b.lines.push_back({"#generating number"});
+    b.lines.push_back({"\t#generating number"});
     auto lines = NumberGenerator::generateConstFrom(std::stoull(l.two), {{r.name, 0}});
     b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 
-    b.lines.push_back({"#end of generating number"});
+    b.lines.push_back({"\t#end of generating number"});
 
     updateRegisterStateWithConst(b, rb, r, l.one);
     r.constValue = std::stoull(l.two);
 
-    b.lines.push_back({"#end of performing const"});
+    b.lines.push_back({"\t#end of performing const"});
 }
 
 void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
@@ -104,7 +96,7 @@ void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"PUT", r.name});     
 
     updateRegisterStateWithConst(b, rb, r, l.one);
-    b.lines.push_back({"#end of performing write"});    
+    b.lines.push_back({"\t#end of performing write"});    
 }
 
 
@@ -117,7 +109,7 @@ void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"GET", r.name});   
 
     updateRegisterState(b, rb, r, l.one);
-    b.lines.push_back({"#end of performing write"});    
+    b.lines.push_back({"\t#end of performing write"});    
 }
 
 void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
@@ -136,7 +128,7 @@ void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"COPY", regOne.name, regTwo.name});  
 
     regOne.constValue = regTwo.constValue;
-    b.lines.push_back({"#end of performing copy"});   
+    b.lines.push_back({"\t#end of performing copy"});   
 }
 
 void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
@@ -155,7 +147,7 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({l.operation, regOne.name, regTwo.name});  
 
     regOne.constValue = regTwo.constValue;
-    b.lines.push_back({"#end of performing copy"});   
+    b.lines.push_back({"\t#end of performing copy"});   
 }
 
 void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
@@ -166,7 +158,7 @@ void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({l.operation, r.name, l.two});     
 
     updateRegisterStateWithConst(b, rb, r, l.one);
-    b.lines.push_back({"#end of performing simple operation"});    
+    b.lines.push_back({"\t#end of performing simple operation"});    
 }
 
 void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name)
@@ -207,7 +199,7 @@ void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block&
     {
         prepareRegisterWithoutLoading(rb, r, b, name);
     }
-    b.lines.push_back({"#loading " + name + " from memory"}); 
+    b.lines.push_back({"\t#loading " + name + " from memory"}); 
 
     if(r.variableName != name)
     {
@@ -223,20 +215,20 @@ void FourthIR::prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block&
         }
         else if (_symbolTable->isConst(name))
         {
-            b.lines.push_back({"#USELESS OPERATION WAS PERFORMED, PLEASE FIX"});       
+            b.lines.push_back({"\t#USELESS OPERATION WAS PERFORMED, PLEASE FIX"});       
             std::string value = _symbolTable->getConstValue(name);
             auto lines = NumberGenerator::generateConstFrom(std::stoull(value), {{r.name, 0}});
             b.lines.insert(b.lines.end(), lines.begin(), lines.end());     
         }
     }
     r.variableName = name;
-    b.lines.push_back({"#end of loading " + name + " from memory"});       
+    b.lines.push_back({"\t#end of loading " + name + " from memory"});       
 }
 
 
 std::vector<Line> FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name)
 {
-    b.lines.push_back({"#storing " + r.variableName + " to memory"});    
+    b.lines.push_back({"\t#storing " + r.variableName + " to memory"});    
     if (r.variableName != name)
     {
         if (r.state == RegisterState::CONSTVARIABLE || r.state == RegisterState::VARIABLE)
@@ -252,7 +244,7 @@ std::vector<Line> FourthIR::prepareRegisterWithoutLoading(RegisterBlock& rb, Reg
             return lines;
         }
     }
-    b.lines.push_back({"#end of storing " + r.variableName + " to memory"});  
+    b.lines.push_back({"\t#end of storing " + r.variableName + " to memory"});  
     return {};  
 }
 
@@ -299,6 +291,23 @@ void FourthIR::handleBranchSimple(std::string name, RegisterBlock rb)
     convertBlockToAssembler(next, rb); 
 }
 
+void FourthIR::checkVariableIsInOtherRegister(Register& r, std::vector<Register>& regTargeted, Block& tmp, Pair& p)
+{
+    std::string variable =r.variableName;
+    for(size_t j = 0; j < regTargeted.size(); j++)
+    {
+        if (regTargeted[j].state == RegisterState::VARIABLE || regTargeted[j].state == RegisterState::CONSTVARIABLE)
+        {
+            if (variable == regTargeted[j].variableName)
+            {
+                // std::cout<<"\t\t\tShould save "<<regToChange[i]<<std::endl;
+                prepareRegisterWithoutLoading(p.registerBlock, r, tmp, "");
+
+            }
+        }
+    }
+}
+
 void FourthIR::alignRegisters(Pair& p, Pair& next)
 {
     auto regToChange = p.registerBlock.getRegisters();
@@ -316,20 +325,7 @@ void FourthIR::alignRegisters(Pair& p, Pair& next)
             }
             else if (regToChange[i].state == RegisterState::VARIABLE || regToChange[i].state == RegisterState::CONSTVARIABLE)
             {
-                std::string variable = regToChange[i].variableName;
-                for(size_t j = 0; j < regToChange.size(); j++)
-                {
-                    if (regTargeted[j].state == RegisterState::VARIABLE || regTargeted[j].state == RegisterState::CONSTVARIABLE)
-                    {
-                        if (variable == regTargeted[j].variableName)
-                        {
-                        std::cout<<"\t\t\tShould save "<<regToChange[i]<<std::endl;
-
-                        prepareRegisterWithoutLoading(p.registerBlock, regToChange[i], tmp, "");
-
-                        }
-                    }
-                }
+                checkVariableIsInOtherRegister(regToChange[i], regTargeted, tmp, p);
             }
         }
 
@@ -343,10 +339,9 @@ void FourthIR::alignRegisters(Pair& p, Pair& next)
             }
         }
 
-
-
     tmp.lines.push_back({"JUMP", "", "#" + next.block.blockName});
     _blocks.push_back(tmp);
+    
     //TODO: COPY ADDRESS REGISTER STATE
     p.registerBlock.setAddressRegisterAsUnkown();
 
