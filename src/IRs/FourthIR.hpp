@@ -2,7 +2,6 @@
 
 #include "Register/Pair.hpp"
 #include "Register/RegisterBlock.hpp"
-#include "Calculators/NumberGenerator.hpp"
 
 class FourthIR : public IRBase
 {
@@ -12,13 +11,6 @@ class FourthIR : public IRBase
 
     private:
     std::vector<Pair> _notYetConvertedBlocks;
-    unsigned int labelCounter = 0;
-    std::string generateLabel()
-    {
-        std::string label = "#LABEL:" + std::to_string(labelCounter);
-        labelCounter++;
-        return label;
-    }
 
     Pair& getBlockByName(std::string searched)
     {
@@ -52,6 +44,7 @@ class FourthIR : public IRBase
     void handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l);
     void handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l);
     void handleMul(RegisterBlock& rb, Block& b, Line& l);
+    void handleDiv(RegisterBlock& rb, Block& b, Line& l);
 
     //updates registers status
     void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name);

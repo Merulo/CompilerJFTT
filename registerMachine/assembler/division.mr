@@ -1,29 +1,34 @@
 GET B       #a
 GET C       #b
+COPY D B
+INC D
+SUB D C
+JZERO D         32
 SUB D D     #w
 SUB E E     #i
-JZERO C 26
+JZERO C         31
 COPY F B
+INC F
 SUB F C
-JZERO F 11  #exit_iterator_calculation
+JZERO F         16  #exit_iterator_calculation
 ADD C C
 INC E
-JUMP 5
+JUMP            9
 INC D
 DEC E
 HALF C
 SUB B C
-JZERO E 27    #exit
+JZERO E         32    #exit
 ADD D D
 HALF C
 DEC E
 COPY F B
 INC F
 SUB F C
-JZERO F 15
+JZERO F         20
 INC D
 SUB B C
-JUMP 15
+JUMP            20
 SUB B B
 PUT D       #w
 PUT B       #a

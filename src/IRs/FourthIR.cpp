@@ -1,5 +1,8 @@
 #include "FourthIR.hpp"
 
+#include "Calculators/MathOperations.hpp"
+#include "Calculators/NumberGenerator.hpp"
+
 void FourthIR::parse(std::vector<Block> bs)
 {
     for (auto& b : bs)
@@ -171,58 +174,27 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
     prepareRegisterWithLoading(rb, registerB, b, l.one);
 
     Register& registerC = rb.getUniqueRegisterForVariable(l.two, b, {registerB});
-    prepareRegisterWithLoading(rb, registerC, b, l.two);
+    if (registerC.variableName == l.two)
+    {
+        prepareRegisterWithoutLoading(rb, registerC, b, "");
+    }
+    else
+    {
+        prepareRegisterWithLoading(rb, registerC, b, l.two);
+    }
 
     Register& registerD = rb.getUniqueRegisterForVariable("TEMPORARY_2", b, {registerB, registerC});
     prepareRegisterWithoutLoading(rb, registerD, b, "TEMPORARY_2");
 
-    std::string labelInCaseOfZero = generateLabel();
-    //check if either registerB or registerC is zero.
-    b.lines.push_back({"JZERO", registerB.name, labelInCaseOfZero});
-    b.lines.push_back({"JZERO", registerC.name, labelInCaseOfZero});
+    auto lines = MathOperations::generateMultiplication(registerB.name, registerC.name, registerD.name, l);
+    b.lines.insert(b.lines.end(), lines.begin(), lines.end());
 
-    //compare so that we multiply by smaller
-    b.lines.push_back({"COPY", registerD.name, registerC.name});
-    b.lines.push_back({"COPY", registerD.name, registerB.name});
-    std::string labelInCaseNoSwapNeeded = generateLabel();
-
-    b.lines.push_back({"JZERO", registerD.name, labelInCaseNoSwapNeeded});
-    
-    //swap
-    b.lines.push_back({"COPY", registerD.name, registerC.name});
-    b.lines.push_back({"COPY", registerC.name, registerB.name});
-    b.lines.push_back({"COPY", registerB.name, registerD.name});
-
-    b.lines.push_back({labelInCaseNoSwapNeeded});
-    b.lines.push_back({"SUB", registerD.name, registerD.name});
-
-    std::string skipOddC = generateLabel();
-    std::string mainLoopLabel = generateLabel();
-
-    b.lines.push_back({mainLoopLabel});
-    b.lines.push_back({"JODD", registerC.name, skipOddC});
-
-    std::string handleOddC = generateLabel();
-    b.lines.push_back({handleOddC});
-    
-    b.lines.push_back({"ADD", registerB.name, registerB.name});
-    b.lines.push_back({"HALF", registerC.name});
-
-    std::string exitLabel = generateLabel();
-    b.lines.push_back({"JZERO", registerC.name, exitLabel});
-    b.lines.push_back({"JUMP", "",mainLoopLabel});
-
-    b.lines.push_back({skipOddC});
-    b.lines.push_back({"ADD", registerD.name, registerB.name});
-    b.lines.push_back({"JUMP", "", handleOddC});
-
-    //in case this is zero
-    b.lines.push_back({labelInCaseOfZero});
-    b.lines.push_back({"SUB", registerD.name, registerD.name});
-    b.lines.push_back({exitLabel});
-    b.lines.push_back({"\t#end of performing MUL operation"});    
-
-    b.lines.push_back({"COPY", registerB.name, registerD.name});
+    updateRegisterState(b, rb, registerB, l.one);
+    registerB.variableName = l.one;
+    registerC.state = RegisterState::UNKNOWN;
+    registerC.variableName = "";
+    registerD.state = RegisterState::UNKNOWN;
+    registerD.variableName = "";
 }
 
 void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name)
