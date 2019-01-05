@@ -1,0 +1,9 @@
+DECLARE
+  a; b; c;
+IN
+  a := 10000;
+  b := 123;
+  c := a % 200;
+  WRITE c;
+
+END

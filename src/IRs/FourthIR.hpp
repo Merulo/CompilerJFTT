@@ -45,6 +45,7 @@ class FourthIR : public IRBase
     void handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l);
     void handleMul(RegisterBlock& rb, Block& b, Line& l);
     void handleDiv(RegisterBlock& rb, Block& b, Line& l);
+    void handleMod(RegisterBlock& rb, Block& b, Line& l);
 
     //updates registers status
     void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name);

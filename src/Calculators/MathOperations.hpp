@@ -12,7 +12,10 @@ class MathOperations
         std::string registerD, std::string registerE,
         std::string registerG, Line l
     );
-
+    static std::vector<Line> generateModulo(
+        std::string registerB, std::string registerC,
+        std::string registerE, std::string registerG, Line l
+    );
 
     private:
     static unsigned int labelCounter;
