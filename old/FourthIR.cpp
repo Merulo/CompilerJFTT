@@ -179,7 +179,7 @@ void FourthIR::updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Registe
 {
     if (_symbolTable->isItVariable(name))
     {
-        r.state = RegisterState::CONSTVARIABLE;
+        r.state = RegisterState::VARIABLE;
     }
     else if (_symbolTable->isItTable(name))
     {

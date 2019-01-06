@@ -35,7 +35,7 @@ void FifthIR::calculateJumps()
                 || line.operation == "JODD")
             {
                 std::string argument = line.two;
-                std::cout<<line<<std::endl;
+                // std::cout<<line<<std::endl;
                 if (argument.find("LABEL:") == std::string::npos)
                 {
                     argument = argument.substr(1, std::string::npos);

@@ -36,7 +36,7 @@ struct Register
     }
     friend std::ostream& operator<<(std::ostream& os, const Register& r)
     {
-        os << r.name << " ";
+        os <<"\t"<< r.name << " ";
         switch(r.state)
         {
             case RegisterState::UNKNOWN:
