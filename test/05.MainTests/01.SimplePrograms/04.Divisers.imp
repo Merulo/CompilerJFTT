@@ -1,0 +1,18 @@
+DECLARE
+    n; j; sieve(2:100);
+IN
+    n := 100;
+    FOR i FROM n DOWNTO 2 DO
+        sieve(i) := 1;
+    ENDFOR
+    FOR i FROM 2 TO n DO
+        IF sieve(i) != 0 THEN
+            j := i + i;
+            WHILE j <= n DO
+                sieve(j) := 0;
+                j := j + i;
+            ENDWHILE
+            WRITE i;
+        ENDIF
+    ENDFOR
+END
