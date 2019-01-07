@@ -109,7 +109,7 @@ void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
 {   
-    Register& r = rb.getRegister(l.one, b, {});
+    Register& r = rb.getRegister(l.one, b, {}, false);
     r.variableName = l.one;
 
     b.lines.push_back({"GET", r.name});    
@@ -120,7 +120,7 @@ void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 {
-    Register& r = rb.getRegister(l.one, b, {});
+    Register& r = rb.getRegister(l.one, b, {}, false);
     r.variableName = l.one;
 
     b.lines.push_back({"\t#generating number"});
@@ -134,7 +134,7 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
 {   
-    Register& regOne = rb.getRegister(l.one, b, {});
+    Register& regOne = rb.getRegister(l.one, b, {}, true);
     updateRegisterState(b, rb, regOne, l.one);
     regOne.variableName = l.one;
 
@@ -318,6 +318,50 @@ void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std
     }       
 }
 
+void FourthIR::convertNextBlock(Block& block, RegisterBlock& rb, std::string name)
+{
+    Block& next = getBlockByName(name, _notYetConvertedBlocks);
+
+    Block handle = generateBlock();
+    rb.exitBlock(handle);
+    handle.blockJump = next.blockName;
+
+    Block& grr = getBlockByName(block.blockName, _blocks);
+        for(auto& l : grr.lines)
+        {
+            if (l.two == "#" + name)
+            {
+                l.two = "#" + handle.blockName;
+            }
+        }
+    handle.lines.push_back({"JUMP", "", "#" + next.blockName});
+    _blocks.push_back(handle);
+    RegisterBlock copy(rb);
+    convertBlockToAssembler(next, copy);            
+}
+
+void FourthIR::convertSplitBlock(Block& block, RegisterBlock& rb, std::string name)
+{
+    Block& nextTrue = getBlockByName(name, _notYetConvertedBlocks);
+    Block handle = generateBlock();
+    RegisterBlock copy(rb);
+    copy.exitBlock(handle);
+    handle.blockJump = nextTrue.blockName;
+
+    Block& grr = getBlockByName(block.blockName, _blocks);
+
+    for(auto& l : grr.lines)
+    {
+        if (l.two == "#" + name)
+        {
+            l.two = "#" + handle.blockName;
+        }
+    }
+    handle.lines.push_back({"JUMP", "", "#" +  nextTrue.blockName});
+    _blocks.push_back(handle);
+            
+    convertBlockToAssembler(nextTrue, copy);
+}
 
 void FourthIR::continueConverting(Block& block, RegisterBlock rb)
 {
@@ -325,70 +369,12 @@ void FourthIR::continueConverting(Block& block, RegisterBlock rb)
      
     if (!block.blockJump.empty())
     {
-        Block& next = getBlockByName(block.blockJump, _notYetConvertedBlocks);
-
-        Block handle = generateBlock();
-        rb.exitBlock(handle);
-        handle.blockJump = next.blockName;
-
-        Block& grr = getBlockByName(block.blockName, _blocks);
-            for(auto& l : grr.lines)
-            {
-                if (l.two == "#" + block.blockJump)
-                {
-                    l.two = "#" + handle.blockName;
-                }
-            }
-        handle.lines.push_back({"JUMP", "", "#" + next.blockName});
-        _blocks.push_back(handle);
-        RegisterBlock copy(rb);
-        convertBlockToAssembler(next, copy);
+        convertNextBlock(block, rb, block.blockJump);
     }
     else if (!block.blockIfFalse.empty() && !block.blockIfTrue.empty())
     {
-        std::cout<<"handling split"<<std::endl;
-        {
-            Block& nextTrue = getBlockByName(block.blockIfTrue, _notYetConvertedBlocks);
-            Block handle = generateBlock();
-            RegisterBlock copy(rb);
-            copy.exitBlock(handle);
-            handle.blockJump = nextTrue.blockName;
-
-            Block& grr = getBlockByName(block.blockName, _blocks);
-
-            for(auto& l : grr.lines)
-            {
-                if (l.two == "#" + block.blockIfTrue)
-                {
-                    l.two = "#" + handle.blockName;
-                }
-            }
-            handle.lines.push_back({"JUMP", "", "#" +  nextTrue.blockName});
-            _blocks.push_back(handle);
-                    
-            convertBlockToAssembler(nextTrue, copy);
-        }
-
-        {
-            Block& nextFalse = getBlockByName(block.blockIfFalse, _notYetConvertedBlocks);
-            Block handle = generateBlock();
-            RegisterBlock copy(rb);
-            copy.exitBlock(handle);
-            handle.blockJump = nextFalse.blockName;
-
-            Block& grr = getBlockByName(block.blockName, _blocks);
-            for(auto& l : grr.lines)
-            {
-                if (l.two == "#" + block.blockIfFalse)
-                {
-                    l.two = "#" + handle.blockName;
-                }
-            }
-
-            handle.lines.push_back({"JUMP", "", "#" + nextFalse.blockName});
-            _blocks.push_back(handle);
-            convertBlockToAssembler(nextFalse, copy);
-        }
+        convertSplitBlock(block, rb, block.blockIfTrue);
+        convertSplitBlock(block, rb, block.blockIfFalse);
     }
 
 }

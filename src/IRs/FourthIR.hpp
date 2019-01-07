@@ -17,12 +17,9 @@ class FourthIR : public IRBase
     void convertToAssembler();
     void convertBlockToAssembler(Block& block, RegisterBlock& registerBlock);
     void continueConverting(Block& block, RegisterBlock rb);
-    //     void handleSinglePath(Pair& p, RegisterBlock rb);
-    //     void handleBranchSimple(std::string name, RegisterBlock rb);
-    //     void alignRegisters(Pair& p, Pair& next);
-    //     void handleBranch(Pair& p, RegisterBlock& rb, std::string next);
-    //     void checkVariableIsInOtherRegister(Register& r, std::vector<Register>& regTargeted, Block& tmp, Pair& p);
-        
+        void convertNextBlock(Block& block, RegisterBlock& rb, std::string name);
+        void convertSplitBlock(Block& block, RegisterBlock& rb, std::string name);
+
     //handles translating operations
     void handleConst(RegisterBlock& rb, Block& b, Line& l);
     void handleWrite(RegisterBlock& rb, Block& b, Line& l);

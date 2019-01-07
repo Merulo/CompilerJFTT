@@ -29,7 +29,7 @@ Register& RegisterBlock::getRegistersForOperation(std::string name, Block& b, st
             return reg;
         }
     }
-
+    return _registers.back();
 }
 
 Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters, bool load)
@@ -61,6 +61,12 @@ Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std
     }
 
     saveToMemory(b, _registers[0], _registers[1]);
+    // if (!load)
+    // {
+    //     std::cout<<"TEEEEEEEEEEEEST="<<_registers[0]<<" "<<_registers[1]<<std::endl;
+
+    // }
+
     if (load)
     {
         loadFromMemory(b, name, _registers[0], _registers[1]);
