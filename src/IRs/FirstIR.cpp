@@ -303,6 +303,7 @@ Line FirstIR::getLine(Data d)
         l.operation = "CONST";
         l.two = std::to_string(d.value);
     }
+
     return l;
 }
 

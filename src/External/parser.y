@@ -77,12 +77,12 @@ command: identifier ASSIGN expression SEMICOLON
     }
     | forProduction FROM value TO value doProduction commands ENDFOR 
     {
-        d.FIR->insertFor($2.name, $4, $6, true);
+        d.FIR->insertFor($2.name, $3, $5, true);
         d.ST->removeIterator($2.name);
     }
     | forProduction FROM value DOWNTO value doProduction commands ENDFOR 
     {
-        d.FIR->insertFor($2.name, $4, $6, false);
+        d.FIR->insertFor($2.name, $3, $5, false);
         d.ST->removeIterator($2.name);
     }
     | READ identifier SEMICOLON 

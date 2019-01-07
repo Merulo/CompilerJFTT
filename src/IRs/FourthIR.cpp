@@ -154,11 +154,12 @@ void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
 {   
-    Register& regTwo = rb.getSecondRegister(l.two, b, {});
-
     Register& regOne = rb.getRegister(l.one, b, {});
     updateRegisterState(b, rb, regOne, l.one);
     regOne.variableName = l.one;
+    
+    Register& regTwo = rb.getSecondRegister(l.two, b, {});
+
 
     b.lines.push_back({l.operation, regOne.name, regTwo.name});  
 

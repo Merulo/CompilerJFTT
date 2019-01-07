@@ -1413,7 +1413,7 @@ yyreduce:
   case 14:
 #line 79 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR->insertFor((yyvsp[-6]).name, (yyvsp[-4]), (yyvsp[-2]), true);
+        d.FIR->insertFor((yyvsp[-6]).name, (yyvsp[-5]), (yyvsp[-3]), true);
         d.ST->removeIterator((yyvsp[-6]).name);
     }
 #line 1420 "src/External/Parser.cpp" /* yacc.c:1646  */
@@ -1422,7 +1422,7 @@ yyreduce:
   case 15:
 #line 84 "src/External/parser.y" /* yacc.c:1646  */
     {
-        d.FIR->insertFor((yyvsp[-6]).name, (yyvsp[-4]), (yyvsp[-2]), false);
+        d.FIR->insertFor((yyvsp[-6]).name, (yyvsp[-5]), (yyvsp[-3]), false);
         d.ST->removeIterator((yyvsp[-6]).name);
     }
 #line 1429 "src/External/Parser.cpp" /* yacc.c:1646  */
