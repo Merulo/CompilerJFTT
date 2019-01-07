@@ -5,6 +5,7 @@ IN
     FOR i FROM n DOWNTO 2 DO
         sieve(i) := 1;
     ENDFOR
+
     FOR i FROM 2 TO n DO
         IF sieve(i) != 0 THEN
             j := i + i;
