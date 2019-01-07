@@ -8,13 +8,12 @@
 #include "SymbolTable.hpp"
 #include "DataTypes/Block.hpp"
 
+#include "Calculators/NumberGenerator.hpp"
+
 class RegisterBlock
 {
     public:
-    RegisterBlock()
-    {
-        
-    }
+    RegisterBlock(){}
     RegisterBlock(std::shared_ptr<SymbolTable> symbolTable);
     RegisterBlock(const RegisterBlock &rb){
         for(auto r : rb._registers)
@@ -27,48 +26,31 @@ class RegisterBlock
         _symbolTable = rb._symbolTable;
     }
 
-    std::vector<Register> getRegisters()
-    {
-        return _registers;
-    }
-    void setAddressRegisterAsUnkown()
-    {
-        _addressRegister.constValue = rand();
-        _addressRegister.variableName = "";
-        _addressRegister.state = RegisterState::UNKNOWN;       
-    }
-    void setUnkown(unsigned int i)
-    {
-        _registers[i].constValue = rand();
-        _registers[i].variableName = "";
-        _registers[i].state = RegisterState::UNKNOWN;
-    }
-    void setRegister(unsigned int i, Register r)
-    {
-        _registers[i] = r;
-    }
-
     void createRegisters();
+    void exitBlock(Block& b);
 
-    std::vector<Line> performMemoryOperation(std::string operation, Register& r, unsigned long long memoryCell);
-    std::vector<Line> performTableMemoryOperation(std::string operation, std::string varName, Register& r);
-    
-    Register& getUniqueRegisterForVariable(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
+    Register& getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r, bool load = true);
+    Register& getSecondRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
     
     void print();
 
     private:
-    
-    void generateNumber(std::vector<Line>& lines, unsigned long long& firstNumber, unsigned long long second);
-    void saveTablesIfNeeded(std::string name, Block& b);
-    void saveTableToMemory(Block& b, Register& r);
-    std::vector<Line> prepareAddressRegister(unsigned long long memoryCell);
+    void generateNumber(std::vector<Line>& lines, unsigned long long& firstNumber, unsigned long long second, Register& freeRegister);
+
+    void loadFromMemory(Block& b, std::string name, Register& r, Register& freeRegister);
+    void loadVariableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister);
+    void loadConstTableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister, unsigned long long diff);
+    void loadVarTableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister, std::string addresVariableName);
+
+    void saveToMemory(Block& b, Register& r, Register& freeRegister);
+    void saveVariableToMemory(Block& b, Register& r, Register& freeRegister);
+    void saveConstTableToMemory(Block& b, Register& r, Register& freeRegister, unsigned long long diff);
+    void saveVarTableToMemory(Block& b, Register& r, Register& freeRegister, std::string name);
 
     bool isDigits(const std::string &str)
     {
         return std::all_of(str.begin(), str.end(), ::isdigit);
     }
-    
 
     std::shared_ptr<SymbolTable> _symbolTable;
     Register _addressRegister;

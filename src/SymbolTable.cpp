@@ -61,7 +61,8 @@ void SymbolTable::assignMemory()
     //special if control variable!
     Variable v;
     v.memoryCell = 0;
-
+    // Variable v2;
+    // v2.memoryCell = 1;
     //variables
     for (auto& v : _variables)
     {
@@ -69,6 +70,7 @@ void SymbolTable::assignMemory()
         index++;
     }
     _variables[extraVariable] = v;   
+    // _variables[extraVariable2] = v;   
 
     //iterators
     for(auto& i : _allIterators)

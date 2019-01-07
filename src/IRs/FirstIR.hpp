@@ -7,6 +7,7 @@
 #include <stack>
 #include <map>
 #include <stack>
+#include <algorithm>
 
 #include "DataTypes/Line.hpp"
 #include "DataTypes/Data.hpp"
@@ -54,4 +55,5 @@ class FirstIR : public IRBase
     std::string _secondExtraParameter;
     std::stack<Block> _conditionBlocks;
     std::stack<Block> _forBlocks;
+ 
 };

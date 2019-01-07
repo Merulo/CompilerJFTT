@@ -27,3 +27,29 @@
         //     prepareRegisterWithLoading(p.registerBlock, regToChange[i], tmp, regTargeted[i].variableName, false);
         // }
     }
+
+
+
+
+
+    auto regs = registerBlock.getRegisters();
+
+    for(auto reg : regs)
+    {
+        if (reg.state == RegisterState::TABLE)
+        {
+            std::string var = reg.variableName;
+            std::string rest = var.substr(var.find("(") + 1, std::string::npos);
+            rest.pop_back();
+
+            if (isDigits(rest))
+            {
+                prepareRegisterWithoutLoading(registerBlock, reg, resultBlock, "");
+                reg.state = RegisterState::UNKNOWN;
+            }
+
+
+        }
+    }
+
+

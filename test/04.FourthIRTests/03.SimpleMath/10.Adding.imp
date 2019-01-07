@@ -3,22 +3,9 @@ DECLARE
 IN
   array(10) := 20;
   array(20) := 30;
-  array(30) := 40;
-  array(40) := 50;
-  array(50) := 60;
-  array(60) := 70;
-  array(70) := 80;
+
   a:= 10;
-  b:= 1;
-  c:= 2;
-  d:= 3;
-  e:= 4;
-  f:= 5;
-  g:= 6;
-  h:= 7;
-  i:= 8;
-  j:= 9;
-  b := 10 + 11;
+
 
   array(a) := array(a) + array(a);
 

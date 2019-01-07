@@ -10,31 +10,17 @@ class FourthIR : public IRBase
     void parse(std::vector<Block> b);
 
     private:
-    std::vector<Pair> _notYetConvertedBlocks;
-
-    Pair& getBlockByName(std::string searched)
-    {
-        auto result = std::find_if(_notYetConvertedBlocks.begin(), _notYetConvertedBlocks.end(),
-        [&searched](auto& tested){
-            return searched == tested.block.blockName;
-        });     
-        if (result == _notYetConvertedBlocks.end())
-        {
-            std::cout<<"problem with getBlockByName, searching for="<<searched<<std::endl;
-        }
-        return *result;
-    }    
-
+    std::vector<Block> _notYetConvertedBlocks;
 
     //converts to assembler
     void convertToAssembler();
-    void convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock);
-    void continueConverting(Pair& p, RegisterBlock rb);
-        void handleSinglePath(Pair& p, RegisterBlock rb);
-        void handleBranchSimple(std::string name, RegisterBlock rb);
-        void alignRegisters(Pair& p, Pair& next);
-        void handleBranch(Pair& p, RegisterBlock& rb, std::string next);
-        void checkVariableIsInOtherRegister(Register& r, std::vector<Register>& regTargeted, Block& tmp, Pair& p);
+    void convertBlockToAssembler(Block& block, RegisterBlock& registerBlock);
+    void continueConverting(Block& block, RegisterBlock rb);
+    //     void handleSinglePath(Pair& p, RegisterBlock rb);
+    //     void handleBranchSimple(std::string name, RegisterBlock rb);
+    //     void alignRegisters(Pair& p, Pair& next);
+    //     void handleBranch(Pair& p, RegisterBlock& rb, std::string next);
+    //     void checkVariableIsInOtherRegister(Register& r, std::vector<Register>& regTargeted, Block& tmp, Pair& p);
         
     //handles translating operations
     void handleConst(RegisterBlock& rb, Block& b, Line& l);
@@ -49,9 +35,4 @@ class FourthIR : public IRBase
 
     //updates registers status
     void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name);
-    void updateRegisterStateWithConst(Block& b, RegisterBlock& rb, Register& r, std::string name);
-
-    //handles memory management
-    void prepareRegisterWithLoading(RegisterBlock& rb, Register& r, Block& b, std::string name, bool save = true);
-    std::vector<Line> prepareRegisterWithoutLoading(RegisterBlock& rb, Register& r, Block& b, std::string name);
 };

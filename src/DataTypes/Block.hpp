@@ -19,6 +19,11 @@ struct Block
 
     // std::optional<RegisterBlock> rb;
 
+    void insert(std::vector<Line>& ls)
+    {
+        lines.insert(lines.end(), ls.begin(), ls.end());
+    }
+
     friend std::ostream& operator<<(std::ostream& os, const Block& b)
     {
         os << "#"<< b.blockName << std::endl;

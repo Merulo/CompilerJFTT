@@ -97,6 +97,7 @@ class SymbolTable
     
     private:
     std::string extraVariable = "IF_CONTROL_VARIABLE";
+    std::string extraVariable2 = "TABLE_EXTRA_VARIABLE";
     std::string forControlName = "_forControl";
     std::map<std::string, Variable> _variables;
     std::map<std::string, Table> _tables;

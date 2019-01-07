@@ -10,7 +10,6 @@ enum class RegisterState
     VARIABLE = 1,
     CONST = 2,
     TABLE = 3,
-    CONSTVARIABLE = 4,
 };
 
 struct Register
@@ -57,11 +56,6 @@ struct Register
             case RegisterState::TABLE:
             {
                 os << "table="<<r.variableName;
-                break;
-            }
-            case RegisterState::CONSTVARIABLE:
-            {
-                os << "constvariable="<<r.variableName<<" with value="<<r.constValue;
                 break;
             }
         }

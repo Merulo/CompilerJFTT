@@ -246,7 +246,11 @@ Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bo
     }
     
     b.lines.push_back(counterFinal);
-
+    
+    Line writeLine;
+    writeLine.operation = "WRITE";
+    writeLine.one = iterator + forControlName; 
+    // b.lines.push_back(writeLine);
     Line jump;
     jump.operation = "JZERO";
     jump.one = counterInit.one;
@@ -265,6 +269,10 @@ Block FirstIR::createSecondControlBlock(std::string iterator, bool isForTo)
     decLine.operation = "DEC";
     decLine.one = iterator + forControlName;
 
+    Line writeLine;
+    writeLine.operation = "WRITE";
+    writeLine.one = iterator + forControlName;    
+
     Line line;
     line.operation = "JZERO";
     line.one = iterator + forControlName;
@@ -276,6 +284,7 @@ Block FirstIR::createSecondControlBlock(std::string iterator, bool isForTo)
 
     b.lines.push_back(incLine);
     b.lines.push_back(decLine);
+    // b.lines.push_back(writeLine);
     b.lines.push_back(line);    
 
     return b;

@@ -16,204 +16,274 @@ void RegisterBlock::createRegisters()
     }
 }
 
-std::vector<Line> RegisterBlock::performTableMemoryOperation(std::string operation, std::string varName, Register& r)
+Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters, bool load)
 {
-    std::string array = varName.substr(0, varName.find("("));
-
-    unsigned long long memoryCell = _symbolTable->getMemoryCell(array);
-    std::string rest = varName.substr(varName.find("(") + 1, std::string::npos);
-    rest.pop_back();
-    unsigned long long shift = _symbolTable->getTableShift(array);
-
-    if (isDigits(rest))
+    if (_symbolTable->isConst(name))
     {
-        memoryCell = memoryCell + std::stoull(rest) - shift;
-        return performMemoryOperation(operation, r, memoryCell);
-    }
-    else
-    {
-        std::vector<Line> lines;
-        Block b;
-        Register& registerForShift = getUniqueRegisterForVariable(rest, b, {r}); 
-        if (registerForShift.variableName != rest)
+        for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
         {
-            lines = performMemoryOperation("STORE", registerForShift, _symbolTable->getMemoryCell(registerForShift.variableName));
-            auto ls = performMemoryOperation("LOAD", registerForShift, _symbolTable->getMemoryCell(rest));
-            lines.insert(lines.end(), ls.begin(), ls.end());
-            registerForShift.variableName = rest;
-            registerForShift.state = RegisterState::VARIABLE;
-        }
-        _addressRegister.state = RegisterState::UNKNOWN;
-        lines.push_back({"COPY", "A", registerForShift.name});
-
-        generateNumber(lines, shift, memoryCell);
-
-        lines.push_back({operation, r.name});
-        return lines;
-    }
-}
-
-void RegisterBlock::generateNumber(std::vector<Line>& lines, unsigned long long& firstNumber, unsigned long long second)
-{
-    while(firstNumber > second)
-    {
-        lines.push_back({"DEC", "A"});
-        firstNumber--;
-    }
-
-    while( firstNumber < second)
-    {
-        lines.push_back({"INC", "A"});
-        firstNumber++;
-    }
-}
-
-std::vector<Line> RegisterBlock::prepareAddressRegister(unsigned long long memoryCell)
-{
-    std::vector<Line> lines;
-    if (_addressRegister.state == RegisterState::UNKNOWN)
-    {
-        lines.push_back({"SUB", "A", "A"});
-        _addressRegister.constValue = 0;
-        _addressRegister.state = RegisterState::CONST;
-    }
-
-    generateNumber(lines, _addressRegister.constValue, memoryCell);
-
-    return lines;    
-}
-
-std::vector<Line> RegisterBlock::performMemoryOperation(std::string operation, Register& r, unsigned long long memoryCell)
-{
-    std::vector<Line> lines = prepareAddressRegister(memoryCell);
-
-    lines.push_back({operation , r.name});
-    return lines;
-}
-
-bool checkRegisterHasState(RegisterState state, Register& r, std::vector<std::reference_wrapper<Register>> usedRegisters)
-{
-    if (r.state == state)
-    {
-        if(std::find_if(usedRegisters.begin(), usedRegisters.end(), [r](auto i)
+            if (it->state == RegisterState::CONST && it->variableName == name)
             {
-                return i.get() == r;
-            }) == usedRegisters.end())
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool checkRegisterHasVariable(std::string name, Register& r, std::vector<std::reference_wrapper<Register>> usedRegisters)
-{
-    if  (r.state == RegisterState::CONSTVARIABLE 
-        || r.state == RegisterState::VARIABLE 
-        || r.state == RegisterState::TABLE 
-        || r.state == RegisterState::CONST)
-    {
-        if (r.variableName == name && std::find_if(usedRegisters.begin(), usedRegisters.end(), [r](auto i)
-            {
-                return i.get() == r;
-            }) == usedRegisters.end())
-        {
-            return true;
-        }
-    }
-    return false;
-}
-
-Register& RegisterBlock::getUniqueRegisterForVariable(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters)
-{
-    if (!b.lines.empty())
-    {
-        saveTablesIfNeeded(name, b);
-    }
-
-    for(auto& r : _registers)
-    {
-        if (checkRegisterHasVariable(name, r, usedRegisters))
-        {
-            return r;
-        }
-    }
-
-    for(auto&r : _registers)
-    {
-        if (checkRegisterHasState(RegisterState::UNKNOWN, r, usedRegisters))
-        {
-            return r;
-        }
-    }
-
-    for(auto& r : _registers)
-    {
-        if (checkRegisterHasState(RegisterState::CONST, r, usedRegisters))
-        {
-            return r;
-        }
-    }
-
-    Register& r = _registers[_currentRegister];
-    _currentRegister++;
-    if (_currentRegister == _registers.size())
-    {
-        _currentRegister = 0;
-    }
-    if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [r](auto i)
-            {
-                return i.get() == r;
-            }) == usedRegisters.end())
-    {
-        return r;
-    }
-    return getUniqueRegisterForVariable(name, b, usedRegisters); 
-}
-
-void RegisterBlock::saveTablesIfNeeded(std::string name, Block& b)
-{
-    for(auto& r : _registers)
-    {
-        if(_symbolTable->isItTable(name))
-        {
-            if (!_symbolTable->isItTable(r.variableName))
-            {
-                continue;
+                return *it;
             }
-            std::string currentTable = name.substr(0, name.find("("));
-            std::string registerTable = r.variableName.substr(0, r.variableName.find("("));
-            if (currentTable == registerTable)
+        }
+
+        for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
+        {
+            if (it->state == RegisterState::UNKNOWN)
             {
-                saveTableToMemory(b, r);
-                return;
+                return *it;
+            }
+        }
+    }
+
+    if (_registers[0].variableName == name)
+    {
+        return _registers[0];
+    }
+
+    if (_registers[0].state == RegisterState::UNKNOWN)
+    {
+        return _registers[0];
+    }
+
+    saveToMemory(b, _registers[0], _registers[1]);
+    if (load)
+    {
+        loadFromMemory(b, name, _registers[0], _registers[1]);
+    }
+
+    return _registers[0];
+}
+
+void RegisterBlock::exitBlock(Block& b)
+{
+    if (_registers[0].state != RegisterState::UNKNOWN)
+    {
+        saveToMemory(b, _registers[0], _registers[1]);
+
+    }
+    for(auto& r : _registers)
+    {
+        r.state = RegisterState::UNKNOWN;
+        r.variableName = "";
+    }
+    _addressRegister.state = RegisterState::UNKNOWN;
+    _addressRegister.variableName = "";
+}
+
+Register& RegisterBlock::getSecondRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters)
+{
+    for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
+    {
+        if (it->variableName == name)
+        {
+            return *it;
+        }
+    }
+
+
+
+   std::cout<<"getting second for "<<name<<" "<<_registers[1]<<std::endl;
+    if (_registers[1].variableName == name)
+    {
+        return _registers[1];
+    }
+    loadFromMemory(b, name, _registers[1], _registers[2]);
+
+    return _registers[1];
+
+}
+
+void RegisterBlock::generateNumber(std::vector<Line>& lines, unsigned long long& firstNumber, unsigned long long second, Register& usedRegister)
+{
+    
+    if (firstNumber > second)
+    {
+        if (firstNumber - second < 5000)
+        {
+            while(firstNumber > second)
+            {
+                lines.push_back({"DEC", "A"});
+                firstNumber--;
             }
         }
         else
+        {         
+            auto linesToAdd = NumberGenerator::generateConstFrom(firstNumber - second, {{usedRegister.name, 0}});
+            linesToAdd.insert(linesToAdd.begin(), {"#SUB " + std::to_string(firstNumber) + " by " + std::to_string(second)});
+            linesToAdd.push_back({"SUB", "A", usedRegister.name});
+            linesToAdd.push_back({"#END OF SUB " + std::to_string(firstNumber) + " by " + std::to_string(second)});
+            lines.insert(lines.end(), linesToAdd.begin(), linesToAdd.end()); 
+
+            _addressRegister.state = RegisterState::UNKNOWN;           
+        }
+    }
+    else if (firstNumber < second )
+    {
+        if (second - firstNumber < 5000)
         {
-            if (r.variableName.find("(") == std::string::npos)
+            while( firstNumber < second)
             {
-                continue;
+                lines.push_back({"INC", "A"});
+                firstNumber++;
             }
-            std::string rest = r.variableName.substr(r.variableName.find("(") + 1, std::string::npos);
-            rest.pop_back();
-            if (name == rest)
-            {
-                saveTableToMemory(b, r);
-                return;                   
-            }
+        }
+        else
+        {         
+            auto linesToAdd = NumberGenerator::generateConstFrom(second - firstNumber, {{usedRegister.name, 0}});
+            linesToAdd.insert(linesToAdd.begin(), {"#ADD " + std::to_string(firstNumber) + " by " + std::to_string(second)});
+            linesToAdd.push_back({"ADD", "A", usedRegister.name});
+            linesToAdd.push_back({"#END OF ADD " + std::to_string(firstNumber) + " by " + std::to_string(second)});
+            lines.insert(lines.end(), linesToAdd.begin(), linesToAdd.end()); 
+            _addressRegister.state = RegisterState::UNKNOWN;           
         }
     }
 }
 
-void RegisterBlock::saveTableToMemory(Block& b, Register& r)
+void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
 {
-    b.lines.push_back({"#saving " + r.variableName + " to memory"});
-    auto lines = performTableMemoryOperation("STORE", r.variableName, r);
-    b.lines.insert(b.lines.end(), lines.begin(), lines.end());
-    r.variableName = "";
-    r.state = RegisterState::UNKNOWN;
-    b.lines.push_back({"#end of saving to memory"});
+    if (r.state == RegisterState::VARIABLE)
+    {
+        saveVariableToMemory(b, r, freeRegister);
+    }
+    else
+    {
+        std::string rest = r.variableName.substr(r.variableName.find("(") + 1, std::string::npos);
+        rest.pop_back();
+        std::cout<<"SAVE array to memory "<<rest<< std::endl;
+        if (isDigits(rest))
+        {
+            saveConstTableToMemory(b, r, freeRegister, std::stoull(rest));
+        }
+        else
+        {
+            saveVarTableToMemory(b, r, freeRegister, rest);
+        }
+    }
+}
+
+void RegisterBlock::saveVarTableToMemory(Block& b, Register& r, Register& freeRegister, std::string name)
+{
+    std::string array = r.variableName.substr(0, r.variableName.find("("));
+    unsigned long memoryCell = _symbolTable->getMemoryCell(array);
+    unsigned long long shift = _symbolTable->getTableShift(array);
+
+    loadVariableFromMemory(b, name, freeRegister, r);
+    b.lines.push_back("\t#SAVING var array " + r.variableName + " from " + r.name + " using " + freeRegister.name);    
+    b.lines.push_back({"COPY", "A", freeRegister.name});
+
+    generateNumber(b.lines, shift, memoryCell, freeRegister);
+
+    b.lines.push_back({"STORE", r.name});    
+    b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+}
+
+ void RegisterBlock::saveVariableToMemory(Block& b, Register& r, Register& freeRegister)
+ {
+    unsigned long long memoryCell = _symbolTable->getMemoryCell(r.variableName);
+    
+    b.lines.push_back("\t#SAVING var " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+    auto lines = NumberGenerator::generateConstFrom(memoryCell, {{"A", 0}});
+    lines.push_back({"STORE", r.name});
+    b.insert(lines);
+    b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+ }
+
+void RegisterBlock::saveConstTableToMemory(Block& b, Register& r, Register& freeRegister, unsigned long long diff)
+{
+    std::string array = r.variableName.substr(0, r.variableName.find("("));
+    unsigned long memoryCell = _symbolTable->getMemoryCell(array);
+    unsigned long long shift = _symbolTable->getTableShift(array);
+    memoryCell = memoryCell + diff - shift;
+
+    b.lines.push_back("\t#SAVING const table " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+    auto lines = NumberGenerator::generateConstFrom(memoryCell, {{"A", 0}});
+    lines.push_back({"STORE", r.name});
+    b.insert(lines);
+    b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);   
+}
+
+void RegisterBlock::loadFromMemory(Block& b, std::string name, Register& r, Register& freeRegister)
+{
+    if (_symbolTable->isItVariable(name))
+    {
+        loadVariableFromMemory(b, name, r, freeRegister);
+    }
+    else
+    {
+        std::string rest = name.substr(name.find("(") + 1, std::string::npos);
+        rest.pop_back();
+        std::cout<<"LOAD array to memory "<<rest<< std::endl;
+        if (isDigits(rest))
+        {
+            loadConstTableFromMemory(b, name, r, freeRegister, std::stoull(rest));
+        }
+        else
+        {
+            loadVarTableFromMemory(b, name, r, freeRegister, rest);
+        }
+    }   
+}
+
+void RegisterBlock::loadVarTableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister, std::string addresVariableName)
+{
+    std::string array = name.substr(0, name.find("("));
+    unsigned long memoryCell = _symbolTable->getMemoryCell(array);
+    unsigned long long shift = _symbolTable->getTableShift(array);
+    std::cout<<array<<" "<<shift<<" "<<memoryCell<<std::endl;
+
+    loadVariableFromMemory(b, addresVariableName, freeRegister, r);
+    b.lines.push_back("\t#LOADING var array " + r.variableName + " from " + r.name + " using " + freeRegister.name);    
+    b.lines.push_back({"COPY", "A", freeRegister.name});
+
+
+    generateNumber(b.lines, shift, memoryCell, freeRegister);
+
+    b.lines.push_back({"LOAD", r.name});    
+    b.lines.push_back("\t#END OF LOADING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+}
+
+void RegisterBlock::loadVariableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister)
+{
+    unsigned long long memoryCell = _symbolTable->getMemoryCell(name);
+
+    b.lines.push_back("\t#LOADING var " + name + " to " + r.name + " using " + freeRegister.name);
+
+    bool found = false;
+    for (auto& regs : _registers)
+    {
+        if (regs.state == RegisterState::VARIABLE && regs.variableName == name)
+        {
+            found = true;
+            b.lines.push_back({"COPY", r.name, regs.name});
+        }
+    }
+
+    if (!found)
+    {
+        auto lines = NumberGenerator::generateConstFrom(memoryCell, {{"A", 0}});
+        lines.push_back({"LOAD", r.name});
+        b.insert(lines);
+    }
+
+    b.lines.push_back("\t#END OF LOADING " + name + " to " + r.name + " using " + freeRegister.name);
+}
+
+
+void RegisterBlock::loadConstTableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister, unsigned long long diff)
+{
+    std::string array = name.substr(0, name.find("("));
+    std::cout<<array<<std::endl;        
+    unsigned long memoryCell = _symbolTable->getMemoryCell(array);
+    unsigned long long shift = _symbolTable->getTableShift(array);
+    memoryCell = memoryCell + diff - shift;
+
+    b.lines.push_back("\t#LOADING const table " + name + " to " + r.name + " using " + freeRegister.name);
+    auto lines = NumberGenerator::generateConstFrom(memoryCell, {{"A", 0}});
+    lines.push_back({"LOAD", r.name});
+    b.insert(lines);
+    b.lines.push_back("\t#END OF LOADING " + name + " to " + r.name + " using " + freeRegister.name);
 }
 
 void RegisterBlock::print()

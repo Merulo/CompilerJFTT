@@ -21,10 +21,6 @@ bool Register::shouldSave(Register one)
         {
             return false;
         }
-        if (one.state == RegisterState::CONSTVARIABLE)
-        {
-            return one.variableName != this->variableName || one.constValue != this->constValue;
-        }
     }
     return true;
 }
