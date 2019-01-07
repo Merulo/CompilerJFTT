@@ -61,11 +61,11 @@ Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std
     }
 
     saveToMemory(b, _registers[0], _registers[1]);
-    // if (!load)
-    // {
-    //     std::cout<<"TEEEEEEEEEEEEST="<<_registers[0]<<" "<<_registers[1]<<std::endl;
+    if (!load)
+    {
+        std::cout<<"TEEEEEEEEEEEEST="<<name<<" "<<_registers[0]<<" "<<_registers[1]<<std::endl;
 
-    // }
+    }
 
     if (load)
     {
@@ -124,7 +124,7 @@ void RegisterBlock::generateNumber(std::vector<Line>& lines, unsigned long long&
     
     if (firstNumber > second)
     {
-        if (firstNumber - second < 5000)
+        if (firstNumber - second < 15)
         {
             while(firstNumber > second)
             {
@@ -145,7 +145,7 @@ void RegisterBlock::generateNumber(std::vector<Line>& lines, unsigned long long&
     }
     else if (firstNumber < second )
     {
-        if (second - firstNumber < 5000)
+        if (second - firstNumber < 15)
         {
             while( firstNumber < second)
             {

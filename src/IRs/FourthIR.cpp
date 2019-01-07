@@ -134,7 +134,13 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
 {   
-    Register& regOne = rb.getRegister(l.one, b, {}, true);
+    bool load = false;
+    if (l.two.find(l.one) != std::string::npos)
+    {
+        load = true;
+    }
+
+    Register& regOne = rb.getRegister(l.one, b, {}, load);
     updateRegisterState(b, rb, regOne, l.one);
     regOne.variableName = l.one;
 
@@ -176,13 +182,11 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
 void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 {    
     Register& r = rb.getRegister(l.one, b, {});
-    // b.lines.push_back({"CURRENT REGISTER STATE = " + r.variableName});
 
     b.lines.push_back({l.operation, r.name, l.two});     
 
     updateRegisterState(b, rb, r, l.one);
-        r.variableName = l.one;
-    // b.lines.push_back({"CURRENT REGISTER STATE = " + r.variableName});
+    r.variableName = l.one;
     b.lines.push_back({"\t#end of performing simple operation"});    
 }
 
