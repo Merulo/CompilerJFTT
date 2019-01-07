@@ -11,6 +11,7 @@ class FourthIR : public IRBase
 
     private:
     std::vector<Block> _notYetConvertedBlocks;
+    bool _removeConsts = true;
 
     //converts to assembler
     void convertToAssembler();

@@ -178,6 +178,7 @@ void ThirdIR::legalizeJMR(Block& b, bool inc)
 
 void ThirdIR::legalizeEquality(Block& b)
 {
+    b.lines.insert(b.lines.begin() + b.lines.size() - 1, {"#DO NOT REMOVE CONST"});
     Line lastLine = b.lines.back();
     legalizeJLS(b, true);
     b.lines.back().one = lastLine.one;

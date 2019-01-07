@@ -18,6 +18,8 @@ void RegisterBlock::createRegisters()
 
 Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters, bool load)
 {
+    b.lines.push_back({"#TEST = " + _registers[0].variableName});
+
     if (_symbolTable->isConst(name))
     {
         for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
@@ -38,11 +40,6 @@ Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std
     }
 
     if (_registers[0].variableName == name)
-    {
-        return _registers[0];
-    }
-
-    if (_registers[0].state == RegisterState::UNKNOWN)
     {
         return _registers[0];
     }
@@ -143,11 +140,11 @@ void RegisterBlock::generateNumber(std::vector<Line>& lines, unsigned long long&
 
 void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
 {
-    if (r.state == RegisterState::VARIABLE)
+    if (r.state == RegisterState::VARIABLE && !r.variableName.empty())
     {
         saveVariableToMemory(b, r, freeRegister);
     }
-    else
+    else if (r.state == RegisterState::TABLE)
     {
         std::string rest = r.variableName.substr(r.variableName.find("(") + 1, std::string::npos);
         rest.pop_back();
@@ -156,7 +153,7 @@ void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
         {
             saveConstTableToMemory(b, r, freeRegister, std::stoull(rest));
         }
-        else
+        else 
         {
             saveVarTableToMemory(b, r, freeRegister, rest);
         }
@@ -165,6 +162,7 @@ void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
 
 void RegisterBlock::saveVarTableToMemory(Block& b, Register& r, Register& freeRegister, std::string name)
 {
+
     std::string array = r.variableName.substr(0, r.variableName.find("("));
     unsigned long memoryCell = _symbolTable->getMemoryCell(array);
     unsigned long long shift = _symbolTable->getTableShift(array);
@@ -208,9 +206,10 @@ void RegisterBlock::loadFromMemory(Block& b, std::string name, Register& r, Regi
 {
     if (_symbolTable->isItVariable(name))
     {
+        b.lines.push_back("#THIS IS A VARIABLE " + name);
         loadVariableFromMemory(b, name, r, freeRegister);
     }
-    else
+    else if (!_symbolTable->isConst(name))
     {
         std::string rest = name.substr(name.find("(") + 1, std::string::npos);
         rest.pop_back();
