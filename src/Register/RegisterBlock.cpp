@@ -16,6 +16,22 @@ void RegisterBlock::createRegisters()
     }
 }
 
+Register& RegisterBlock::getRegistersForOperation(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters)
+{
+    for(auto& reg : _registers)
+    {
+        if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [reg](auto i)
+            {
+                return i.get() == reg;
+            }) == usedRegisters.end())
+        {
+            saveToMemory(b, reg, _registers[0]);
+            return reg;
+        }
+    }
+
+}
+
 Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters, bool load)
 {
     b.lines.push_back({"#TEST = " + _registers[0].variableName});
@@ -73,19 +89,24 @@ Register& RegisterBlock::getSecondRegister(std::string name, Block& b, std::vect
 {
     for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
     {
-        if (it->variableName == name)
+        if (it->variableName == name && std::find_if(usedRegisters.begin(), usedRegisters.end(), [it](auto i)
+            {
+                return i.get() == *it;
+            }) == usedRegisters.end())
         {
             return *it;
         }
     }
 
 
-
+    b.lines.push_back({"#getting second for " + name + " " + _registers[1].name});
    std::cout<<"getting second for "<<name<<" "<<_registers[1]<<std::endl;
     if (_registers[1].variableName == name)
     {
         return _registers[1];
     }
+    b.lines.push_back({"#2getting second for " + name + " " + _registers[1].name});
+
     loadFromMemory(b, name, _registers[1], _registers[2]);
 
     return _registers[1];

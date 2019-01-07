@@ -33,7 +33,7 @@ Block IRBase::generateBlock()
 {
     Block block;
     block.blockName = "Block_" + std::to_string(_blockCounter);
-    std::cerr<<"generating block "<<block.blockName<<std::endl;
+    // std::cerr<<"generating block "<<block.blockName<<std::endl;
     _blockCounter++;
     return block;
 }

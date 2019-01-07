@@ -21,19 +21,19 @@ void FourthIR::convertToAssembler()
 
 void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBlock)
 {
-        if (std::find(_blocks.begin(), _blocks.end(), block) != _blocks.end())
+    if (std::find(_blocks.begin(), _blocks.end(), block) != _blocks.end())
     {
         return;
     }
 
-    std::cout<<"converting "<<block.blockName<<std::endl;
-    registerBlock.print();
+    std::cout<<"STARTING CONVERTING "<<block.blockName<<std::endl;
+    // registerBlock.print();
 
     Block resultBlock;
     resultBlock.blockName = block.blockName;
     for(auto& l : block.lines)
     {
-        std::cout<<"TEST="<<l<<std::endl;
+        // std::cout<<"TEST="<<l<<std::endl;
         resultBlock.lines.push_back({"\t#performing " + l.toString()});     
         if (l.operation == "CONST")
         {
@@ -67,18 +67,18 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBloc
         {
             handleSimpleOperation(registerBlock, resultBlock, l);
         }
-        // if (l.operation == "MUL")
-        // {
-        //     handleMul(registerBlock, resultBlock, l);
-        // }
-        // if (l.operation == "DIV")
-        // {
-        //     handleDiv(registerBlock, resultBlock, l);
-        // }
-        // if (l.operation == "MOD")
-        // {
-        //     handleMod(registerBlock, resultBlock, l);
-        // }        
+        if (l.operation == "MUL")
+        {
+            handleMul(registerBlock, resultBlock, l);
+        }
+        if (l.operation == "DIV")
+        {
+            handleDiv(registerBlock, resultBlock, l);
+        }
+        if (l.operation == "MOD")
+        {
+            handleMod(registerBlock, resultBlock, l);
+        }        
         if (l.operation == "#DO NOT REMOVE CONST")
         {
             _removeConsts = false;
@@ -175,12 +175,120 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
 void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 {    
     Register& r = rb.getRegister(l.one, b, {});
+    // b.lines.push_back({"CURRENT REGISTER STATE = " + r.variableName});
 
     b.lines.push_back({l.operation, r.name, l.two});     
 
     updateRegisterState(b, rb, r, l.one);
+        r.variableName = l.one;
+    // b.lines.push_back({"CURRENT REGISTER STATE = " + r.variableName});
     b.lines.push_back({"\t#end of performing simple operation"});    
 }
+
+void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
+{    
+    Register& registerB = rb.getRegister(l.one, b, {});
+    updateRegisterState(b, rb, registerB, l.one);
+    registerB.variableName = l.one;
+
+    Register& registerC = rb.getSecondRegister(l.two, b, {registerB});
+    registerC.state = RegisterState::UNKNOWN;
+    registerC.variableName = "";    
+
+    Register& registerD = rb.getRegistersForOperation("TEMPORARY_2", b, {registerB, registerC});
+    registerD.state = RegisterState::UNKNOWN;
+    registerD.variableName = "";
+
+    b.lines.push_back({"#using: " + registerB.name + " " + registerC.name + " " + registerD.name});
+
+    auto lines = MathOperations::generateMultiplication(registerB.name, registerC.name, registerD.name, l);
+    b.lines.insert(b.lines.end(), lines.begin(), lines.end());
+
+    b.lines.push_back({"\t#end of performing MUL operation"});    
+}
+
+void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
+{    
+    Register& registerB = rb.getRegister(l.one, b, {});
+    updateRegisterState(b, rb, registerB, l.one);
+    registerB.variableName = l.one;
+
+    Register& registerC = rb.getSecondRegister(l.two, b, {registerB});
+    registerC.state = RegisterState::UNKNOWN;
+    registerC.variableName = "";
+
+    Register& registerD = rb.getRegistersForOperation("TEMPORARY_1", b, {registerB, registerC});
+    registerD.state = RegisterState::UNKNOWN;
+    registerD.variableName = "";
+
+    Register& registerE = rb.getRegistersForOperation("TEMPORARY_2", b, {registerB, registerC, registerD});
+    registerE.state = RegisterState::UNKNOWN;
+    registerE.variableName = "";
+
+    Register& registerF = rb.getRegistersForOperation("TEMPORARY_3", b, {registerB, registerC, registerD, registerE});  
+    registerF.state = RegisterState::UNKNOWN;
+    registerF.variableName = "";    
+
+    b.lines.push_back({"#using: " + registerB.name + " " + registerC.name + " " + registerD.name + " " + registerE.name + " " + registerF.name});
+
+    auto lines = MathOperations::generateDivision(
+        registerB.name, registerC.name, 
+        registerD.name, registerE.name,
+        registerF.name, l);
+
+    b.lines.insert(b.lines.end(), lines.begin(), lines.end());
+
+    updateRegisterState(b, rb, registerB, l.one);
+    registerB.variableName = l.one;
+
+    b.lines.push_back({"\t#end of performing DIV operation"});    
+}
+
+void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
+{    
+    Register& registerB = rb.getRegister(l.one, b, {});
+    updateRegisterState(b, rb, registerB, l.one);
+    registerB.variableName = l.one;
+
+    Register& registerC = rb.getSecondRegister(l.two, b, {registerB});
+    registerC.state = RegisterState::UNKNOWN;
+    registerC.variableName = "";
+
+    Register& registerE = rb.getRegistersForOperation("TEMPORARY_2", b, {registerB, registerC});
+    registerE.state = RegisterState::UNKNOWN;
+    registerE.variableName = "";
+
+    Register& registerF = rb.getRegistersForOperation("TEMPORARY_3", b, {registerB, registerC, registerE});  
+    registerF.state = RegisterState::UNKNOWN;
+    registerF.variableName = "";   
+
+    auto lines = MathOperations::generateModulo(
+        registerB.name, registerC.name, 
+        registerE.name, registerF.name, l);
+
+    b.lines.insert(b.lines.end(), lines.begin(), lines.end());
+    b.lines.push_back({"\t#end of performing DIV operation"});    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -212,7 +320,6 @@ void FourthIR::updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std
 
 void FourthIR::continueConverting(Block& block, RegisterBlock rb)
 {
-    std::cout<<block.blockName<<std::endl;
     _removeConsts = true;
      
     if (!block.blockJump.empty())
@@ -233,9 +340,8 @@ void FourthIR::continueConverting(Block& block, RegisterBlock rb)
             }
         handle.lines.push_back({"JUMP", "", "#" + next.blockName});
         _blocks.push_back(handle);
-        // rb.exitBlock(next);
-        // rb.print();
-        convertBlockToAssembler(next, rb);
+        RegisterBlock copy(rb);
+        convertBlockToAssembler(next, copy);
     }
     else if (!block.blockIfFalse.empty() && !block.blockIfTrue.empty())
     {
@@ -243,7 +349,8 @@ void FourthIR::continueConverting(Block& block, RegisterBlock rb)
         {
             Block& nextTrue = getBlockByName(block.blockIfTrue, _notYetConvertedBlocks);
             Block handle = generateBlock();
-            rb.exitBlock(handle);
+            RegisterBlock copy(rb);
+            copy.exitBlock(handle);
             handle.blockJump = nextTrue.blockName;
 
             Block& grr = getBlockByName(block.blockName, _blocks);
@@ -257,14 +364,15 @@ void FourthIR::continueConverting(Block& block, RegisterBlock rb)
             }
             handle.lines.push_back({"JUMP", "", "#" +  nextTrue.blockName});
             _blocks.push_back(handle);
-                    RegisterBlock copy(rb);
+                    
             convertBlockToAssembler(nextTrue, copy);
         }
 
         {
             Block& nextFalse = getBlockByName(block.blockIfFalse, _notYetConvertedBlocks);
             Block handle = generateBlock();
-            rb.exitBlock(handle);
+            RegisterBlock copy(rb);
+            copy.exitBlock(handle);
             handle.blockJump = nextFalse.blockName;
 
             Block& grr = getBlockByName(block.blockName, _blocks);
@@ -278,7 +386,6 @@ void FourthIR::continueConverting(Block& block, RegisterBlock rb)
 
             handle.lines.push_back({"JUMP", "", "#" + nextFalse.blockName});
             _blocks.push_back(handle);
-                    RegisterBlock copy(rb);
             convertBlockToAssembler(nextFalse, copy);
         }
     }

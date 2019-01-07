@@ -29,6 +29,7 @@ class RegisterBlock
     void createRegisters();
     void exitBlock(Block& b);
 
+    Register& getRegistersForOperation(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
     Register& getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r, bool load = true);
     Register& getSecondRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
     
