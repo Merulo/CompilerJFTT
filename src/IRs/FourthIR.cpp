@@ -27,7 +27,7 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBloc
     }
 
     std::cout<<"STARTING CONVERTING "<<block.blockName<<std::endl;
-    // registerBlock.print();
+    registerBlock.print();
 
     Block resultBlock;
     resultBlock.blockName = block.blockName;

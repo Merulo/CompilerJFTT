@@ -22,6 +22,7 @@ class RegisterBlock
             _registers.push_back(copy);
         }
         _addressRegister = rb._addressRegister;
+        _registerH = rb._registerH;
         _currentRegister = rb._currentRegister;
         _symbolTable = rb._symbolTable;
     }
@@ -37,6 +38,7 @@ class RegisterBlock
 
     private:
     std::vector<Line> generateNumber(unsigned long long& firstNumber, unsigned long long second, Register& freeRegister);
+    std::vector<Line> generateNumberFrom(unsigned long long& firstNumber, unsigned long long second, Register& freeRegister);
     std::vector<Line> generateNumberShift(unsigned long long value, Register& freeRegister, std::string operation);
 
     void loadFromMemory(Block& b, std::string name, Register& r, Register& freeRegister);
@@ -56,6 +58,7 @@ class RegisterBlock
 
     std::shared_ptr<SymbolTable> _symbolTable;
     Register _addressRegister;
+    Register _registerH;
     std::vector<Register> _registers;
     unsigned int _currentRegister;
 };
