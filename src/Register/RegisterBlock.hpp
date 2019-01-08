@@ -36,7 +36,8 @@ class RegisterBlock
     void print();
 
     private:
-    void generateNumber(std::vector<Line>& lines, unsigned long long& firstNumber, unsigned long long second, Register& freeRegister);
+    std::vector<Line> generateNumber(unsigned long long& firstNumber, unsigned long long second, Register& freeRegister);
+    std::vector<Line> generateNumberShift(unsigned long long value, Register& freeRegister, std::string operation);
 
     void loadFromMemory(Block& b, std::string name, Register& r, Register& freeRegister);
     void loadVariableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister);
