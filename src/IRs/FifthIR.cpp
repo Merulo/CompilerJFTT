@@ -1,5 +1,7 @@
 #include "FifthIR.hpp"
 
+#include "Calculators/MathOperations.hpp"
+
 void FifthIR::parse(std::vector<Block> b)
 {
     std::cout<<"FifthIR WORKING"<<std::endl;
@@ -36,7 +38,7 @@ void FifthIR::calculateJumps()
             {
                 std::string argument = line.two;
                 // std::cout<<line<<std::endl;
-                if (argument.find("LABEL:") == std::string::npos)
+                if (argument.find(MathOperations::getLabelName()) == std::string::npos)
                 {
                     argument = argument.substr(1, std::string::npos);
                     int jumpTarget = getFirstInstructionInBlock(getBlockByName(argument, _blocks));

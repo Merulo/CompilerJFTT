@@ -16,14 +16,21 @@ class MathOperations
         std::string registerB, std::string registerC,
         std::string registerE, std::string registerG, Line l
     );
+    
+    static std::string getLabelName()
+    {
+        return labelName;
+    }
 
     private:
     static unsigned int labelCounter;
     static std::string generateLabel()
     {
-        std::string label = "#LABEL:" + std::to_string(labelCounter);
+        std::string label = labelName + std::to_string(labelCounter);
         labelCounter++;
         return label;
     }
+
+    static std::string labelName;
 
 };

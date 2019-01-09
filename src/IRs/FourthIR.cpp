@@ -331,13 +331,17 @@ void FourthIR::convertNextBlock(Block& block, RegisterBlock& rb, std::string nam
     handle.blockJump = next.blockName;
 
     Block& grr = getBlockByName(block.blockName, _blocks);
-        for(auto& l : grr.lines)
+    for(auto& l : grr.lines)
+    {
+        if (l.two == "#" + name)
         {
-            if (l.two == "#" + name)
-            {
-                l.two = "#" + handle.blockName;
-            }
+            l.two = "#" + handle.blockName;
         }
+        if (l.operation.find(name) != std::string::npos)
+        {
+            l.operation.replace(l.operation.find(name), name.length(), handle.blockName);
+        }
+    }
     handle.lines.push_back({"JUMP", "", "#" + next.blockName});
     _blocks.push_back(handle);
     RegisterBlock copy(rb);
@@ -360,6 +364,10 @@ void FourthIR::convertSplitBlock(Block& block, RegisterBlock& rb, std::string na
         {
             l.two = "#" + handle.blockName;
         }
+        if (l.operation.find(name) != std::string::npos)
+        {
+            l.operation.replace(l.operation.find(name), name.length(), handle.blockName);
+        }        
     }
     handle.lines.push_back({"JUMP", "", "#" +  nextTrue.blockName});
     _blocks.push_back(handle);

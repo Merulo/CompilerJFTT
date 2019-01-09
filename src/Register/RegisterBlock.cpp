@@ -64,8 +64,6 @@ Register& RegisterBlock::getRegistersForOperation(std::string name, Block& b, st
 
 Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters, bool load)
 {
-    b.lines.push_back({"#TEST = " + _registers[0].variableName});
-
     if (_symbolTable->isConst(name))
     {
         for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
@@ -113,13 +111,12 @@ Register& RegisterBlock::getSecondRegister(std::string name, Block& b, std::vect
         }
     }
 
-    b.lines.push_back({"#getting second for " + name + " " + _registerH.name});
-    std::cout<<"getting second for "<<name<<" "<<_registerH<<std::endl;
+    b.lines.push_back({"\t#getting second register for " + name + " -> " + _registerH.name});
     if (_registerH.variableName == name)
     {
         return _registerH;
     }
-    b.lines.push_back({"#2getting second for " + name + " " + _registerH.name});
+    b.lines.push_back({"\t#need to load " + name + " " + _registerH.name});
 
     loadFromMemory(b, name, _registerH, _registers[2]);
 
@@ -307,7 +304,7 @@ void RegisterBlock::loadFromMemory(Block& b, std::string name, Register& r, Regi
 {
     if (_symbolTable->isItVariable(name))
     {
-        b.lines.push_back("#THIS IS A VARIABLE " + name);
+        b.lines.push_back("\t#THIS IS A VARIABLE " + name);
         loadVariableFromMemory(b, name, r, freeRegister);
     }
     else if (!_symbolTable->isConst(name))

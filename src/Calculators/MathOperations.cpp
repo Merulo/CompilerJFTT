@@ -1,5 +1,6 @@
 #include "MathOperations.hpp"
 
+std::string MathOperations::labelName = "#LABEL_";
 
 std::vector<Line> MathOperations::generateMultiplication(std::string registerB, std::string registerC, std::string registerD, Line l)
 {
