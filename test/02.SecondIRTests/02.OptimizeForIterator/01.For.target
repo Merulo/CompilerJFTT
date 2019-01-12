@@ -4,10 +4,10 @@
 #jump to ForBlock_0_initialForControl
 #end of Block_0
 #ForBlock_0_initialForControl
-	CONST i 0
 	CONST i_forControl 10
 	INC i_forControl 
-	SUB i_forControl i
+	CONST variable_0 0
+	SUB i_forControl variable_0
 	JZERO i_forControl 
 #ifTrue Block_5
 #ifFalse Block_1_For_0_Content
@@ -17,7 +17,6 @@
 #jump to ForBlock_0_exitFor
 #end of Block_1_For_0_Content
 #ForBlock_0_exitFor
-	INC i 
 	DEC i_forControl 
 	JZERO i_forControl 
 #ifTrue Block_5

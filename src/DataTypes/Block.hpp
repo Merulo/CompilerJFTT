@@ -14,6 +14,8 @@ struct Block
     std::string blockIfTrue;
     std::string blockIfFalse;
     std::string blockJump;
+    bool visited = false;
+
     inline bool operator==(const Block& rhs){ return blockName == rhs.blockName; }
     inline bool operator!=(const Block& rhs){ return !(*this == rhs); }
 

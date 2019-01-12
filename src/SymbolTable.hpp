@@ -57,6 +57,11 @@ class SymbolTable
         _allIterators[newName] = iForControl;
     }
 
+    std::string getForControl()
+    {
+        return forControlName;
+    }
+
     void removeIterator(std::string name)
     {
         _currentIterators.erase(name);

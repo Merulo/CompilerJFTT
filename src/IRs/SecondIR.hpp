@@ -13,4 +13,10 @@ class SecondIR : public IRBase
 
     void optimize();
 
+
+    //optimizations:
+    void removeUnusedIterators();
+    bool isUsedInEndingBlock(std::string variable, Block& startingBlock, Block& endingBlock);
+    void stripVariable(std::string variable, Block& b);
+    void stripForIterator(std::string variable, Block& b);
 };

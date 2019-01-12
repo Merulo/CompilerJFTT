@@ -29,7 +29,17 @@ class IRBase
     {
         return _forCounter;
     }
-    
+
+ 
+    void resetBlocks()
+    {
+        for(auto& b : _blocks)
+        {
+            b.visited = false;
+        }
+    }
+   
+
     std::shared_ptr<SymbolTable> _symbolTable;
     std::vector<Block> _blocks;
     std::stack<Block> _currentBlock;
