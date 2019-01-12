@@ -12,28 +12,28 @@
 	CONST variable_0 2
 	CONST variable_1 3
 	JMR variable_0 variable_1
-#ifTrue Block_4
-#ifFalse Block_3
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse Block_Condition_0_ifFalse
 #end of Block_2
-#Block_4
+#Block_Condition_0_ifTrue
 #jump to Block_1
-#end of Block_4
+#end of Block_Condition_0_ifTrue
+#Block_Condition_0_ifFalse
+#end of Block_Condition_0_ifFalse
 #Block_3
-#end of Block_3
-#Block_5
 	WRITE b 
-#end of Block_5
-#Block_6
+#end of Block_3
+#Block_4
 	CONST variable_2 0
 	CONST variable_3 1
 	JMR variable_2 variable_3
-#ifTrue Block_8
-#ifFalse Block_7
-#end of Block_6
-#Block_8
-#jump to Block_5
-#end of Block_8
-#Block_7
+#ifTrue Block_Condition_1_ifTrue
+#ifFalse Block_Condition_1_ifFalse
+#end of Block_4
+#Block_Condition_1_ifTrue
+#jump to Block_3
+#end of Block_Condition_1_ifTrue
+#Block_Condition_1_ifFalse
 	WRITE c 
 	HALT  
-#end of Block_7
+#end of Block_Condition_1_ifFalse

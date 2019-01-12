@@ -42,8 +42,8 @@ class FirstIR : public IRBase
     void endWhileDo();
     void endDoWhile();
     void insertFor(std::string iterator, Data from, Data to, bool isForTo);
-    Block createBeforeForBlock(std::string iterator, Data from, Data to, bool isForTo);
-    Block createSecondControlBlock(std::string iterator, bool isForTo);
+    Block createBeforeForBlock(std::string iterator, Data from, Data to, bool isForTo, std::string name);
+    Block createSecondControlBlock(std::string iterator, bool isForTo, std::string name);
     Line getLine(Data d);
 
     private:

@@ -6,37 +6,37 @@
 #Block_1
 	CONST variable_0 0
 	JMR a variable_0
-#ifTrue Block_3
-#ifFalse Block_2
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse Block_Condition_0_ifFalse
 #end of Block_1
-#Block_3
+#Block_Condition_0_ifTrue
 	CONST variable_1 2
 	COPY b a
 	DIV b variable_1
 	CONST variable_2 2
 	MUL b variable_2
-#jump to Block_4
-#end of Block_3
-#Block_4
+#jump to Block_2
+#end of Block_Condition_0_ifTrue
+#Block_2
 	JMR a b
-#ifTrue Block_6
-#ifFalse Block_5
-#end of Block_4
-#Block_6
+#ifTrue Block_Condition_1_ifTrue
+#ifFalse Block_Condition_1_ifFalse
+#end of Block_2
+#Block_Condition_1_ifTrue
 	CONST variable_3 1
 	WRITE variable_3 
-#jump to Block_7
-#end of Block_6
-#Block_5
+#jump to Block_3
+#end of Block_Condition_1_ifTrue
+#Block_Condition_1_ifFalse
 	CONST variable_4 0
 	WRITE variable_4 
-#jump to Block_7
-#end of Block_5
-#Block_7
+#jump to Block_3
+#end of Block_Condition_1_ifFalse
+#Block_3
 	CONST variable_5 2
 	DIV a variable_5
 #jump to Block_1
-#end of Block_7
-#Block_2
+#end of Block_3
+#Block_Condition_0_ifFalse
 	HALT  
-#end of Block_2
+#end of Block_Condition_0_ifFalse

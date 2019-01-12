@@ -3,73 +3,73 @@
 	CONST a 10
 	CONST b 20
 #end of Block_0
-#Block_3
+#ForBlock_0_initialForControl
 	COPY i a
 	CONST i_forControl 20
 	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
-#ifTrue Block_2
-#ifFalse Block_1
-#end of Block_3
-#Block_1
+#ifTrue Block_2_For_0_Content
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_initialForControl
+#Block_1_For_0_Content
 	WRITE a 
-#end of Block_1
-#Block_4
+#end of Block_1_For_0_Content
+#ForBlock_0_exitFor
 	INC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_2
-#ifFalse Block_1
-#end of Block_4
-#Block_2
-#end of Block_2
+#ifTrue Block_2_For_0_Content
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_exitFor
+#Block_2_For_0_Content
+#end of Block_2_For_0_Content
 #Block_5
 #end of Block_5
-#Block_8
+#ForBlock_1_initialForControl
 	CONST i 10
 	COPY i_forControl a
 	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
-#ifTrue Block_7
-#ifFalse Block_6
-#end of Block_8
-#Block_6
+#ifTrue Block_7_For_1_Content
+#ifFalse Block_6_For_1_Content
+#end of ForBlock_1_initialForControl
+#Block_6_For_1_Content
 	WRITE a 
-#end of Block_6
-#Block_9
+#end of Block_6_For_1_Content
+#ForBlock_1_exitFor
 	INC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_7
-#ifFalse Block_6
-#end of Block_9
-#Block_7
-#end of Block_7
+#ifTrue Block_7_For_1_Content
+#ifFalse Block_6_For_1_Content
+#end of ForBlock_1_exitFor
+#Block_7_For_1_Content
+#end of Block_7_For_1_Content
 #Block_10
 #end of Block_10
-#Block_13
+#ForBlock_2_initialForControl
 	CONST i 10
 	CONST i_forControl 20
 	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
-#ifTrue Block_12
-#ifFalse Block_11
-#end of Block_13
-#Block_11
+#ifTrue Block_12_For_2_Content
+#ifFalse Block_11_For_2_Content
+#end of ForBlock_2_initialForControl
+#Block_11_For_2_Content
 	WRITE a 
-#end of Block_11
-#Block_14
+#end of Block_11_For_2_Content
+#ForBlock_2_exitFor
 	INC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_12
-#ifFalse Block_11
-#end of Block_14
-#Block_12
-#end of Block_12
+#ifTrue Block_12_For_2_Content
+#ifFalse Block_11_For_2_Content
+#end of ForBlock_2_exitFor
+#Block_12_For_2_Content
+#end of Block_12_For_2_Content
 #Block_15
 	WRITE b 
 	HALT  

@@ -7,65 +7,65 @@
 #end of Block_0
 #Block_1
 	JME n m
-#ifTrue Block_3
-#ifFalse Block_2
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse Block_Condition_0_ifFalse
 #end of Block_1
-#Block_3
+#Block_Condition_0_ifTrue
 	CONST power 0
 	COPY rest n
 	MOD rest divider
-#end of Block_3
-#Block_4
+#end of Block_Condition_0_ifTrue
+#Block_2
 	CONST variable_0 0
 	JEQ rest variable_0
-#ifTrue Block_6
-#ifFalse Block_5
-#end of Block_4
-#Block_6
+#ifTrue Block_Condition_1_ifTrue
+#ifFalse Block_Condition_1_ifFalse
+#end of Block_2
+#Block_Condition_1_ifTrue
 	DIV n divider
 	CONST variable_1 1
 	ADD power variable_1
 	COPY rest n
 	MOD rest divider
-#jump to Block_4
-#end of Block_6
-#Block_5
-#end of Block_5
-#Block_7
+#jump to Block_2
+#end of Block_Condition_1_ifTrue
+#Block_Condition_1_ifFalse
+#end of Block_Condition_1_ifFalse
+#Block_3
 	CONST variable_2 0
 	JMR power variable_2
-#ifTrue Block_9
-#ifFalse Block_8
-#end of Block_7
-#Block_9
+#ifTrue Block_Condition_2_ifTrue
+#ifFalse Block_Condition_2_ifFalse
+#end of Block_3
+#Block_Condition_2_ifTrue
 	WRITE divider 
 	WRITE power 
-#jump to Block_10
-#end of Block_9
-#Block_8
+#jump to Block_4
+#end of Block_Condition_2_ifTrue
+#Block_Condition_2_ifFalse
 	CONST variable_3 1
 	ADD divider variable_3
 	COPY m divider
 	MUL m divider
-#jump to Block_10
-#end of Block_8
-#Block_10
+#jump to Block_4
+#end of Block_Condition_2_ifFalse
+#Block_4
 #jump to Block_1
-#end of Block_10
-#Block_2
-#end of Block_2
-#Block_11
+#end of Block_4
+#Block_Condition_0_ifFalse
+#end of Block_Condition_0_ifFalse
+#Block_5
 	CONST variable_4 1
 	JNE n variable_4
-#ifTrue Block_13
-#ifFalse Block_12
-#end of Block_11
-#Block_13
+#ifTrue Block_Condition_3_ifTrue
+#ifFalse Block_Condition_3_ifFalse
+#end of Block_5
+#Block_Condition_3_ifTrue
 	WRITE n 
 	CONST variable_5 1
 	WRITE variable_5 
-#jump to Block_12
-#end of Block_13
-#Block_12
+#jump to Block_Condition_3_ifFalse
+#end of Block_Condition_3_ifTrue
+#Block_Condition_3_ifFalse
 	HALT  
-#end of Block_12
+#end of Block_Condition_3_ifFalse

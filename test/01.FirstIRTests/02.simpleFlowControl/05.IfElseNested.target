@@ -5,74 +5,74 @@
 #end of Block_0
 #Block_1
 	JMR a b
-#ifTrue Block_3
-#ifFalse Block_2
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse Block_Condition_0_ifFalse
 #end of Block_1
-#Block_3
-#end of Block_3
-#Block_4
-	JMR b a
-#ifTrue Block_6
-#ifFalse Block_5
-#end of Block_4
-#Block_6
-#end of Block_6
-#Block_7
-	JMR a b
-#ifTrue Block_9
-#ifFalse Block_8
-#end of Block_7
-#Block_9
-	CONST c 110
-#jump to Block_10
-#end of Block_9
-#Block_8
-	CONST c 120
-#jump to Block_10
-#end of Block_8
-#Block_10
-	CONST c 130
-#jump to Block_11
-#end of Block_10
-#Block_5
-	CONST c 140
-#jump to Block_11
-#end of Block_5
-#Block_11
-#jump to Block_12
-#end of Block_11
+#Block_Condition_0_ifTrue
+#end of Block_Condition_0_ifTrue
 #Block_2
-#end of Block_2
-#Block_13
 	JMR b a
-#ifTrue Block_15
-#ifFalse Block_14
-#end of Block_13
-#Block_15
-	CONST c 150
-#jump to Block_16
-#end of Block_15
-#Block_14
-#end of Block_14
-#Block_17
+#ifTrue Block_Condition_1_ifTrue
+#ifFalse Block_Condition_1_ifFalse
+#end of Block_2
+#Block_Condition_1_ifTrue
+#end of Block_Condition_1_ifTrue
+#Block_3
 	JMR a b
-#ifTrue Block_19
-#ifFalse Block_18
-#end of Block_17
-#Block_19
+#ifTrue Block_Condition_2_ifTrue
+#ifFalse Block_Condition_2_ifFalse
+#end of Block_3
+#Block_Condition_2_ifTrue
+	CONST c 110
+#jump to Block_4
+#end of Block_Condition_2_ifTrue
+#Block_Condition_2_ifFalse
+	CONST c 120
+#jump to Block_4
+#end of Block_Condition_2_ifFalse
+#Block_4
+	CONST c 130
+#jump to Block_5
+#end of Block_4
+#Block_Condition_1_ifFalse
+	CONST c 140
+#jump to Block_5
+#end of Block_Condition_1_ifFalse
+#Block_5
+#jump to Block_6
+#end of Block_5
+#Block_Condition_0_ifFalse
+#end of Block_Condition_0_ifFalse
+#Block_7
+	JMR b a
+#ifTrue Block_Condition_3_ifTrue
+#ifFalse Block_Condition_3_ifFalse
+#end of Block_7
+#Block_Condition_3_ifTrue
+	CONST c 150
+#jump to Block_8
+#end of Block_Condition_3_ifTrue
+#Block_Condition_3_ifFalse
+#end of Block_Condition_3_ifFalse
+#Block_9
+	JMR a b
+#ifTrue Block_Condition_4_ifTrue
+#ifFalse Block_Condition_4_ifFalse
+#end of Block_9
+#Block_Condition_4_ifTrue
 	CONST c 160
-#jump to Block_20
-#end of Block_19
-#Block_18
+#jump to Block_10
+#end of Block_Condition_4_ifTrue
+#Block_Condition_4_ifFalse
 	CONST c 170
-#jump to Block_20
-#end of Block_18
-#Block_20
-#jump to Block_16
-#end of Block_20
-#Block_16
-#jump to Block_12
-#end of Block_16
-#Block_12
+#jump to Block_10
+#end of Block_Condition_4_ifFalse
+#Block_10
+#jump to Block_8
+#end of Block_10
+#Block_8
+#jump to Block_6
+#end of Block_8
+#Block_6
 	HALT  
-#end of Block_12
+#end of Block_6

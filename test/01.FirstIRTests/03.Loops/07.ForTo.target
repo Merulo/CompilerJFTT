@@ -3,27 +3,27 @@
 	CONST a 10
 	CONST b 20
 #end of Block_0
-#Block_3
+#ForBlock_0_initialForControl
 	COPY i a
 	COPY i_forControl b
 	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
-#ifTrue Block_2
-#ifFalse Block_1
-#end of Block_3
-#Block_1
+#ifTrue Block_2_For_0_Content
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_initialForControl
+#Block_1_For_0_Content
 	WRITE a 
-#end of Block_1
-#Block_4
+#end of Block_1_For_0_Content
+#ForBlock_0_exitFor
 	INC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_2
-#ifFalse Block_1
-#end of Block_4
-#Block_2
-#end of Block_2
+#ifTrue Block_2_For_0_Content
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_exitFor
+#Block_2_For_0_Content
+#end of Block_2_For_0_Content
 #Block_5
 	WRITE b 
 	HALT  

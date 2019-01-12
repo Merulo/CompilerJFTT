@@ -2,76 +2,76 @@
 #Block_0
 	CONST n 100
 #end of Block_0
-#Block_3
+#ForBlock_0_initialForControl
 	COPY i n
 	COPY i_forControl i
 	INC i_forControl 
 	CONST variable_0 2
 	SUB i_forControl variable_0
 	JZERO i_forControl 
-#ifTrue Block_2
-#ifFalse Block_1
-#end of Block_3
-#Block_1
+#ifTrue Block_2_For_0_Content
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_initialForControl
+#Block_1_For_0_Content
 	CONST sieve(i) 1
-#end of Block_1
-#Block_4
+#end of Block_1_For_0_Content
+#ForBlock_0_exitFor
 	DEC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_2
-#ifFalse Block_1
-#end of Block_4
-#Block_2
-#end of Block_2
+#ifTrue Block_2_For_0_Content
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_exitFor
+#Block_2_For_0_Content
+#end of Block_2_For_0_Content
 #Block_5
 #end of Block_5
-#Block_14
+#ForBlock_1_initialForControl
 	CONST i 2
 	COPY i_forControl n
 	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
-#ifTrue Block_13
-#ifFalse Block_6
-#end of Block_14
-#Block_6
-#end of Block_6
+#ifTrue Block_9_For_1_Content
+#ifFalse Block_6_For_1_Content
+#end of ForBlock_1_initialForControl
+#Block_6_For_1_Content
+#end of Block_6_For_1_Content
 #Block_7
 	CONST variable_1 0
 	JNE sieve(i) variable_1
-#ifTrue Block_9
-#ifFalse Block_8
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse Block_Condition_0_ifFalse
 #end of Block_7
-#Block_9
+#Block_Condition_0_ifTrue
 	COPY j i
 	ADD j i
-#end of Block_9
-#Block_10
+#end of Block_Condition_0_ifTrue
+#Block_8
 	JLE j n
-#ifTrue Block_12
-#ifFalse Block_11
-#end of Block_10
-#Block_12
+#ifTrue Block_Condition_1_ifTrue
+#ifFalse Block_Condition_1_ifFalse
+#end of Block_8
+#Block_Condition_1_ifTrue
 	CONST sieve(j) 0
 	ADD j i
-#jump to Block_10
-#end of Block_12
-#Block_11
-	WRITE i 
 #jump to Block_8
-#end of Block_11
-#Block_8
-#end of Block_8
-#Block_15
+#end of Block_Condition_1_ifTrue
+#Block_Condition_1_ifFalse
+	WRITE i 
+#jump to Block_Condition_0_ifFalse
+#end of Block_Condition_1_ifFalse
+#Block_Condition_0_ifFalse
+#end of Block_Condition_0_ifFalse
+#ForBlock_1_exitFor
 	INC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_13
-#ifFalse Block_6
-#end of Block_15
-#Block_13
-#end of Block_13
-#Block_16
+#ifTrue Block_9_For_1_Content
+#ifFalse Block_6_For_1_Content
+#end of ForBlock_1_exitFor
+#Block_9_For_1_Content
+#end of Block_9_For_1_Content
+#Block_12
 	HALT  
-#end of Block_16
+#end of Block_12

@@ -4,6 +4,8 @@
 
 unsigned int IRBase::_nextGeneratedVariableSuffix = 0;
 unsigned int IRBase::_blockCounter = 0;
+unsigned int IRBase::_conditionCounter = 0;
+unsigned int IRBase::_forCounter = 0;
 
 IRBase::IRBase(std::string IRName) : _IRName(IRName)
 {
@@ -35,6 +37,21 @@ Block IRBase::generateBlock()
     block.blockName = "Block_" + std::to_string(_blockCounter);
     // std::cerr<<"generating block "<<block.blockName<<std::endl;
     _blockCounter++;
+    return block;
+}
+
+std::string IRBase::generateForName()
+{
+    std::string name = "ForBlock_" + std::to_string(_forCounter);
+    _forCounter++;
+    return name;
+}
+
+Block IRBase::generateConditionBlock()
+{
+    Block block;
+    block.blockName = "Block_Condition_" + std::to_string(_conditionCounter);
+    _conditionCounter++;
     return block;
 }
 

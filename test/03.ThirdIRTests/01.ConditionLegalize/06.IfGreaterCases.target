@@ -10,21 +10,21 @@
 	COPY IF_CONTROL_VARIABLE b
 	INC IF_CONTROL_VARIABLE 
 	SUB IF_CONTROL_VARIABLE a
-	JZERO IF_CONTROL_VARIABLE #Block_3
+	JZERO IF_CONTROL_VARIABLE #Block_Condition_0_ifTrue
 	COPY IF_CONTROL_VARIABLE a
 	INC IF_CONTROL_VARIABLE 
 	SUB IF_CONTROL_VARIABLE b
-	JZERO IF_CONTROL_VARIABLE #Block_3
-	JUMP  #Block_2
-#ifTrue Block_2
-#ifFalse Block_3
+	JZERO IF_CONTROL_VARIABLE #Block_Condition_0_ifTrue
+	JUMP  #Block_Condition_0_ifFalse
+#ifTrue Block_Condition_0_ifFalse
+#ifFalse Block_Condition_0_ifTrue
 #end of Block_1
-#Block_3
+#Block_Condition_0_ifTrue
 	CONST a 100
-	JUMP  #Block_2
-#jump to Block_2
-#end of Block_3
-#Block_2
+	JUMP  #Block_Condition_0_ifFalse
+#jump to Block_Condition_0_ifFalse
+#end of Block_Condition_0_ifTrue
+#Block_Condition_0_ifFalse
 	WRITE a 
 	HALT  
-#end of Block_2
+#end of Block_Condition_0_ifFalse

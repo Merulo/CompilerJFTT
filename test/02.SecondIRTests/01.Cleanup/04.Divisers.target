@@ -1,70 +1,70 @@
 #SecondIR:
 #Block_0
 	CONST n 100
-#jump to Block_3
+#jump to ForBlock_0_initialForControl
 #end of Block_0
-#Block_3
+#ForBlock_0_initialForControl
 	COPY i n
 	COPY i_forControl i
 	INC i_forControl 
 	CONST variable_0 2
 	SUB i_forControl variable_0
 	JZERO i_forControl 
-#ifTrue Block_14
-#ifFalse Block_1
-#end of Block_3
-#Block_1
+#ifTrue ForBlock_1_initialForControl
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_initialForControl
+#Block_1_For_0_Content
 	CONST sieve(i) 1
-#jump to Block_4
-#end of Block_1
-#Block_4
+#jump to ForBlock_0_exitFor
+#end of Block_1_For_0_Content
+#ForBlock_0_exitFor
 	DEC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_14
-#ifFalse Block_1
-#end of Block_4
-#Block_14
+#ifTrue ForBlock_1_initialForControl
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_exitFor
+#ForBlock_1_initialForControl
 	CONST i 2
 	COPY i_forControl n
 	INC i_forControl 
 	SUB i_forControl i
 	JZERO i_forControl 
-#ifTrue Block_16
+#ifTrue Block_12
 #ifFalse Block_7
-#end of Block_14
+#end of ForBlock_1_initialForControl
 #Block_7
 	CONST variable_1 0
 	JNE sieve(i) variable_1
-#ifTrue Block_9
-#ifFalse Block_15
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse ForBlock_1_exitFor
 #end of Block_7
-#Block_9
+#Block_Condition_0_ifTrue
 	COPY j i
 	ADD j i
-#jump to Block_10
-#end of Block_9
-#Block_10
+#jump to Block_8
+#end of Block_Condition_0_ifTrue
+#Block_8
 	JLE j n
-#ifTrue Block_12
-#ifFalse Block_11
-#end of Block_10
-#Block_12
+#ifTrue Block_Condition_1_ifTrue
+#ifFalse Block_Condition_1_ifFalse
+#end of Block_8
+#Block_Condition_1_ifTrue
 	CONST sieve(j) 0
 	ADD j i
-#jump to Block_10
-#end of Block_12
-#Block_11
+#jump to Block_8
+#end of Block_Condition_1_ifTrue
+#Block_Condition_1_ifFalse
 	WRITE i 
-#jump to Block_15
-#end of Block_11
-#Block_15
+#jump to ForBlock_1_exitFor
+#end of Block_Condition_1_ifFalse
+#ForBlock_1_exitFor
 	INC i 
 	DEC i_forControl 
 	JZERO i_forControl 
-#ifTrue Block_16
+#ifTrue Block_12
 #ifFalse Block_7
-#end of Block_15
-#Block_16
+#end of ForBlock_1_exitFor
+#Block_12
 	HALT  
-#end of Block_16
+#end of Block_12

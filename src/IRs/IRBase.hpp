@@ -22,7 +22,13 @@ class IRBase
 
     protected:
     Block generateBlock();
+    Block generateConditionBlock();
+    std::string generateForName();
     Block& getBlockByName(std::string searched, std::vector<Block>& blocks);
+    static unsigned int getForCounter()
+    {
+        return _forCounter;
+    }
     
     std::shared_ptr<SymbolTable> _symbolTable;
     std::vector<Block> _blocks;
@@ -34,5 +40,7 @@ class IRBase
 
     std::string _IRName;
     static unsigned int _blockCounter;
+    static unsigned int _forCounter;
+    static unsigned int _conditionCounter;
     static unsigned int _nextGeneratedVariableSuffix;
 };

@@ -7,17 +7,17 @@
 	CONST variable_0 0
 	CONST variable_1 1
 	JMR variable_0 variable_1
-#ifTrue Block_3
-#ifFalse Block_2
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse Block_Condition_0_ifFalse
 #end of Block_1
-#Block_3
+#Block_Condition_0_ifTrue
 	CONST a 100
-#jump to Block_4
-#end of Block_3
-#Block_2
+#jump to Block_2
+#end of Block_Condition_0_ifTrue
+#Block_Condition_0_ifFalse
 	CONST b 200
-#jump to Block_4
-#end of Block_2
-#Block_4
+#jump to Block_2
+#end of Block_Condition_0_ifFalse
+#Block_2
 	HALT  
-#end of Block_4
+#end of Block_2

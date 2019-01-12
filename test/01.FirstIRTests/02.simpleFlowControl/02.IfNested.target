@@ -5,90 +5,90 @@
 	CONST variable_0 0
 	CONST variable_1 1
 	JMR variable_0 variable_1
-#ifTrue Block_3
-#ifFalse Block_2
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse Block_Condition_0_ifFalse
 #end of Block_1
-#Block_3
-#end of Block_3
-#Block_4
+#Block_Condition_0_ifTrue
+#end of Block_Condition_0_ifTrue
+#Block_2
 	CONST variable_2 2
 	CONST variable_3 3
 	JMR variable_2 variable_3
-#ifTrue Block_6
-#ifFalse Block_5
-#end of Block_4
-#Block_6
-#end of Block_6
-#Block_7
+#ifTrue Block_Condition_1_ifTrue
+#ifFalse Block_Condition_1_ifFalse
+#end of Block_2
+#Block_Condition_1_ifTrue
+#end of Block_Condition_1_ifTrue
+#Block_3
 	CONST variable_4 4
 	CONST variable_5 5
 	JMR variable_4 variable_5
-#ifTrue Block_9
-#ifFalse Block_8
-#end of Block_7
-#Block_9
-#end of Block_9
-#Block_10
+#ifTrue Block_Condition_2_ifTrue
+#ifFalse Block_Condition_2_ifFalse
+#end of Block_3
+#Block_Condition_2_ifTrue
+#end of Block_Condition_2_ifTrue
+#Block_4
 	CONST variable_6 6
 	CONST variable_7 7
 	JMR variable_6 variable_7
-#ifTrue Block_12
-#ifFalse Block_11
-#end of Block_10
-#Block_12
+#ifTrue Block_Condition_3_ifTrue
+#ifFalse Block_Condition_3_ifFalse
+#end of Block_4
+#Block_Condition_3_ifTrue
 	CONST a 100
-#jump to Block_11
-#end of Block_12
-#Block_11
-#jump to Block_8
-#end of Block_11
-#Block_8
-#jump to Block_5
-#end of Block_8
+#jump to Block_Condition_3_ifFalse
+#end of Block_Condition_3_ifTrue
+#Block_Condition_3_ifFalse
+#jump to Block_Condition_2_ifFalse
+#end of Block_Condition_3_ifFalse
+#Block_Condition_2_ifFalse
+#jump to Block_Condition_1_ifFalse
+#end of Block_Condition_2_ifFalse
+#Block_Condition_1_ifFalse
+#end of Block_Condition_1_ifFalse
 #Block_5
-#end of Block_5
-#Block_13
 	CONST variable_8 8
 	CONST variable_9 9
 	JMR variable_8 variable_9
-#ifTrue Block_15
-#ifFalse Block_14
-#end of Block_13
-#Block_15
+#ifTrue Block_Condition_4_ifTrue
+#ifFalse Block_Condition_4_ifFalse
+#end of Block_5
+#Block_Condition_4_ifTrue
 	CONST a 200
-#jump to Block_14
-#end of Block_15
-#Block_14
-#end of Block_14
-#Block_16
+#jump to Block_Condition_4_ifFalse
+#end of Block_Condition_4_ifTrue
+#Block_Condition_4_ifFalse
+#end of Block_Condition_4_ifFalse
+#Block_6
 	CONST variable_10 10
 	CONST variable_11 11
 	JMR variable_10 variable_11
-#ifTrue Block_18
-#ifFalse Block_17
-#end of Block_16
-#Block_18
+#ifTrue Block_Condition_5_ifTrue
+#ifFalse Block_Condition_5_ifFalse
+#end of Block_6
+#Block_Condition_5_ifTrue
 	CONST a 300
-#jump to Block_17
-#end of Block_18
-#Block_17
-#end of Block_17
-#Block_19
+#jump to Block_Condition_5_ifFalse
+#end of Block_Condition_5_ifTrue
+#Block_Condition_5_ifFalse
+#end of Block_Condition_5_ifFalse
+#Block_7
 	CONST variable_12 12
 	CONST variable_13 13
 	JMR variable_12 variable_13
-#ifTrue Block_21
-#ifFalse Block_20
-#end of Block_19
-#Block_21
+#ifTrue Block_Condition_6_ifTrue
+#ifFalse Block_Condition_6_ifFalse
+#end of Block_7
+#Block_Condition_6_ifTrue
 	CONST a 400
-#jump to Block_20
-#end of Block_21
-#Block_20
+#jump to Block_Condition_6_ifFalse
+#end of Block_Condition_6_ifTrue
+#Block_Condition_6_ifFalse
 	CONST a 500
-#jump to Block_2
-#end of Block_20
-#Block_2
+#jump to Block_Condition_0_ifFalse
+#end of Block_Condition_6_ifFalse
+#Block_Condition_0_ifFalse
 	CONST a 600
 	HALT  
-#end of Block_2
+#end of Block_Condition_0_ifFalse

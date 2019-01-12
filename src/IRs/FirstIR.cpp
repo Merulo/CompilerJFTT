@@ -72,12 +72,15 @@ void FirstIR::handleConditionOperation(cStrRef operation, cStrRef one, cStrRef t
     _currentBlock.pop();
 
     //creates blockIfFalse
-    Block b2 = generateBlock();
+    Block b2 = generateConditionBlock();
+    std::string name = b2.blockName;
+    b2.blockName+= "_ifFalse";
     _currentBlock.push(b2);
     _blocks.back().blockIfFalse = _currentBlock.top().blockName;
 
     //creates blockIfTrue
-    Block b3 = generateBlock();
+    Block b3;
+    b3.blockName = name + "_ifTrue";
     _currentBlock.push(b3);
     _blocks.back().blockIfTrue = _currentBlock.top().blockName;    
 
@@ -157,6 +160,7 @@ void FirstIR::closeForBlock()
     _blocks.push_back(_currentBlock.top());
     _currentBlock.pop();
     Block b1 = generateBlock();
+    b1.blockName = b1.blockName + "_For_" +std::to_string(getForCounter()) + "_Content";
     _currentBlock.push(b1);
     _forBlocks.push(b1);       
 }
@@ -169,11 +173,12 @@ void FirstIR::insertFor(std::string iterator, Data from, Data to, bool isForTo)
     Block b2 = _forBlocks.top();
     _forBlocks.pop();
 
-    Block firstControlBlock = createBeforeForBlock(iterator, from, to, isForTo);
+    std::string name = generateForName();
+    Block firstControlBlock = createBeforeForBlock(iterator, from, to, isForTo, name);
     firstControlBlock.blockIfFalse = b2.blockName;
     firstControlBlock.blockIfTrue = b1.blockName;
 
-    Block secondControlBlock = createSecondControlBlock(iterator, isForTo);
+    Block secondControlBlock = createSecondControlBlock(iterator, isForTo, name);
     secondControlBlock.blockIfFalse = b2.blockName;
     secondControlBlock.blockIfTrue = b1.blockName;        
     
@@ -202,9 +207,10 @@ void FirstIR::insertFor(std::string iterator, Data from, Data to, bool isForTo)
 
 }
 
-Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bool isForTo)
+Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bool isForTo, std::string name)
 {
     Block b = generateBlock();
+    b.blockName = name + "_initialForControl";
     Line iteratorInit = getLine(from);
     iteratorInit.one = iterator;
 
@@ -258,9 +264,10 @@ Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bo
     return b;
 }
 
-Block FirstIR::createSecondControlBlock(std::string iterator, bool isForTo)
+Block FirstIR::createSecondControlBlock(std::string iterator, bool isForTo, std::string name)
 {
     Block b = generateBlock();
+    b.blockName = name + "_exitFor";    
     Line incLine;
     incLine.operation = "INC";
     incLine.one = iterator;

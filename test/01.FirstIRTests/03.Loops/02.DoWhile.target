@@ -10,13 +10,13 @@
 	CONST variable_0 1
 	CONST variable_1 0
 	JMR variable_0 variable_1
-#ifTrue Block_4
-#ifFalse Block_3
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse Block_Condition_0_ifFalse
 #end of Block_2
-#Block_4
+#Block_Condition_0_ifTrue
 #jump to Block_1
-#end of Block_4
-#Block_3
+#end of Block_Condition_0_ifTrue
+#Block_Condition_0_ifFalse
 	WRITE b 
 	HALT  
-#end of Block_3
+#end of Block_Condition_0_ifFalse
