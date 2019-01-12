@@ -159,7 +159,7 @@ std::vector<Line> RegisterBlock::generateNumber(unsigned long long& firstNumber,
             return generateNumberShift(second - firstNumber, usedRegister, "ADD"); 
         }
     }
-    return {{"#ERROR"}};
+    return {{"#No need to generate number"}};
 }
 
 std::vector<Line> RegisterBlock::generateNumberFrom(unsigned long long& firstNumber, unsigned long long second, Register& usedRegister)
@@ -200,7 +200,7 @@ std::vector<Line> RegisterBlock::generateNumberFrom(unsigned long long& firstNum
             return NumberGenerator::generateConstFrom(second, {{"A", 0}});   
         }
     }
-    return {{"#ERROR"}};
+    return {{"#No need to generate number"}};
 }
 
 
