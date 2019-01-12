@@ -1,0 +1,28 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; m; n; o; p; r; array(0:100);
+IN
+  a := 15;
+  array(0) := 15;
+  array(1) := 0;
+  DO
+    WRITE a;
+    a := a - 1;
+    array(0) := array(0) - 1;
+    b:= 1;
+    c:= 1;
+    d:= 1;
+    e:= 1;
+    f:= 1;
+    g:= 1;
+    h:= 1;
+    i:= 1;
+    j:= 1;
+    k:= 1;
+    l:= 1;
+    m:= 1;
+    n:= 1;
+    o:= 1;
+    p:= 1;
+    r:= 1;
+  WHILE array(0) > array(1) ENDDO
+END
