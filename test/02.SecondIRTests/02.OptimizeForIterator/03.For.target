@@ -1,0 +1,35 @@
+#SecondIR:
+#Block_0
+	CONST a 10
+#jump to ForBlock_0_initialForControl
+#end of Block_0
+#ForBlock_0_initialForControl
+	CONST i 0
+	CONST i_forControl 10
+	INC i_forControl 
+	SUB i_forControl i
+	JZERO i_forControl 
+#ifTrue Block_6
+#ifFalse Block_2
+#end of ForBlock_0_initialForControl
+#Block_2
+	CONST variable_0 10
+	CONST variable_1 200
+	JMR variable_0 variable_1
+#ifTrue Block_Condition_0_ifTrue
+#ifFalse ForBlock_0_exitFor
+#end of Block_2
+#Block_Condition_0_ifTrue
+	WRITE i 
+#jump to ForBlock_0_exitFor
+#end of Block_Condition_0_ifTrue
+#ForBlock_0_exitFor
+	INC i 
+	DEC i_forControl 
+	JZERO i_forControl 
+#ifTrue Block_6
+#ifFalse Block_2
+#end of ForBlock_0_exitFor
+#Block_6
+	HALT  
+#end of Block_6

@@ -1,0 +1,14 @@
+DECLARE
+  a; b;
+IN
+  a := 10;
+  FOR i FROM 0 TO 10 DO
+    IF 10 > 200 THEN
+      IF 10 > 200 THEN
+        WRITE 9;
+      ELSE
+        WRITE i;
+      ENDIF
+    ENDIF
+  ENDFOR
+END

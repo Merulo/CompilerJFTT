@@ -1,0 +1,28 @@
+#SecondIR:
+#Block_0
+	CONST a 10
+#jump to ForBlock_0_initialForControl
+#end of Block_0
+#ForBlock_0_initialForControl
+	CONST i 0
+	CONST i_forControl 10
+	INC i_forControl 
+	SUB i_forControl i
+	JZERO i_forControl 
+#ifTrue Block_5
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_initialForControl
+#Block_1_For_0_Content
+	WRITE a 
+#jump to ForBlock_0_exitFor
+#end of Block_1_For_0_Content
+#ForBlock_0_exitFor
+	INC i 
+	DEC i_forControl 
+	JZERO i_forControl 
+#ifTrue Block_5
+#ifFalse Block_1_For_0_Content
+#end of ForBlock_0_exitFor
+#Block_5
+	HALT  
+#end of Block_5
