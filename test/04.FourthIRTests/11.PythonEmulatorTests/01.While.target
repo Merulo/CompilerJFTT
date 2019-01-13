@@ -1,0 +1,105 @@
+#FifthIR:
+#Block_0
+		#performing CONST a 10  
+		#generating number  
+	SUB B B
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+		#end of generating number  
+		#performing JUMP  #Block_5  
+	JUMP  12 #Block_5
+#end of Block_0
+#Block_5
+		#SAVING var a from B using H  
+	SUB A A
+	INC A 
+	STORE B 
+		#END OF SAVING a from B using H  
+	JUMP  16 #Block_1
+#jump to Block_1
+#end of Block_5
+#Block_1
+		#performing CONST variable_0 20  
+		#generating number  
+	SUB G G
+	INC G 
+	INC G 
+	INC G 
+	INC G 
+	INC G 
+	INC G 
+	INC G 
+	INC G 
+	INC G 
+	INC G 
+	ADD G G
+		#end of generating number  
+		#performing COPY IF_CONTROL_VARIABLE variable_0  
+	COPY B G
+		#end of performing copy  
+		#performing SUB IF_CONTROL_VARIABLE a  
+		#getting second register for a -> H  
+		#need to load a H  
+		#THIS IS A VARIABLE a  
+		#LOADING var a to H using D  
+	SUB A A
+	INC A 
+	LOAD H 
+		#END OF LOADING a to H using D  
+	SUB B H
+		#end of performing operation  
+		#performing JZERO IF_CONTROL_VARIABLE #Block_8  
+	JZERO B 45 #Block_8
+		#end of performing simple operation  
+		#performing JUMP  #Block_6  
+	JUMP  35 #Block_6
+#end of Block_1
+#Block_6
+		#SAVING var IF_CONTROL_VARIABLE from B using H  
+	DEC A 
+	STORE B 
+		#END OF SAVING IF_CONTROL_VARIABLE from B using H  
+	JUMP  38 #Block_Condition_0_ifTrue
+#jump to Block_Condition_0_ifTrue
+#end of Block_6
+#Block_Condition_0_ifTrue
+		#performing WRITE a   
+		#THIS IS A VARIABLE a  
+		#LOADING var a to B using H  
+	SUB A A
+	INC A 
+	LOAD B 
+		#END OF LOADING a to B using H  
+	PUT B 
+		#end of performing write  
+		#performing JUMP  #Block_7  
+	JUMP  43 #Block_7
+#end of Block_Condition_0_ifTrue
+#Block_7
+		#SAVING var a from B using H  
+	#No need to generate number  
+	STORE B 
+		#END OF SAVING a from B using H  
+	JUMP  16 #Block_1
+#jump to Block_1
+#end of Block_7
+#Block_8
+		#SAVING var IF_CONTROL_VARIABLE from B using H  
+	DEC A 
+	STORE B 
+		#END OF SAVING IF_CONTROL_VARIABLE from B using H  
+	JUMP  48 #Block_Condition_0_ifFalse
+#jump to Block_Condition_0_ifFalse
+#end of Block_8
+#Block_Condition_0_ifFalse
+		#performing HALT    
+	HALT  
+#end of Block_Condition_0_ifFalse

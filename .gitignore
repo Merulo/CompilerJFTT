@@ -34,3 +34,4 @@
 # Tests
 *.result
 *.rm
+*.ir

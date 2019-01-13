@@ -6,12 +6,17 @@ int main(int argc, char** argv)
 {
     if (argc < 3)
     {
+        std::cout<<"USAGE: ./main.exe input output"<<std::endl;
+        std::cout<<"Option: -em disables python emulator for deterministic cases"<<std::endl;
+
         std::cout<<"Not enough arguments\n";
         return 1;
     }
     d.FIR->setSymbolTable(d.ST);
     yyin = fopen(argv[1], "r");
     yyparse();
+
+    bool emulator = true;
 
     for(int i = 0; i < argc; i++)
     {
@@ -21,6 +26,10 @@ int main(int argc, char** argv)
         {
             output = argv[i+1];
         }
+        if (str == "-em")
+        {
+            emulator = false;
+        }        
         if (str == "-FIR")
         {
             d.FIR->print(output);
@@ -43,15 +52,15 @@ int main(int argc, char** argv)
         {
             d.convertToSIR();
             d.convertToTIR();
-            d.convertToFOIR();
+            d.convertToFOIR(argv[2], emulator);
             d.FOIR->print(output);
             return 0;
-        }                   
+        }
     }
 
     d.convertToSIR();
     d.convertToTIR();
-    d.convertToFOIR();
+    d.convertToFOIR(argv[2], emulator);
     d.converToFIIR();
     d.FIIR->print(argv[2]);
 

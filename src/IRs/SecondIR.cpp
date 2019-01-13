@@ -9,7 +9,6 @@ void SecondIR::parse(std::vector<Block> b)
 
 void SecondIR::optimize()
 {
-    //TODO emulator try
     removeUnusedIterators();
 
 

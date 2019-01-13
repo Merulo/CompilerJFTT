@@ -39,11 +39,11 @@ class Driver
         TIR->parse(SIR->getBlocks());
     }
 
-    void convertToFOIR()
+    void convertToFOIR(std::string fileName, bool useEmulator)
     {
         FOIR = std::make_shared<FourthIR>();
         FOIR->setSymbolTable(ST);
-        FOIR->parse(TIR->getBlocks());
+        FOIR->parse(TIR->getBlocks(), fileName, useEmulator);
     }
 
     void converToFIIR()

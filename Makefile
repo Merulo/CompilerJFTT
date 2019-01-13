@@ -42,6 +42,7 @@ main.exe: $(MAIN) $(OBJECTS)
 	(cd $(REGISTER_MACHINE_DIR) && make maszyna-rejestrowa)
 	(mv $(REGISTER_MACHINE_DIR)/maszyna-rejestrowa emulator.exe)
 	echo $(ALL_TESTS) | xargs -n 1 cp emulator.exe
+	echo $(ALL_TESTS) | xargs -n 1 cp emulator.py
 
 $(BINARY_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(dir $@)
 	@mkdir -p $(dir $@)

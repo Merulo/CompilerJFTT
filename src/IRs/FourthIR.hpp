@@ -7,11 +7,13 @@ class FourthIR : public IRBase
 {
     public:
     FourthIR() : IRBase("FourthIR") {};
-    void parse(std::vector<Block> b);
+    void parse(std::vector<Block> b, std::string fileName, bool useEmulator);
 
     private:
     std::vector<Block> _notYetConvertedBlocks;
     bool _removeConsts = true;
+
+    bool isDeterministic();
 
     //converts to assembler
     void convertToAssembler();

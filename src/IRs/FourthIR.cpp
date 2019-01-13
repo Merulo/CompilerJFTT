@@ -1,12 +1,35 @@
 #include "FourthIR.hpp"
 
+#include <stdlib.h>
+
 #include "Calculators/MathOperations.hpp"
 #include "Calculators/NumberGenerator.hpp"
+#include "External/EmulatorRunner.hpp"
 
-void FourthIR::parse(std::vector<Block> bs)
+void FourthIR::parse(std::vector<Block> bs, std::string fileName, bool useEmulator)
 {
     std::cout<<std::endl<<std::endl;
     _notYetConvertedBlocks = bs;
+
+    if (isDeterministic() && useEmulator)
+    {
+        std::cout<<"RUN EMULATOR"<<std::endl;
+        _blocks = _notYetConvertedBlocks;
+        std::string tmpFile = "tmp.ir";
+        print(tmpFile);
+        EmulatorRunner er;
+        bool value = er.emulate(tmpFile, fileName);
+        _blocks = {};
+        if (value)
+        {
+            exit(0);
+        }
+    }
+    else
+    {
+        std::cout<<"DONT RUN EMULATOR"<<std::endl;
+    }
+
     _symbolTable->assignMemory();
     convertToAssembler();
 
@@ -19,6 +42,21 @@ void FourthIR::convertToAssembler()
     convertBlockToAssembler(_notYetConvertedBlocks.front(), registerBlock);
 }
 
+bool FourthIR::isDeterministic()
+{
+    for (auto& b : _notYetConvertedBlocks)
+    {
+        for(auto& l : b.lines)
+        {
+            if (l.operation == "READ")
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBlock)
 {
     if (std::find(_blocks.begin(), _blocks.end(), block) != _blocks.end())
@@ -27,7 +65,7 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBloc
     }
 
     std::cout<<"STARTING CONVERTING "<<block.blockName<<std::endl;
-    registerBlock.print();
+    // registerBlock.print();
 
     Block resultBlock;
     resultBlock.blockName = block.blockName;
