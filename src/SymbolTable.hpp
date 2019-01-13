@@ -42,60 +42,14 @@ class SymbolTable
     void setInitialized(std::string name);
 
     unsigned long long getMemoryCell(std::string name);
-    std::string getConstValue(std::string name)
-    {
-        return _consts[name];
-    }
-
-    void addToIterators(std::string name)
-    {
-        Iterator i;
-        _currentIterators[name] = i;
-        _allIterators[name] = i;
-        Iterator iForControl;
-        std::string newName = name + forControlName;
-        _allIterators[newName] = iForControl;
-    }
-
-    std::string getForControl()
-    {
-        return forControlName;
-    }
-
-    void removeIterator(std::string name)
-    {
-        _currentIterators.erase(name);
-    }
-
-    bool isItTable(std::string var)
-    {
-        std::string table = var.substr(0, var.find('('));
-        return _tables.find(table) != _tables.end();
-    }
-
-    bool isItVariable(std::string var)
-    {
-        if (_variables.find(var) != _variables.end())
-        {
-            return true;
-        }
-        if (_allIterators.find(var) != _allIterators.end())
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    unsigned long long getTableShift(std::string var)
-    {
-        return _tables[var].beginIndex;
-    }
-
-    std::string getExtraVariable()
-    {
-        return extraVariable;
-    }
+    std::string getConstValue(std::string name);
+    void addToIterators(std::string name);
+    std::string getForControl();
+    void removeIterator(std::string name);
+    bool isItTable(std::string var);
+    bool isItVariable(std::string var);
+    unsigned long long getTableShift(std::string var);
+    std::string getExtraVariable();
 
     void print();
     bool isNameTaken(std::string name);

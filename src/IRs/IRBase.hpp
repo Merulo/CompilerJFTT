@@ -25,21 +25,9 @@ class IRBase
     Block generateConditionBlock();
     std::string generateForName();
     Block& getBlockByName(std::string searched, std::vector<Block>& blocks);
-    static unsigned int getForCounter()
-    {
-        return _forCounter;
-    }
-
- 
-    void resetBlocks()
-    {
-        for(auto& b : _blocks)
-        {
-            b.visited = false;
-        }
-    }
+    static unsigned int getForCounter();
+    void resetBlocks();
    
-
     std::shared_ptr<SymbolTable> _symbolTable;
     std::vector<Block> _blocks;
     std::stack<Block> _currentBlock;

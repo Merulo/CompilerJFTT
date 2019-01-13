@@ -1,6 +1,12 @@
 #include "MathOperations.hpp"
 
 std::string MathOperations::labelName = "#LABEL_";
+unsigned int MathOperations::labelCounter = 0;
+
+std::string MathOperations::getLabelName()
+{
+    return labelName;
+}
 
 std::vector<Line> MathOperations::generateMultiplication(std::string registerB, std::string registerC, std::string registerD, Line l)
 {
@@ -185,4 +191,9 @@ std::vector<Line> MathOperations::generateModulo(
     return lines;
 }
 
-unsigned int MathOperations::labelCounter = 0;
+std::string MathOperations::generateLabel()
+{
+    std::string label = labelName + std::to_string(labelCounter);
+    labelCounter++;
+    return label;
+}

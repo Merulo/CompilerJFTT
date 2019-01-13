@@ -15,17 +15,7 @@ class RegisterBlock
     public:
     RegisterBlock(){}
     RegisterBlock(std::shared_ptr<SymbolTable> symbolTable);
-    RegisterBlock(const RegisterBlock &rb){
-        for(auto r : rb._registers)
-        {
-            Register copy = r;
-            _registers.push_back(copy);
-        }
-        _addressRegister = rb._addressRegister;
-        _registerH = rb._registerH;
-        _currentRegister = rb._currentRegister;
-        _symbolTable = rb._symbolTable;
-    }
+    RegisterBlock(const RegisterBlock &rb);
 
     void createRegisters();
     void exitBlock(Block& b);

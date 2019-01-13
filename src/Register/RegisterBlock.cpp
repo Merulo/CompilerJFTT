@@ -6,6 +6,18 @@ RegisterBlock::RegisterBlock(std::shared_ptr<SymbolTable> symbolTable)
     _currentRegister = 0;
 }
 
+RegisterBlock::RegisterBlock(const RegisterBlock &rb){
+    for(auto r : rb._registers)
+    {
+        Register copy = r;
+        _registers.push_back(copy);
+    }
+    _addressRegister = rb._addressRegister;
+    _registerH = rb._registerH;
+    _currentRegister = rb._currentRegister;
+    _symbolTable = rb._symbolTable;
+}
+
 void RegisterBlock::createRegisters()
 {
     _addressRegister.name = "A";

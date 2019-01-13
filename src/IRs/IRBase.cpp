@@ -55,6 +55,20 @@ Block IRBase::generateConditionBlock()
     return block;
 }
 
+unsigned int IRBase::getForCounter()
+{
+    return _forCounter;
+}
+
+
+void IRBase::resetBlocks()
+{
+    for(auto& b : _blocks)
+    {
+        b.visited = false;
+    }
+}
+
 Block& IRBase::getBlockByName(std::string searched, std::vector<Block>& blocks)
 {
     auto result = std::find_if(blocks.begin(), blocks.end(),

@@ -221,3 +221,58 @@ bool SymbolTable::isNameTaken(std::string name)
 
     return false;
 }
+
+std::string SymbolTable::getConstValue(std::string name)
+{
+    return _consts[name];
+}
+
+void SymbolTable::addToIterators(std::string name)
+{
+    Iterator i;
+    _currentIterators[name] = i;
+    _allIterators[name] = i;
+    Iterator iForControl;
+    std::string newName = name + forControlName;
+    _allIterators[newName] = iForControl;
+}
+
+std::string SymbolTable::getForControl()
+{
+    return forControlName;
+}
+
+void SymbolTable::removeIterator(std::string name)
+{
+    _currentIterators.erase(name);
+}
+
+bool SymbolTable::isItTable(std::string var)
+{
+    std::string table = var.substr(0, var.find('('));
+    return _tables.find(table) != _tables.end();
+}
+
+bool SymbolTable::isItVariable(std::string var)
+{
+    if (_variables.find(var) != _variables.end())
+    {
+        return true;
+    }
+    if (_allIterators.find(var) != _allIterators.end())
+    {
+        return true;
+    }
+
+    return false;
+}
+
+unsigned long long SymbolTable::getTableShift(std::string var)
+{
+    return _tables[var].beginIndex;
+}
+
+std::string SymbolTable::getExtraVariable()
+{
+    return extraVariable;
+}
