@@ -61,4 +61,4 @@ for i in filtered:
 percent = testPassed/float(testCounter)*100
 percent = round(percent, 0)
 sys.stdout.write(COLORS.OK_BLUE)
-print("\tPassed:", percent, "%", COLORS.END)
+print("\t\tPassed:", percent, "%", COLORS.END)
