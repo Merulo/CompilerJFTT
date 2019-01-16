@@ -410,4 +410,3 @@ void RegisterBlock::loadConstTableFromMemory(Block& b, std::string name, Registe
     b.insert(lines);
     b.lines.push_back("\t#END OF LOADING " + name + " to " + r.name + " using " + freeRegister.name);
 }
-
