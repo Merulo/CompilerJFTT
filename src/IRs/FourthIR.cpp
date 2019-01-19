@@ -71,7 +71,8 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBloc
     resultBlock.blockName = block.blockName;
     for(auto& l : block.lines)
     {
-        // std::cout<<"TEST="<<l<<std::endl;
+        std::cout<<"TEST="<<l<<std::endl;
+        registerBlock.print();
         resultBlock.lines.push_back({"\t#performing " + l.toString()});     
         if (l.operation == "CONST")
         {
@@ -129,7 +130,7 @@ void FourthIR::convertBlockToAssembler(Block& block, RegisterBlock& registerBloc
 
 void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
 {    
-    Register& r = rb.getRegister(l.one, b, {});
+    Register& r = rb.getRegister(l.one, b, {}, true, true);
     r.variableName = l.one;
 
     b.lines.push_back({"PUT", r.name});     
@@ -147,7 +148,7 @@ void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
 {   
-    Register& r = rb.getRegister(l.one, b, {}, false);
+    Register& r = rb.getRegister(l.one, b, {}, true, false);
     r.variableName = l.one;
 
     b.lines.push_back({"GET", r.name});    
@@ -158,7 +159,7 @@ void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 {
-    Register& r = rb.getRegister(l.one, b, {}, false);
+    Register& r = rb.getRegister(l.one, b, {}, true, false);
     r.variableName = l.one;
 
     b.lines.push_back({"\t#generating number"});
@@ -172,17 +173,14 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
 {   
-    bool load = false;
-    if (l.two.find(l.one) != std::string::npos)
-    {
-        load = true;
-    }
 
-    Register& regOne = rb.getRegister(l.one, b, {}, load);
+    Register& regOne = rb.getRegister(l.one, b, {}, true, false);
     updateRegisterState(b, rb, regOne, l.one);
     regOne.variableName = l.one;
 
-    Register& regTwo = rb.getSecondRegister(l.two, b, {});
+    Register& regTwo = rb.getRegister(l.two, b, {regOne}, false, true);
+    updateRegisterState(b, rb, regTwo, l.two);
+    regTwo.variableName = l.two;
 
     if (_symbolTable->isConst(l.two) && _removeConsts)
     {
@@ -198,12 +196,13 @@ void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
 {   
-    Register& regOne = rb.getRegister(l.one, b, {});
+    Register& regOne = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, regOne, l.one);
     regOne.variableName = l.one;
     
-    Register& regTwo = rb.getSecondRegister(l.two, b, {});
-
+    Register& regTwo = rb.getRegister(l.two, b, {regOne}, false, true);
+    updateRegisterState(b, rb, regTwo, l.two);
+    regTwo.variableName = l.two;
 
     b.lines.push_back({l.operation, regOne.name, regTwo.name});  
 
@@ -219,7 +218,7 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 {    
-    Register& r = rb.getRegister(l.one, b, {});
+    Register& r = rb.getRegister(l.one, b, {}, true, true);
 
     b.lines.push_back({l.operation, r.name, l.two});     
 
@@ -230,13 +229,24 @@ void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
 {    
-    Register& registerB = rb.getRegister(l.one, b, {});
+    Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
 
-    Register& registerC = rb.getSecondRegister(l.two, b, {registerB});
+    std::string argument = l.two;
+    if (l.one == l.two)
+    {
+        argument = "";
+    }
+
+    Register& registerC = rb.getRegistersForOperation(argument, b, {registerB});
     registerC.state = RegisterState::UNKNOWN;
-    registerC.variableName = "";    
+    registerC.variableName = "";
+    b.lines.push_back({"#GOT " + registerC.name});
+    if (l.one == l.two)
+    {
+        b.lines.push_back({"COPY", registerC.name, registerB.name});
+    }
 
     Register& registerD = rb.getRegistersForOperation("TEMPORARY_2", b, {registerB, registerC});
     registerD.state = RegisterState::UNKNOWN;
@@ -252,13 +262,13 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
 {    
-    Register& registerB = rb.getRegister(l.one, b, {});
+    Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
 
-    Register& registerC = rb.getSecondRegister(l.two, b, {registerB});
-    registerC.state = RegisterState::UNKNOWN;
-    registerC.variableName = "";
+    Register& registerC = rb.getRegister(l.two, b, {registerB}, false, true);
+    updateRegisterState(b, rb, registerC, l.two);
+    registerC.variableName = l.two;
 
     Register& registerD = rb.getRegistersForOperation("TEMPORARY_1", b, {registerB, registerC});
     registerD.state = RegisterState::UNKNOWN;
@@ -289,13 +299,13 @@ void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
 {    
-    Register& registerB = rb.getRegister(l.one, b, {});
+    Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
 
-    Register& registerC = rb.getSecondRegister(l.two, b, {registerB});
-    registerC.state = RegisterState::UNKNOWN;
-    registerC.variableName = "";
+    Register& registerC = rb.getRegister(l.two, b, {registerB}, false, true);
+    updateRegisterState(b, rb, registerC, l.two);
+    registerC.variableName = l.two;
 
     Register& registerE = rb.getRegistersForOperation("TEMPORARY_2", b, {registerB, registerC});
     registerE.state = RegisterState::UNKNOWN;

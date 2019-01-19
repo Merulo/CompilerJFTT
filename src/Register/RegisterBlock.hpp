@@ -21,9 +21,10 @@ class RegisterBlock
     void exitBlock(Block& b);
 
     Register& getRegistersForOperation(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
-    Register& getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r, bool load = true);
-    Register& getSecondRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
-    
+    Register& getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r, bool changeValue = true, bool load = true);
+    // Register& getSecondRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
+    void storeSameTable(std::string name, Block& b);
+
     void print();
 
     private:

@@ -9,7 +9,7 @@ void ThirdIR::parse(std::vector<Block> b)
 void ThirdIR::legalize()
 {
     removeCopyWithSameArguments();
-    // searchForTwoTablesWithSameOperation();
+    searchForTwoTablesWithSameOperation();
     legalizeSpecificJumps();
     legalizeJumps();
 }

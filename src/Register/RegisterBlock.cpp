@@ -32,13 +32,14 @@ void RegisterBlock::createRegisters()
 
 void RegisterBlock::exitBlock(Block& b)
 {
-    if (_registers[0].state != RegisterState::UNKNOWN)
-    {
-        saveToMemory(b, _registers[0], _registerH);
+    // if (_registers[0].state != RegisterState::UNKNOWN)
+    // {
+    //     saveToMemory(b, _registers[0], _registerH);
 
-    }
+    // }
     for(auto& r : _registers)
     {
+        saveToMemory(b, r, _registerH);
         r.state = RegisterState::UNKNOWN;
         r.variableName = "";
     }
@@ -60,79 +61,132 @@ void RegisterBlock::print()
 
 Register& RegisterBlock::getRegistersForOperation(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters)
 {
+    b.lines.push_back({"#SEARCHING FOR " + name});
     for(auto& reg : _registers)
     {
         if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [reg](auto i)
-            {
-                return i.get() == reg;
-            }) == usedRegisters.end())
+                {
+                    return i.get() == reg;
+                }) != usedRegisters.end())
+        {      
+            continue;
+        }  
+        if (reg.variableName == name)
         {
-            saveToMemory(b, reg, _registers[0]);
+            saveToMemory(b, reg, _registerH);
             return reg;
         }
     }
-    return _registers.back();
-}
 
-Register& RegisterBlock::getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters, bool load)
-{
-    if (_symbolTable->isConst(name))
+    auto& reg = _registers[_currentRegister];
+    _currentRegister++;
+    if (_currentRegister == _registers.size())
     {
-        for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
-        {
-            if (it->state == RegisterState::CONST && it->variableName == name)
-            {
-                return *it;
-            }
-        }
-
-        for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
-        {
-            if (it->state == RegisterState::UNKNOWN)
-            {
-                return *it;
-            }
-        }
+        _currentRegister = 0;
     }
 
-    if (_registers[0].variableName == name)
-    {
-        return _registers[0];
-    }
-
-    saveToMemory(b, _registers[0], _registerH);
-
-    if (load)
-    {
-        loadFromMemory(b, name, _registers[0], _registerH);
-    }
-
-    return _registers[0];
-}
-
-Register& RegisterBlock::getSecondRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters)
-{
-    for(auto it = _registers.rbegin(); it != _registers.rend(); it++)
-    {
-        if (it->variableName == name && std::find_if(usedRegisters.begin(), usedRegisters.end(), [it](auto i)
+    if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [reg](auto i)
             {
-                return i.get() == *it;
+                return i.get() == reg;
             }) == usedRegisters.end())
+    {
+        saveToMemory(b, reg, _registerH);
+        loadFromMemory(b, name, reg, _registerH);
+        return reg;
+    }    
+
+    return getRegistersForOperation(name, b, usedRegisters);     
+}
+
+Register& RegisterBlock::getRegister(std::string name, 
+    Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters, 
+    bool changeValue, bool load)
+{
+    if (changeValue)
+    {
+        storeSameTable(name , b);
+    }
+    for(auto& reg : _registers)
+    {
+        if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [reg](auto i)
+                {
+                    return i.get() == reg;
+                }) != usedRegisters.end())
+        {      
+            continue;
+        }         
+        if (reg.variableName == name)
         {
-            return *it;
+            return reg;
+        }
+    }
+    for(auto& reg : _registers)
+    {
+        if (reg.state == RegisterState::UNKNOWN)
+        {
+            if (load)
+            {
+                loadFromMemory(b, name, reg, _registerH);
+            }
+            return reg;
         }
     }
 
-    b.lines.push_back({"\t#getting second register for " + name + " -> " + _registerH.name});
-    if (_registerH.variableName == name)
+    auto & reg = _registers[_currentRegister];
+    _currentRegister++;
+    if (_currentRegister == _registers.size())
     {
-        return _registerH;
+        _currentRegister = 0;
     }
-    b.lines.push_back({"\t#need to load " + name + " " + _registerH.name});
 
-    loadFromMemory(b, name, _registerH, _registers[2]);
+    if (reg.state == RegisterState::CONST)
+    {
+        return getRegister(name, b, usedRegisters, load);
+    }
 
-    return _registerH;
+    if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [reg](auto i)
+            {
+                return i.get() == reg;
+            }) == usedRegisters.end())
+    {
+        saveToMemory(b, reg, _registerH);
+        if (load)
+        {
+            loadFromMemory(b, name, reg, _registerH);
+        }        
+        return reg;
+    }    
+
+    return getRegister(name, b, usedRegisters, load); 
+}
+
+void RegisterBlock::storeSameTable(std::string name, Block& b)
+{
+    std::string currentTable = name.substr(0, name.find("("));
+    for(auto& reg : _registers)
+    {
+        if (reg.state != RegisterState::TABLE)
+        {
+            continue;
+        }
+        std::string registerTable = reg.variableName.substr(0, reg.variableName.find("("));
+        if (registerTable == currentTable)
+        {
+            saveToMemory(b, reg, _registerH);
+            reg.state = RegisterState::UNKNOWN;
+            reg.variableName = "";
+            return;
+        }
+        std::string rest = reg.variableName.substr(reg.variableName.find("(") + 1, std::string::npos);
+        rest.pop_back();
+        if (name == rest)
+        {
+            saveToMemory(b, reg, _registerH);
+            reg.state = RegisterState::UNKNOWN;
+            reg.variableName = "";
+            return;            
+        }
+    }
 }
 
 std::vector<Line> RegisterBlock::generateNumber(unsigned long long& firstNumber, unsigned long long second, Register& usedRegister)
@@ -319,7 +373,7 @@ void RegisterBlock::loadFromMemory(Block& b, std::string name, Register& r, Regi
         b.lines.push_back("\t#THIS IS A VARIABLE " + name);
         loadVariableFromMemory(b, name, r, freeRegister);
     }
-    else if (!_symbolTable->isConst(name))
+    else if (_symbolTable->isItTable(name))
     {
         std::string rest = name.substr(name.find("(") + 1, std::string::npos);
         rest.pop_back();
