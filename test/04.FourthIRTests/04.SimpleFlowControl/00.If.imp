@@ -1,0 +1,20 @@
+DECLARE
+  a; b; c; d; e; f;
+IN
+  a := 10;
+  b := 20;
+  e := 100;
+  f := 200;
+  c := 3000;
+  d := 4000;
+  WRITE a;
+  IF b < a THEN
+    WRITE e;
+    d := 40;
+    c := 30;
+    WRITE f;
+  ENDIF
+  WRITE c;
+  WRITE d;
+
+END

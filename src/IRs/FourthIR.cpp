@@ -78,8 +78,8 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
     resultBlock.blockName = pair.block.blockName;
     for(auto& l : pair.block.lines)
     {
-        std::cout<<"TEST="<<l<<std::endl;
-        registerBlock.print();
+        // std::cout<<"TEST="<<l<<std::endl;
+        // registerBlock.print();
         resultBlock.lines.push_back({"\t#performing " + l.toString()});     
         if (l.operation == "CONST")
         {
@@ -130,7 +130,7 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
             _removeConsts = false;
         }    
     }
-    std::cout<<"ENTERING "<<pair.block.blockName<<std::endl;
+    std::cout<<"LEAVING "<<pair.block.blockName<<std::endl;
     registerBlock.print();
 
     pair.endRegisterBlock = registerBlock; 
