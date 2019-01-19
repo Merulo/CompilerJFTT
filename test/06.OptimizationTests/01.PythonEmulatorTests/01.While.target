@@ -1,6 +1,13 @@
 #FifthIR:
 #Block_0
 		#performing CONST a 10  
+		#TESTING0 a  
+		#TESTING1 a  
+		#TESTING1 a  
+		#TESTING1 a  
+		#TESTING1 a  
+		#TESTING1 a  
+		#TESTING1 a  
 		#generating number  
 	SUB B B
 	INC B 
@@ -28,50 +35,94 @@
 #end of Block_5
 #Block_1
 		#performing CONST variable_0 20  
+		#TESTING0 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
 		#generating number  
-	SUB G G
-	INC G 
-	INC G 
-	INC G 
-	INC G 
-	INC G 
-	INC G 
-	INC G 
-	INC G 
-	INC G 
-	INC G 
-	ADD G G
+	SUB B B
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	INC B 
+	ADD B B
 		#end of generating number  
 		#performing COPY IF_CONTROL_VARIABLE variable_0  
-	COPY B G
+		#TESTING0 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING1 variable_0  
+		#TESTING0 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+	COPY C B
 		#end of performing copy  
 		#performing SUB IF_CONTROL_VARIABLE a  
-		#getting second register for a -> H  
-		#need to load a H  
+		#TESTING0 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
 		#THIS IS A VARIABLE a  
-		#LOADING var a to H using D  
+		#LOADING var a to B using H  
 	SUB A A
 	INC A 
-	LOAD H 
-		#END OF LOADING a to H using D  
-	SUB B H
+	LOAD B 
+		#END OF LOADING a to B using H  
+	SUB C B
 		#end of performing operation  
 		#performing JZERO IF_CONTROL_VARIABLE #Block_8  
-	JZERO B 45 #Block_8
+		#TESTING0 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+		#TESTING1 IF_CONTROL_VARIABLE  
+	JZERO C 46 #Block_8
 		#end of performing simple operation  
 		#performing JUMP  #Block_6  
 	JUMP  35 #Block_6
 #end of Block_1
 #Block_6
-		#SAVING var IF_CONTROL_VARIABLE from B using H  
-	DEC A 
+		#SAVING var a from B using H  
+	#No need to generate number  
 	STORE B 
-		#END OF SAVING IF_CONTROL_VARIABLE from B using H  
-	JUMP  38 #Block_Condition_0_ifTrue
+		#END OF SAVING a from B using H  
+		#SAVING var IF_CONTROL_VARIABLE from C using H  
+	DEC A 
+	STORE C 
+		#END OF SAVING IF_CONTROL_VARIABLE from C using H  
+	JUMP  39 #Block_Condition_0_ifTrue
 #jump to Block_Condition_0_ifTrue
 #end of Block_6
 #Block_Condition_0_ifTrue
 		#performing WRITE a   
+		#TESTING0 a  
+		#TESTING1 a  
+		#TESTING1 a  
+		#TESTING1 a  
+		#TESTING1 a  
+		#TESTING1 a  
+		#TESTING1 a  
 		#THIS IS A VARIABLE a  
 		#LOADING var a to B using H  
 	SUB A A
@@ -81,7 +132,7 @@
 	PUT B 
 		#end of performing write  
 		#performing JUMP  #Block_7  
-	JUMP  43 #Block_7
+	JUMP  44 #Block_7
 #end of Block_Condition_0_ifTrue
 #Block_7
 		#SAVING var a from B using H  
@@ -92,11 +143,15 @@
 #jump to Block_1
 #end of Block_7
 #Block_8
-		#SAVING var IF_CONTROL_VARIABLE from B using H  
-	DEC A 
+		#SAVING var a from B using H  
+	#No need to generate number  
 	STORE B 
-		#END OF SAVING IF_CONTROL_VARIABLE from B using H  
-	JUMP  48 #Block_Condition_0_ifFalse
+		#END OF SAVING a from B using H  
+		#SAVING var IF_CONTROL_VARIABLE from C using H  
+	DEC A 
+	STORE C 
+		#END OF SAVING IF_CONTROL_VARIABLE from C using H  
+	JUMP  50 #Block_Condition_0_ifFalse
 #jump to Block_Condition_0_ifFalse
 #end of Block_8
 #Block_Condition_0_ifFalse

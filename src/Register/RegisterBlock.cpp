@@ -163,13 +163,16 @@ Register& RegisterBlock::getRegister(std::string name,
 void RegisterBlock::storeSameTable(std::string name, Block& b)
 {
     std::string currentTable = name.substr(0, name.find("("));
+    b.lines.push_back({"\t#TESTING0 " + name});
     for(auto& reg : _registers)
     {
+        b.lines.push_back({"\t#TESTING1 " + currentTable});
         if (reg.state != RegisterState::TABLE)
         {
             continue;
         }
         std::string registerTable = reg.variableName.substr(0, reg.variableName.find("("));
+        b.lines.push_back({"\t#TESTING2 " + registerTable});
         if (registerTable == currentTable)
         {
             saveToMemory(b, reg, _registerH);
@@ -179,6 +182,7 @@ void RegisterBlock::storeSameTable(std::string name, Block& b)
         }
         std::string rest = reg.variableName.substr(reg.variableName.find("(") + 1, std::string::npos);
         rest.pop_back();
+        b.lines.push_back({"\t#TESTING3 " + rest});
         if (name == rest)
         {
             saveToMemory(b, reg, _registerH);
@@ -397,7 +401,7 @@ void RegisterBlock::loadVarTableFromMemory(Block& b, std::string name, Register&
     std::cout<<array<<" "<<shift<<" "<<memoryCell<<std::endl;
 
     loadVariableFromMemory(b, addresVariableName, freeRegister, r);
-    b.lines.push_back("\t#LOADING var array " + r.variableName + " from " + r.name + " using " + freeRegister.name);    
+    b.lines.push_back("\t#LOADING " + name +" from " + r.name + " using " + freeRegister.name);    
     b.lines.push_back({"COPY", "A", freeRegister.name});
 
     auto linesToAdd = generateNumber(shift, memoryCell, freeRegister);

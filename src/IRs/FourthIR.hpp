@@ -10,17 +10,17 @@ class FourthIR : public IRBase
     void parse(std::vector<Block> b, std::string fileName, bool useEmulator);
 
     private:
-    std::vector<Block> _notYetConvertedBlocks;
+    std::vector<Pair> _notYetConvertedBlocks;
     bool _removeConsts = true;
 
     bool isDeterministic();
 
     //converts to assembler
     void convertToAssembler();
-    void convertBlockToAssembler(Block& block, RegisterBlock& registerBlock);
-    void continueConverting(Block& block, RegisterBlock rb);
-        void convertNextBlock(Block& block, RegisterBlock& rb, std::string name);
-        void convertSplitBlock(Block& block, RegisterBlock& rb, std::string name);
+    void convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock);
+    void continueConverting(Pair& pair, RegisterBlock rb);
+        void convertNextBlock(Pair& pair, RegisterBlock& rb, std::string name);
+        void convertSplitBlock(Pair& pair, RegisterBlock& rb, std::string name);
 
     //handles translating operations
     void handleConst(RegisterBlock& rb, Block& b, Line& l);
@@ -35,4 +35,18 @@ class FourthIR : public IRBase
 
     //updates registers status
     void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name);
+
+
+    Pair& getPairByName(std::string name)
+    {
+        for(auto& pair : _notYetConvertedBlocks)
+        {
+            if (pair.block.blockName == name)
+            {
+                return pair;
+            }
+        }
+        std::cout<<"PROBLEM"<<std::endl;
+        return _notYetConvertedBlocks.front();
+    }
 };
