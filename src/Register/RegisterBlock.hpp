@@ -19,11 +19,12 @@ class RegisterBlock
 
     void createRegisters();
     void exitBlock(Block& b);
+    void exitBlock(Block& b, RegisterBlock& other);
 
     Register& getRegistersForOperation(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
-    Register& getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r, bool changeValue = true, bool load = true);
-    // Register& getSecondRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
-    void storeSameTable(std::string name, Block& b);
+    Register& getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r, 
+        bool changeValue, bool load, bool extra = true);
+    void storeSameTable(std::string name, Block& b, bool extra);
 
     void print();
 

@@ -32,11 +32,6 @@ void RegisterBlock::createRegisters()
 
 void RegisterBlock::exitBlock(Block& b)
 {
-    // if (_registers[0].state != RegisterState::UNKNOWN)
-    // {
-    //     saveToMemory(b, _registers[0], _registerH);
-
-    // }
     for(auto& r : _registers)
     {
         saveToMemory(b, r, _registerH);
@@ -47,6 +42,43 @@ void RegisterBlock::exitBlock(Block& b)
     _registerH.variableName = "";
     _addressRegister.state = RegisterState::UNKNOWN;
     _addressRegister.variableName = "";
+}
+
+void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
+{
+    for(size_t i = 0; i < _registers.size(); i++)
+    {
+        if (_registers[i].variableName == other._registers[i].variableName)
+        {
+            std::cout<<"SKIPPING SAVING "<<_registers[i]<<std::endl;
+            continue;
+        }
+
+        std::cout<<"Saving "<<_registers[i]<<std::endl;
+        saveToMemory(b, _registers[i], _registerH);
+    }
+
+    for(size_t i = 0; i < _registers.size(); i++)
+    {
+        if (_registers[i].variableName == other._registers[i].variableName)
+        {
+            std::cout<<"SKIPPING LOADING "<<_registers[i]<<std::endl;
+            continue;
+        }        
+        std::cout<<"Loading "<<_registers[i]<<std::endl;
+        _registers[i].variableName = "";
+        _registers[i].state = RegisterState::UNKNOWN;
+        loadFromMemory(b, other._registers[i].variableName, _registers[i], _registerH);
+    }
+    if (other._addressRegister.state != RegisterState::UNKNOWN)
+    {
+        std::cout<<"change "<<_addressRegister<<std::endl;
+        std::cout<<"to "<<other._addressRegister<<std::endl;
+        b.lines.push_back({"#START OF SETTING MEMORY REGISTER"});
+        auto lines = generateNumberFrom(_addressRegister.constValue, other._addressRegister.constValue, _registerH);
+        b.insert(lines);
+        b.lines.push_back({"#END OF SETTING MEMORY REGISTER"});
+    }
 }
 
 void RegisterBlock::print()
@@ -100,11 +132,11 @@ Register& RegisterBlock::getRegistersForOperation(std::string name, Block& b, st
 
 Register& RegisterBlock::getRegister(std::string name, 
     Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters, 
-    bool changeValue, bool load)
+    bool changeValue, bool load, bool extra)
 {
     if (changeValue)
     {
-        storeSameTable(name , b);
+        storeSameTable(name , b, extra);
     }
     for(auto& reg : _registers)
     {
@@ -141,7 +173,7 @@ Register& RegisterBlock::getRegister(std::string name,
 
     if (reg.state == RegisterState::CONST)
     {
-        return getRegister(name, b, usedRegisters, load);
+        return getRegister(name, b, usedRegisters, load, extra);
     }
 
     if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [reg](auto i)
@@ -157,38 +189,38 @@ Register& RegisterBlock::getRegister(std::string name,
         return reg;
     }    
 
-    return getRegister(name, b, usedRegisters, load); 
+    return getRegister(name, b, usedRegisters, load, extra); 
 }
 
-void RegisterBlock::storeSameTable(std::string name, Block& b)
+void RegisterBlock::storeSameTable(std::string name, Block& b, bool extra)
 {
     std::string currentTable = name.substr(0, name.find("("));
-    b.lines.push_back({"\t#TESTING0 " + name});
     for(auto& reg : _registers)
     {
-        b.lines.push_back({"\t#TESTING1 " + currentTable});
         if (reg.state != RegisterState::TABLE)
         {
             continue;
         }
+        if (name == reg.variableName && extra)
+        {
+            continue;
+        }
         std::string registerTable = reg.variableName.substr(0, reg.variableName.find("("));
-        b.lines.push_back({"\t#TESTING2 " + registerTable});
         if (registerTable == currentTable)
         {
             saveToMemory(b, reg, _registerH);
             reg.state = RegisterState::UNKNOWN;
             reg.variableName = "";
-            return;
+            continue;
         }
         std::string rest = reg.variableName.substr(reg.variableName.find("(") + 1, std::string::npos);
         rest.pop_back();
-        b.lines.push_back({"\t#TESTING3 " + rest});
         if (name == rest)
         {
             saveToMemory(b, reg, _registerH);
             reg.state = RegisterState::UNKNOWN;
             reg.variableName = "";
-            return;            
+            continue;            
         }
     }
 }

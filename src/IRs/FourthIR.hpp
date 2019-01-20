@@ -21,6 +21,7 @@ class FourthIR : public IRBase
     void continueConverting(Pair& pair, RegisterBlock rb);
         void convertNextBlock(Pair& pair, RegisterBlock& rb, std::string name);
         void convertSplitBlock(Pair& pair, RegisterBlock& rb, std::string name);
+        void alignRegisters(Pair& pair, Pair& next, RegisterBlock& rb, std::string name);
 
     //handles translating operations
     void handleConst(RegisterBlock& rb, Block& b, Line& l);
@@ -35,7 +36,6 @@ class FourthIR : public IRBase
 
     //updates registers status
     void updateRegisterState(Block& b, RegisterBlock& rb, Register& r, std::string name);
-
 
     Pair& getPairByName(std::string name)
     {
