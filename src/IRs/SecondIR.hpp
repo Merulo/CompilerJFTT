@@ -15,8 +15,12 @@ class SecondIR : public IRBase
 
 
     //optimizations:
-    void removeUnusedIterators();
-    bool isUsedInEndingBlock(std::string variable, Block& startingBlock, Block& endingBlock);
-    void stripVariable(std::string variable, Block& b);
-    void stripForIterator(std::string variable, Block& b);
+        //iterators:
+        void removeUnusedIterators();
+            bool isUsedInEndingBlock(std::string variable, Block& startingBlock, Block& endingBlock);
+            void stripVariable(std::string variable, Block& b);
+            void stripForIterator(std::string variable, Block& b);
+        //add sub small const:
+        void removeAddSubSmallConst();
+            void checkIfThisCanBeRemoved(std::vector<Line>& lines, std::vector<Line>::iterator& iterator);
 };
