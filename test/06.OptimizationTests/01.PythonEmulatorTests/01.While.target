@@ -1,13 +1,6 @@
 #FifthIR:
 #Block_0
 		#performing CONST a 10  
-		#TESTING0 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#TESTING1 a  
 		#generating number  
 	SUB B B
 	INC B 
@@ -21,139 +14,53 @@
 	INC B 
 	INC B 
 		#end of generating number  
-		#performing JUMP  #Block_5  
-	JUMP  12 #Block_5
+		#performing JUMP  #Block_1  
+	JUMP  12 #Block_1
 #end of Block_0
-#Block_5
-		#SAVING var a from B using H  
-	SUB A A
-	INC A 
-	STORE B 
-		#END OF SAVING a from B using H  
-	JUMP  16 #Block_1
-#jump to Block_1
-#end of Block_5
 #Block_1
 		#performing CONST variable_0 20  
-		#TESTING0 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
 		#generating number  
-	SUB B B
-	INC B 
-	INC B 
-	INC B 
-	INC B 
-	INC B 
-	INC B 
-	INC B 
-	INC B 
-	INC B 
-	INC B 
-	ADD B B
+	SUB C C
+	INC C 
+	INC C 
+	INC C 
+	INC C 
+	INC C 
+	INC C 
+	INC C 
+	INC C 
+	INC C 
+	INC C 
+	ADD C C
 		#end of generating number  
 		#performing COPY IF_CONTROL_VARIABLE variable_0  
-		#TESTING0 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING1 variable_0  
-		#TESTING0 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-	COPY C B
+	COPY D C
 		#end of performing copy  
 		#performing SUB IF_CONTROL_VARIABLE a  
-		#TESTING0 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#THIS IS A VARIABLE a  
-		#LOADING var a to B using H  
-	SUB A A
-	INC A 
-	LOAD B 
-		#END OF LOADING a to B using H  
-	SUB C B
+	SUB D B
 		#end of performing operation  
-		#performing JZERO IF_CONTROL_VARIABLE #Block_8  
-		#TESTING0 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-		#TESTING1 IF_CONTROL_VARIABLE  
-	JZERO C 46 #Block_8
+		#performing JZERO IF_CONTROL_VARIABLE #Block_Condition_0_ifFalse  
+	JZERO D 33 #Block_Condition_0_ifFalse
 		#end of performing simple operation  
-		#performing JUMP  #Block_6  
-	JUMP  35 #Block_6
+		#performing JUMP  #Block_Condition_0_ifTrue  
+	JUMP  28 #Block_Condition_0_ifTrue
 #end of Block_1
-#Block_6
-		#SAVING var a from B using H  
-	#No need to generate number  
-	STORE B 
-		#END OF SAVING a from B using H  
-		#SAVING var IF_CONTROL_VARIABLE from C using H  
-	DEC A 
-	STORE C 
-		#END OF SAVING IF_CONTROL_VARIABLE from C using H  
-	JUMP  39 #Block_Condition_0_ifTrue
-#jump to Block_Condition_0_ifTrue
-#end of Block_6
 #Block_Condition_0_ifTrue
 		#performing WRITE a   
-		#TESTING0 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#TESTING1 a  
-		#THIS IS A VARIABLE a  
-		#LOADING var a to B using H  
-	SUB A A
-	INC A 
-	LOAD B 
-		#END OF LOADING a to B using H  
 	PUT B 
 		#end of performing write  
-		#performing JUMP  #Block_7  
-	JUMP  44 #Block_7
+		#performing JUMP  #Block_5  
+	JUMP  30 #Block_5
 #end of Block_Condition_0_ifTrue
-#Block_7
-		#SAVING var a from B using H  
+#Block_5
+		#SAVING var IF_CONTROL_VARIABLE from D using H  
+	SUB A A
 	#No need to generate number  
-	STORE B 
-		#END OF SAVING a from B using H  
-	JUMP  16 #Block_1
+	STORE D 
+		#END OF SAVING IF_CONTROL_VARIABLE from D using H  
+	JUMP  12 #Block_1
 #jump to Block_1
-#end of Block_7
-#Block_8
-		#SAVING var a from B using H  
-	#No need to generate number  
-	STORE B 
-		#END OF SAVING a from B using H  
-		#SAVING var IF_CONTROL_VARIABLE from C using H  
-	DEC A 
-	STORE C 
-		#END OF SAVING IF_CONTROL_VARIABLE from C using H  
-	JUMP  50 #Block_Condition_0_ifFalse
-#jump to Block_Condition_0_ifFalse
-#end of Block_8
+#end of Block_5
 #Block_Condition_0_ifFalse
 		#performing HALT    
 	HALT  

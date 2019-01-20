@@ -6,8 +6,6 @@
 #ForBlock_0_initialForControl
 	CONST i_forControl 10
 	INC i_forControl 
-	CONST variable_0 0
-	SUB i_forControl variable_0
 	JZERO i_forControl 
 #ifTrue Block_5
 #ifFalse Block_1_For_0_Content

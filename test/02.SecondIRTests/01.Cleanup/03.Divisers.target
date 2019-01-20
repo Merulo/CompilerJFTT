@@ -25,8 +25,7 @@
 #end of Block_2
 #Block_Condition_1_ifTrue
 	DIV n divider
-	CONST variable_1 1
-	ADD power variable_1
+	INC power 
 	COPY rest n
 	MOD rest divider
 #jump to Block_2
@@ -43,8 +42,7 @@
 #jump to Block_1
 #end of Block_Condition_2_ifTrue
 #Block_Condition_2_ifFalse
-	CONST variable_3 1
-	ADD divider variable_3
+	INC divider 
 	COPY m divider
 	MUL m divider
 #jump to Block_1

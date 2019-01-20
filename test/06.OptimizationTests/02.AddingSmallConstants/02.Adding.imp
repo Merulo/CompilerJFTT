@@ -1,0 +1,6 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j;
+IN
+  a := 3 + 4;
+  WRITE a;
+END

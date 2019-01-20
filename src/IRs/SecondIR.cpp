@@ -10,7 +10,7 @@ void SecondIR::parse(std::vector<Block> b)
 void SecondIR::optimize()
 {
     removeUnusedIterators();
-
+    removeAddSubSmallConst();
 
     //TODO: constant propagation
     //TODO: loop unrolling
@@ -69,6 +69,19 @@ void SecondIR::removeEmptyBlocks()
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void SecondIR::removeUnusedIterators()
 {
@@ -173,4 +186,66 @@ bool SecondIR::isUsedInEndingBlock(std::string variable, Block& startingBlock, B
 
     return isUsedInEndingBlock(variable, nextTrue, endingBlock) 
         && isUsedInEndingBlock(variable, nextFalse, endingBlock);
+}
+
+
+void SecondIR::removeAddSubSmallConst()
+{
+    for(auto& b : _blocks)
+    {
+        for(auto line = b.lines.begin(); line != b.lines.end(); line++)
+        {
+            checkIfThisCanBeRemoved(b.lines, line);
+        }
+    }
+}
+
+
+void SecondIR::checkIfThisCanBeRemoved(std::vector<Line>& lines, std::vector<Line>::iterator& iterator)
+{
+    if (iterator->operation != "ADD" && iterator->operation != "SUB")
+    {
+        return;
+    }
+    std::string operation = iterator->operation;
+    std::string arg = iterator->one;
+    if (!_symbolTable->isConst(iterator->two))
+    {
+        return;
+    }
+    auto constString = _symbolTable->getConstValue(iterator->two);
+    if (constString == "NAN")
+    {
+        return;
+    }
+    unsigned long long value = std::stoull(constString);
+    if (value > 15)
+    {
+        return;
+    }
+    if ((iterator-1)->operation == "CONST")
+    {
+        iterator = lines.erase(iterator - 1);
+    }
+    else
+    {
+        iterator = lines.erase(iterator - 2);
+        iterator++;
+    }
+
+    iterator = lines.erase(iterator);
+    iterator--;
+
+    Line l;
+    l.operation = "DEC";
+    if (operation == "ADD")
+    {
+        l.operation = "INC";
+    }
+    l.one = arg;
+    for(unsigned long long i = 0; i < value; i++)
+    {
+        iterator++;
+        iterator = lines.insert(iterator, l);
+    }
 }

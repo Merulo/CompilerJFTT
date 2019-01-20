@@ -7,8 +7,8 @@
 	COPY i n
 	COPY i_forControl i
 	INC i_forControl 
-	CONST variable_0 2
-	SUB i_forControl variable_0
+	DEC i_forControl 
+	DEC i_forControl 
 	JZERO i_forControl 
 #ifTrue ForBlock_1_initialForControl
 #ifFalse Block_1_For_0_Content
