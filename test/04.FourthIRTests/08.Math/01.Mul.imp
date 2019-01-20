@@ -1,9 +1,9 @@
 DECLARE
   a; b; c;
 IN
-  a := 11;
-  b := 12;
-  c := a * b;
-  WRITE c;
+  b := 11;
+  c := 12;
+  a := b * 12;
+  WRITE a;
 
 END

@@ -50,7 +50,7 @@ struct Register
             }
             case RegisterState::CONST:
             {
-                os << "const="<<r.constValue;
+                os << "const="<<r.constValue<<" "<<r.variableName;
                 break;
             }
             case RegisterState::TABLE:

@@ -23,7 +23,8 @@
 	CONST i 9
 	CONST j 10
 	CONST k 11
-	COPY array(1) array(100)
+	COPY variable_2 array(100)
+	COPY array(1) variable_2
 	WRITE array(1) 
 	HALT  
 #end of Block_0
