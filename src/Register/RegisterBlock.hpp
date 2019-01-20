@@ -50,7 +50,6 @@ class RegisterBlock
 
     std::shared_ptr<SymbolTable> _symbolTable;
     Register _addressRegister;
-    Register _registerH;
     std::vector<Register> _registers;
     unsigned int _currentRegister;
 };

@@ -53,11 +53,11 @@
 	JUMP  30 #Block_5
 #end of Block_Condition_0_ifTrue
 #Block_5
-		#SAVING var IF_CONTROL_VARIABLE from D using H  
+		#SAVING var IF_CONTROL_VARIABLE from D using A  
 	SUB A A
 	#No need to generate number  
 	STORE D 
-		#END OF SAVING IF_CONTROL_VARIABLE from D using H  
+		#END OF SAVING IF_CONTROL_VARIABLE from D using A  
 	JUMP  12 #Block_1
 #jump to Block_1
 #end of Block_5

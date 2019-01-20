@@ -69,8 +69,8 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
         return;
     }
 
-    // std::cout<<"ENTERING "<<pair.block.blockName<<std::endl;
-    // registerBlock.print();
+    std::cout<<"ENTERING "<<pair.block.blockName<<std::endl;
+    registerBlock.print();
     pair.startRegisterBlock = registerBlock;
     pair.registerBlockIsSet = true;
 
@@ -130,8 +130,8 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
             _removeConsts = false;
         }    
     }
-    // std::cout<<"LEAVING "<<pair.block.blockName<<std::endl;
-    // registerBlock.print();
+    std::cout<<"LEAVING "<<pair.block.blockName<<std::endl;
+    registerBlock.print();
 
     pair.endRegisterBlock = registerBlock; 
     _blocks.push_back(resultBlock);
@@ -251,7 +251,7 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
     Register& registerC = rb.getRegistersForOperation(argument, b, {registerB});
     registerC.state = RegisterState::UNKNOWN;
     registerC.variableName = "";
-    b.lines.push_back({"#GOT " + registerC.name});
+
     if (l.one == l.two)
     {
         b.lines.push_back({"COPY", registerC.name, registerB.name});
