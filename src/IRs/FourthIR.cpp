@@ -160,6 +160,7 @@ void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
 {   
     Register& r = rb.getRegister(l.one, b, {}, true, false);
     r.variableName = l.one;
+    r.needToSafe = true;
 
     b.lines.push_back({"GET", r.name});    
     updateRegisterState(b, rb, r, l.one);
@@ -171,6 +172,7 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 {
     Register& r = rb.getRegister(l.one, b, {}, true, false);
     r.variableName = l.one;
+    r.needToSafe = true;
 
     b.lines.push_back({"\t#generating number"});
     auto lines = NumberGenerator::generateConstFrom(std::stoull(l.two), {{r.name, 0}});
@@ -190,6 +192,7 @@ void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
     Register& regOne = rb.getRegister(l.one, b, {regTwo}, true, false);
     updateRegisterState(b, rb, regOne, l.one);
     regOne.variableName = l.one;
+    regOne.needToSafe = true;
 
     if (_symbolTable->isConst(l.two) && _removeConsts)
     {
@@ -208,6 +211,7 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
     Register& regOne = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, regOne, l.one);
     regOne.variableName = l.one;
+    regOne.needToSafe = true;
 
     Register& regTwo = rb.getRegister(l.two, b, {regOne}, false, true);
     updateRegisterState(b, rb, regTwo, l.two);
@@ -228,6 +232,10 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
 void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 {    
     Register& r = rb.getRegister(l.one, b, {}, true, true);
+    if (l.operation == "DEC" || l.operation == "INC")
+    {
+        r.needToSafe = true;
+    }
 
     b.lines.push_back({l.operation, r.name, l.two});     
 
@@ -241,6 +249,7 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
     Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
+    registerB.needToSafe = true;
 
     std::string argument = l.two;
     if (l.one == l.two)
@@ -274,6 +283,7 @@ void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
     Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
+    registerB.needToSafe = true;
 
     Register& registerC = rb.getRegister(l.two, b, {registerB}, false, true);
     updateRegisterState(b, rb, registerC, l.two);
@@ -311,6 +321,7 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
     Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
+    registerB.needToSafe = true;
 
     Register& registerC = rb.getRegister(l.two, b, {registerB}, false, true);
     updateRegisterState(b, rb, registerC, l.two);

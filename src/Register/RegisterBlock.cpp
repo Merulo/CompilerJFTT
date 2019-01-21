@@ -333,7 +333,10 @@ void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
 {
     if (r.state == RegisterState::VARIABLE && !r.variableName.empty())
     {
-        saveVariableToMemory(b, r, freeRegister);
+        if (r.needToSafe)
+        {
+            saveVariableToMemory(b, r, freeRegister);
+        }
     }
     else if (r.state == RegisterState::TABLE)
     {
@@ -371,14 +374,12 @@ void RegisterBlock::saveVarTableToMemory(Block& b, Register& r, Register& freeRe
     _addressRegister.state = RegisterState::UNKNOWN;    
     b.insert(linesToAdd);
 
-    // b.lines.push_back({"PUT", "A"});
     b.lines.push_back({"STORE", r.name});    
     b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
 }
 
  void RegisterBlock::saveVariableToMemory(Block& b, Register& r, Register& freeRegister)
  {
-   
     unsigned long long memoryCell = _symbolTable->getMemoryCell(r.variableName);
     
     b.lines.push_back("\t#SAVING var " + r.variableName + " from " + r.name + " using " + freeRegister.name);
@@ -424,6 +425,7 @@ void RegisterBlock::saveConstTableToMemory(Block& b, Register& r, Register& free
 
 void RegisterBlock::loadFromMemory(Block& b, std::string name, Register& r, Register& freeRegister)
 {
+    r.needToSafe = false;
     if (_symbolTable->isItVariable(name))
     {
         b.lines.push_back("\t#THIS IS A VARIABLE " + name);
