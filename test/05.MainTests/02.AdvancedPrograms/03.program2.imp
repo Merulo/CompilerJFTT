@@ -1,27 +1,26 @@
-[ Rozklad liczby na czynniki pierwsze ]
 DECLARE
-    n; m; reszta; potega; dzielnik;
+    n; m; rest; power; divider;
 IN
     READ n;
-    dzielnik := 2;
-    m := dzielnik * dzielnik;
+    divider := 2;
+    m := divider * divider;
     WHILE n >= m DO
-        potega := 0;
-        reszta := n % dzielnik;
-        WHILE reszta = 0 DO
-            n := n / dzielnik;
-            potega := potega + 1;
-            reszta := n % dzielnik;
+        power := 0;
+        rest := n % divider;
+        WHILE rest = 0 DO
+            n := n / divider;
+            power := power + 1;
+            rest := n % divider;
         ENDWHILE
-        IF potega > 0 THEN [ czy znaleziono dzielnik ]
-            WRITE dzielnik;
-            WRITE potega;
+        IF power > 0 THEN
+            WRITE divider;
+            WRITE power;
         ELSE
-            dzielnik := dzielnik + 1;
-            m := dzielnik * dzielnik;
+            divider := divider + 1;
+            m := divider * divider;
         ENDIF
     ENDWHILE
-    IF n != 1 THEN [ ostatni dzielnik ]
+    IF n != 1 THEN
         WRITE n;
         WRITE 1;
     ENDIF
