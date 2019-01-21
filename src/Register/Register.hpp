@@ -23,7 +23,6 @@ struct Register
     unsigned long long constValue;
     std::string name;
     std::string variableName;
-    bool shouldSave(Register one);
 
     bool operator==(const Register& rhs)
     {
