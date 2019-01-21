@@ -56,21 +56,14 @@ unsigned long long SymbolTable::getMemoryCell(std::string name)
 
 void SymbolTable::assignMemory()
 {
-    ull index = 1;
+    ull index = 0;
     
-    //special if control variable!
-    Variable v;
-    v.memoryCell = 0;
-    // Variable v2;
-    // v2.memoryCell = 1;
     //variables
     for (auto& v : _variables)
     {
         v.second.memoryCell = index;
         index++;
-    }
-    _variables[extraVariable] = v;   
-    // _variables[extraVariable2] = v;   
+    } 
 
     //iterators
     for(auto& i : _allIterators)
@@ -255,6 +248,10 @@ bool SymbolTable::isItTable(std::string var)
 
 bool SymbolTable::isItVariable(std::string var)
 {
+    if (var == extraVariable)
+    {
+        return true;
+    }
     if (_variables.find(var) != _variables.end())
     {
         return true;

@@ -34,11 +34,11 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
     {
         if (_registers[i].variableName == other._registers[i].variableName)
         {
-            std::cout<<"SKIPPING SAVING "<<_registers[i]<<std::endl;
+            // std::cout<<"SKIPPING SAVING "<<_registers[i]<<std::endl;
             continue;
         }
 
-        std::cout<<"Saving "<<_registers[i]<<std::endl;
+        // std::cout<<"Saving "<<_registers[i]<<std::endl;
         saveToMemory(b, _registers[i], _addressRegister);
     }
 
@@ -46,14 +46,14 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
     {
         if (_registers[i].variableName == other._registers[i].variableName)
         {
-            std::cout<<"SKIPPING LOADING "<<_registers[i]<<std::endl;
+            // std::cout<<"SKIPPING LOADING "<<_registers[i]<<std::endl;
             continue;
         } 
         if (other._registers[i].state != RegisterState::TABLE)
         {
             continue;
         }       
-        std::cout<<"Loading "<<_registers[i]<<std::endl;
+        // std::cout<<"Loading "<<_registers[i]<<std::endl;
         _registers[i].variableName = "";
         _registers[i].state = RegisterState::UNKNOWN;
         loadFromMemory(b, other._registers[i].variableName, _registers[i], _addressRegister);
@@ -63,14 +63,14 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
     {
         if (_registers[i].variableName == other._registers[i].variableName)
         {
-            std::cout<<"SKIPPING LOADING "<<_registers[i]<<std::endl;
+            // std::cout<<"SKIPPING LOADING "<<_registers[i]<<std::endl;
             continue;
         }
         if (other._registers[i].state == RegisterState::TABLE)
         {
             continue;
         }           
-        std::cout<<"Loading "<<_registers[i]<<std::endl;
+        // std::cout<<"Loading "<<_registers[i]<<std::endl;
         _registers[i].variableName = "";
         _registers[i].state = RegisterState::UNKNOWN;
         loadFromMemory(b, other._registers[i].variableName, _registers[i], _addressRegister);
@@ -78,8 +78,8 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
 
     if (other._addressRegister.state != RegisterState::UNKNOWN)
     {
-        std::cout<<"change "<<_addressRegister<<std::endl;
-        std::cout<<"to "<<other._addressRegister<<std::endl;
+        // std::cout<<"change "<<_addressRegister<<std::endl;
+        // std::cout<<"to "<<other._addressRegister<<std::endl;
         if (_addressRegister.state == RegisterState::UNKNOWN)
         {
             b.lines.push_back({"SUB", "A", "A"});
@@ -333,6 +333,10 @@ void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
 {
     if (r.state == RegisterState::VARIABLE && !r.variableName.empty())
     {
+        if (r.variableName == "IF_CONTROL_VARIABLE")
+        {
+            return;
+        }
         if (r.needToSafe)
         {
             saveVariableToMemory(b, r, freeRegister);
@@ -428,6 +432,10 @@ void RegisterBlock::loadFromMemory(Block& b, std::string name, Register& r, Regi
     r.needToSafe = false;
     if (_symbolTable->isItVariable(name))
     {
+        if (name == "IF_CONTROL_VARIABLE")
+        {
+            return;
+        }        
         b.lines.push_back("\t#THIS IS A VARIABLE " + name);
         loadVariableFromMemory(b, name, r, freeRegister);
     }

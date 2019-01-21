@@ -169,6 +169,12 @@ void ThirdIR::legalizeJLS(Block& b, bool inc)
 
 void ThirdIR::legalizeJMR(Block& b, bool inc)
 {
+    if (checkZeroJump(b) && !inc)
+    {
+        legalizeZeroJMR(b);
+        return;
+    }
+
     Line lastLine = b.lines.back();
     b.lines.pop_back();
 
@@ -178,10 +184,79 @@ void ThirdIR::legalizeJMR(Block& b, bool inc)
 
 void ThirdIR::legalizeEquality(Block& b)
 {
+    if (checkZeroJump(b))
+    {
+        legalizeZeroJump(b);
+        return;
+    }
     b.lines.insert(b.lines.begin() + b.lines.size() - 1, {"#DO NOT REMOVE CONST"});
     Line lastLine = b.lines.back();
     legalizeJLS(b, true);
     b.lines.back().one = lastLine.one;
     b.lines.back().two = lastLine.two;
     legalizeJMR(b, true);
+}
+
+bool ThirdIR::checkZeroJump(Block& b)
+{
+    Line lastLine = b.lines.back();
+    if (_symbolTable->isConst(lastLine.one) && _symbolTable->getConstValue(lastLine.one) == "0")
+    {
+        return true;
+    }
+    if (_symbolTable->isConst(lastLine.two) && _symbolTable->getConstValue(lastLine.two) == "0")
+    {
+        return true;
+    }    
+    return false;
+}
+
+void ThirdIR::legalizeZeroJump(Block& b)
+{
+    Line lastLine = b.lines.back();
+    b.lines.clear();
+
+    std::string argument = lastLine.one;
+    if (_symbolTable->isConst(argument))
+    {
+        argument = lastLine.two;
+    }
+    Line l;
+    l.operation = "JZERO";
+    l.one = argument;
+    l.two = "#" + b.blockIfTrue;
+    b.lines.push_back(l);
+
+    Line l2;
+    l2.operation = "JUMP";
+    l2.two = "#" + b.blockIfFalse;
+    b.lines.push_back(l2);
+}
+
+void ThirdIR::legalizeZeroJMR(Block& b)
+{
+    Line lastLine = b.lines.back();
+    b.lines.clear();
+
+    std::swap(b.blockIfFalse, b.blockIfTrue);
+    std::string argument = lastLine.one;
+    if (_symbolTable->isConst(argument))
+    {
+        Line l;
+        l.operation = "JUMP";
+        l.two = "#" + b.blockIfTrue;
+        b.lines.push_back(l);
+        return;
+    }
+    
+    Line l;
+    l.operation = "JZERO";
+    l.one = argument;
+    l.two = "#" + b.blockIfTrue;
+    b.lines.push_back(l);
+
+    Line l2;
+    l2.operation = "JUMP";
+    l2.two = "#" + b.blockIfFalse;
+    b.lines.push_back(l2);
 }

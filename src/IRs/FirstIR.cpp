@@ -253,10 +253,6 @@ Block FirstIR::createBeforeForBlock(std::string iterator, Data from, Data to, bo
     
     b.lines.push_back(counterFinal);
     
-    Line writeLine;
-    writeLine.operation = "WRITE";
-    writeLine.one = iterator + forControlName; 
-    // b.lines.push_back(writeLine);
     Line jump;
     jump.operation = "JZERO";
     jump.one = counterInit.one;

@@ -1,0 +1,20 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l;
+IN
+  a := 1;
+  b := 0;
+
+  IF a != 0 THEN
+    WRITE 666;
+  ENDIF
+  IF b != 0 THEN
+    WRITE 999;
+  ENDIF 
+  IF 0 != a THEN
+    WRITE 666;
+  ENDIF
+  IF 0 != b THEN
+    WRITE 999;
+  ENDIF 
+
+END

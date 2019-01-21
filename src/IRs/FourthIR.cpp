@@ -69,8 +69,8 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
         return;
     }
 
-    std::cout<<"ENTERING "<<pair.block.blockName<<std::endl;
-    registerBlock.print();
+    // std::cout<<"ENTERING "<<pair.block.blockName<<std::endl;
+    // registerBlock.print();
     pair.startRegisterBlock = registerBlock;
     pair.registerBlockIsSet = true;
 
@@ -130,8 +130,8 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
             _removeConsts = false;
         }    
     }
-    std::cout<<"LEAVING "<<pair.block.blockName<<std::endl;
-    registerBlock.print();
+    // std::cout<<"LEAVING "<<pair.block.blockName<<std::endl;
+    // registerBlock.print();
 
     pair.endRegisterBlock = registerBlock; 
     _blocks.push_back(resultBlock);
@@ -460,8 +460,8 @@ void FourthIR::continueConverting(Pair& pair, RegisterBlock rb)
     }
     else if (!pair.block.blockIfFalse.empty() && !pair.block.blockIfTrue.empty())
     {
-        convertSplitBlock(pair, rb, pair.block.blockIfTrue);
         convertSplitBlock(pair, rb, pair.block.blockIfFalse);
+        convertSplitBlock(pair, rb, pair.block.blockIfTrue);
     }
 
 }
