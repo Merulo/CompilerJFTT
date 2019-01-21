@@ -238,7 +238,7 @@ void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
 {    
-    Register& registerB = rb.getRegister(l.one, b, {}, true, true, false);
+    Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
 
@@ -271,7 +271,7 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
 {    
-    Register& registerB = rb.getRegister(l.one, b, {}, true, true, false);
+    Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
 
@@ -308,7 +308,7 @@ void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
 
 void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
 {    
-    Register& registerB = rb.getRegister(l.one, b, {}, true, true, false);
+    Register& registerB = rb.getRegister(l.one, b, {}, true, true);
     updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
 
@@ -415,6 +415,7 @@ void FourthIR::alignRegisters(Pair& pair, Pair& next, RegisterBlock& rb, std::st
     next.startRegisterBlock.print();
 
     Block handle = generateBlock();
+    std::cout<<"USING "<<handle.blockName<<std::endl;
     RegisterBlock copy(pair.endRegisterBlock);
     copy.exitBlock(handle, next.startRegisterBlock);
     handle.blockJump = next.block.blockName;

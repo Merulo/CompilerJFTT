@@ -18,13 +18,12 @@ class RegisterBlock
     RegisterBlock(const RegisterBlock &rb);
 
     void createRegisters();
-    void exitBlock(Block& b);
     void exitBlock(Block& b, RegisterBlock& other);
 
     Register& getRegistersForOperation(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
     Register& getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r, 
-        bool changeValue, bool load, bool extra = true);
-    void storeSameTable(std::string name, Block& b, bool extra);
+        bool changeValue, bool load);
+    void storeSameTable(std::string name, Block& b);
 
     void print();
 
