@@ -13,9 +13,6 @@ std::vector<Line> MathOperations::generateMultiplication(std::string registerB, 
     std::vector<Line> lines;
     std::string labelInCaseOfZero = generateLabel();
     //check if either registerB or registerC is zero.
-    // lines.push_back({"PUT", registerB});
-    // lines.push_back({"PUT", registerC});
-    // lines.push_back({"PUT", registerD});
 
     lines.push_back({"JZERO", registerB, labelInCaseOfZero});
     lines.push_back({"JZERO", registerC, labelInCaseOfZero});
@@ -59,7 +56,6 @@ std::vector<Line> MathOperations::generateMultiplication(std::string registerB, 
     lines.push_back({labelInCaseOfZero});
     lines.push_back({"SUB", registerD, registerD});
     lines.push_back({exitLabel});
-    // lines.push_back({"COPY", registerB, registerD});
 
     return lines;
 }
@@ -127,8 +123,6 @@ std::vector<Line> MathOperations::generateDivision(
     lines.push_back({"SUB", registerB, registerB});
 
     lines.push_back({label32});    
-
-    // lines.push_back({"COPY", registerB, registerD});
 
     return lines;
 }

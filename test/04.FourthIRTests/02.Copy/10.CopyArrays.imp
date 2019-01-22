@@ -1,0 +1,12 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; array(0:100);
+IN
+  a:= 50;
+  array(a) := 100;
+  a := a + 1;
+  array(a) := 101;
+
+  WRITE array(50);
+  WRITE array(51);
+
+END

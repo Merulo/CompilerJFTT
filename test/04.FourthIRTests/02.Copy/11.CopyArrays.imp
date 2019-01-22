@@ -1,0 +1,22 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l; array(0:100);
+IN
+  array(3) := 123;
+  array(4) := 321;
+  a := 3;
+  b := 6 * array(a);
+  a := 4;
+  c := 7 * array(a);
+  a := 5;
+
+  WRITE array(3);
+  WRITE array(4);
+  WRITE b;
+  WRITE c;
+  a := 3;
+  WRITE array(a);
+  a := 4;
+  WRITE array(a);
+
+
+END

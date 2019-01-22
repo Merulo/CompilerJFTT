@@ -15,7 +15,6 @@
 	INC B 
 		#end of generating number  
 		#performing JUMP  #Block_1  
-	JUMP  12 #Block_1
 #end of Block_0
 #Block_1
 		#performing CONST variable_0 20  
@@ -40,10 +39,10 @@
 	SUB D B
 		#end of performing operation  
 		#performing JZERO IF_CONTROL_VARIABLE #Block_Condition_0_ifFalse  
-	JZERO D 28 #Block_Condition_0_ifFalse
+	JZERO D 27 #Block_Condition_0_ifFalse
 		#end of performing simple operation  
 		#performing JUMP  #Block_Condition_0_ifTrue  
-	JUMP  29 #Block_Condition_0_ifTrue
+	JUMP  28 #Block_Condition_0_ifTrue
 #end of Block_1
 #Block_Condition_0_ifFalse
 		#performing HALT    
@@ -53,10 +52,6 @@
 		#performing WRITE a   
 	PUT B 
 		#end of performing write  
-		#performing JUMP  #Block_5  
-	JUMP  31 #Block_5
+		#performing JUMP  #Block_1  
+	JUMP  11 #Block_1
 #end of Block_Condition_0_ifTrue
-#Block_5
-	JUMP  12 #Block_1
-#jump to Block_1
-#end of Block_5

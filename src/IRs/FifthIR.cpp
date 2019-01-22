@@ -1,13 +1,14 @@
 #include "FifthIR.hpp"
 
+#include <algorithm>
+
 #include "Calculators/MathOperations.hpp"
 
 void FifthIR::parse(std::vector<Block> b)
 {
     std::cout<<"FifthIR WORKING"<<std::endl;
     _blocks = b;
-    //todo: remove jumps if the block is the next block
-    // removeUnneededJumps()
+    removeJumps();
     calculateJumps();
 }
 
@@ -81,5 +82,68 @@ int FifthIR::getFirstInstructionAfter(Block& b, std::string name)
             return line.operationNumber;
         }
     }
-    return -1;
+    Block next = getNextBlock(b);
+    return getFirstInstructionInBlock(next);
+}
+
+void FifthIR::removeJumps()
+{
+    for(auto b = _blocks.begin(); b != _blocks.end(); b++)
+    {
+        if (onlyComments(*b))
+        {
+            std::cout<<"Remove "<<(*b).blockName<<std::endl;
+            if ((*b).lines.back().operation == "JUMP")
+            {
+                std::string arg = (*b).lines.back().two;
+                arg.erase(0, 1);
+                std::cout<<arg<<std::endl;
+                Block& current = getBlockByName(arg, _blocks);
+                replaceJump((*b), current);  
+                b = _blocks.erase(b);
+                b--;
+            }
+        }
+    }
+    for(auto it = _blocks.begin() + 1; it != _blocks.end(); it++)
+    {
+        Block& previous = *(it-1);
+        Block& current = *it;
+        if(previous.lines.back().two == "#" + current.blockName)
+        {
+            std::cout<<"Removing jump from "<< previous.blockName<<" to "<<current.blockName<<std::endl;
+            previous.lines.erase(previous.lines.end() - 1);
+            if (onlyComments(previous))
+            {
+                replaceJump(previous, current);
+            }
+        }
+    }
+
+}
+
+bool FifthIR::onlyComments(Block& b)
+{
+    for(auto& l : b.lines)
+    {
+        if (l.operation.find("#") == std::string::npos && l.operation != "JUMP")
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void FifthIR::replaceJump(Block& previous, Block& current)
+{
+    for(auto& b : _blocks)
+    {
+        for(auto& l : b.lines)
+        {
+            replace(l.operation, previous.blockName, current.blockName);
+            replace(l.one, previous.blockName, current.blockName);
+            replace(l.two, previous.blockName, current.blockName);
+        }
+    }
 }

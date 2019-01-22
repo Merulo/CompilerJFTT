@@ -369,9 +369,6 @@ void RegisterBlock::saveVarTableToMemory(Block& b, Register& r, Register& freeRe
     unsigned long long shift = _symbolTable->getTableShift(array);
 
     Register& regToSub = getRegister("", b, {r, freeRegister}, false, true);
-    b.lines.push_back({"#GOT " + regToSub.name+" with "+regToSub.variableName+" "});
-    b.lines.push_back({"#GOT " + r.name+" with "+r.variableName+" "});
-    b.lines.push_back({"#GOT " + freeRegister.name+" with "+freeRegister.variableName+" "});
 
     loadVariableFromMemory(b, name, freeRegister, r);
     b.lines.push_back("\t#SAVING var array " + r.variableName + " from " + r.name + " using " + freeRegister.name);    
@@ -479,7 +476,7 @@ void RegisterBlock::loadVarTableFromMemory(Block& b, std::string name, Register&
 
     // b.lines.push_back({"PUT", "A"});
     b.lines.push_back({"LOAD", r.name});    
-    b.lines.push_back("\t#END OF LOADING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+    b.lines.push_back("\t#END OF LOADING " + name + " from " + r.name + " using " + freeRegister.name);
 }
 
 void RegisterBlock::loadVariableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister)
