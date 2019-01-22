@@ -59,7 +59,7 @@ std::vector<Line> MathOperations::generateMultiplication(std::string registerB, 
     lines.push_back({labelInCaseOfZero});
     lines.push_back({"SUB", registerD, registerD});
     lines.push_back({exitLabel});
-    lines.push_back({"COPY", registerB, registerD});
+    // lines.push_back({"COPY", registerB, registerD});
 
     return lines;
 }

@@ -247,8 +247,8 @@ void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
 {    
     Register& registerB = rb.getRegister(l.one, b, {}, true, true);
-    updateRegisterState(b, rb, registerB, l.one);
     registerB.variableName = l.one;
+    updateRegisterState(b, rb, registerB, l.one);
     registerB.needToSafe = true;
 
     std::string argument = l.two;
@@ -274,6 +274,14 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
 
     auto lines = MathOperations::generateMultiplication(registerB.name, registerC.name, registerD.name, l);
     b.lines.insert(b.lines.end(), lines.begin(), lines.end());
+
+    registerD.variableName = l.one;
+    updateRegisterState(b, rb, registerD, l.one);
+    registerD.needToSafe = true;
+
+    registerB.state = RegisterState::UNKNOWN;
+    registerB.variableName = "";
+    registerB.needToSafe = false;
 
     b.lines.push_back({"\t#end of performing MUL operation"});    
 }
