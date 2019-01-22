@@ -29,5 +29,6 @@ def updateCost(directory):
 sum = 0
 sum += updateCost("04.FourthIRTests")
 sum += updateCost("05.MainTests")
+sum += updateCost("06.OptimizationTests")
 
 print("Sum=", sum)

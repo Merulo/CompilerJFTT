@@ -109,7 +109,7 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
         {
             resultBlock.lines.push_back(l);
         }
-        if (l.operation == "JZERO" || l.operation == "JODD" || l.operation == "INC" || l.operation == "DEC")
+        if (l.operation == "JZERO" || l.operation == "JODD" || l.operation == "INC" || l.operation == "DEC" || l.operation == "HALF")
         {
             handleSimpleOperation(registerBlock, resultBlock, l);
         }
@@ -213,6 +213,12 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
     regOne.variableName = l.one;
     regOne.needToSafe = true;
 
+    if (l.one == l.two && l.operation == "ADD")
+    {
+        b.lines.push_back({l.operation, regOne.name, regOne.name});
+        return;
+    }
+
     Register& regTwo = rb.getRegister(l.two, b, {regOne}, false, true);
     updateRegisterState(b, rb, regTwo, l.two);
     regTwo.variableName = l.two;
@@ -225,14 +231,13 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
         regTwo.state = RegisterState::UNKNOWN;
     }
 
-    regOne.constValue = regTwo.constValue;
     b.lines.push_back({"\t#end of performing operation"});   
 }
 
 void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 {    
     Register& r = rb.getRegister(l.one, b, {}, true, true);
-    if (l.operation == "DEC" || l.operation == "INC")
+    if (l.operation == "DEC" || l.operation == "INC" || l.operation == "HALF")
     {
         r.needToSafe = true;
     }

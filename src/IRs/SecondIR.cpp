@@ -11,6 +11,7 @@ void SecondIR::optimize()
 {
     removeUnusedIterators();
     removeAddSubSmallConst();
+    searchForMulAndDiv();
 
     //TODO: constant propagation
     //TODO: loop unrolling
@@ -247,5 +248,96 @@ void SecondIR::checkIfThisCanBeRemoved(std::vector<Line>& lines, std::vector<Lin
     {
         iterator++;
         iterator = lines.insert(iterator, l);
+    }
+}
+
+void SecondIR::searchForMulAndDiv()
+{
+    for(auto& b : _blocks)
+    {
+        for(size_t i = 0; i < b.lines.size(); i++)
+        {
+            if (b.lines[i].operation == "MUL")
+            {
+                checkPowerOfTwoMul(b.lines[i], b, i);
+            }
+            if (b.lines[i].operation == "DIV")
+            {
+                checkPowerOfTwoDiv(b.lines[i], b, i);
+            }            
+        }
+    }
+}
+
+void SecondIR::checkPowerOfTwoMul(Line& l, Block& b, size_t i)
+{
+    if (!_symbolTable->isConst(l.two))
+    {
+        return;
+    }
+    std::string value = _symbolTable->getConstValue(l.two);
+    if (value == "0")
+    {
+        l.operation = "CONST";
+        std::string arg = l.two;
+        l.two = "0";
+        stripVariable(arg, b);
+        return;
+    }
+    unsigned long long number = std::stoull(value);
+    if ((number & (number - 1)) != 0)
+    {
+        return;
+    }
+
+    Line addLine;
+    addLine.operation = "ADD";
+    addLine.one = l.one;
+    addLine.two = l.one;
+
+    stripVariable(l.two, b);
+
+    while (number != 1)
+    {
+        b.lines.insert(b.lines.begin() + i - 1, addLine);
+        number = number / 2;
+    }
+}
+
+void SecondIR::checkPowerOfTwoDiv(Line& l, Block& b, size_t i)
+{
+    if (!_symbolTable->isConst(l.two))
+    {
+        return;
+    }
+    std::string value = _symbolTable->getConstValue(l.two);
+    if (value == "0")
+    {
+        l.operation = "CONST";
+        std::string arg = l.two;
+        l.two = "0";
+        stripVariable(arg, b);
+        return;
+    }
+    if (value == "NAN")
+    {
+        return;
+    }
+    unsigned long long number = std::stoull(value);
+    if ((number & (number - 1)) != 0)
+    {
+        return;
+    }
+
+    Line addLine;
+    addLine.operation = "HALF";
+    addLine.one = l.one;
+
+    stripVariable(l.two, b);
+
+    while (number != 1)
+    {
+        b.lines.insert(b.lines.begin() + i - 1, addLine);
+        number = number / 2;
     }
 }

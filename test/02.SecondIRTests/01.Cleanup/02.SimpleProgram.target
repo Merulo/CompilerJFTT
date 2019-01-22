@@ -13,8 +13,7 @@
 	CONST variable_1 2
 	COPY b a
 	MOD b variable_1
-	CONST variable_2 2
-	DIV a variable_2
+	HALF a 
 	WRITE b 
 #jump to Block_1
 #end of Block_Condition_0_ifTrue

@@ -10,11 +10,9 @@
 #ifFalse Block_Condition_0_ifFalse
 #end of Block_1
 #Block_Condition_0_ifTrue
-	CONST variable_1 2
 	COPY b a
-	DIV b variable_1
-	CONST variable_2 2
-	MUL b variable_2
+	HALF b 
+	ADD b b
 #jump to Block_2
 #end of Block_Condition_0_ifTrue
 #Block_2
@@ -33,8 +31,7 @@
 #jump to Block_3
 #end of Block_Condition_1_ifFalse
 #Block_3
-	CONST variable_5 2
-	DIV a variable_5
+	HALF a 
 #jump to Block_1
 #end of Block_3
 #Block_Condition_0_ifFalse

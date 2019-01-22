@@ -23,4 +23,8 @@ class SecondIR : public IRBase
         //add sub small const:
         void removeAddSubSmallConst();
             void checkIfThisCanBeRemoved(std::vector<Line>& lines, std::vector<Line>::iterator& iterator);
+        //mul by power of 2
+        void searchForMulAndDiv();
+            void checkPowerOfTwoMul(Line& l, Block& b, size_t i);
+            void checkPowerOfTwoDiv(Line& l, Block& b, size_t i);
 };
