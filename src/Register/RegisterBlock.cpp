@@ -30,6 +30,7 @@ void RegisterBlock::createRegisters()
 
 void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
 {
+    //saves to memory
     for(size_t i = 0; i < _registers.size(); i++)
     {
         if (_registers[i].variableName == other._registers[i].variableName)
@@ -37,11 +38,17 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
             // std::cout<<"SKIPPING SAVING "<<_registers[i]<<std::endl;
             continue;
         }
+        //TODO: check if this value is used on right side, if no then continue
+        // if (other._registers[i].state == RegisterState::UNKNOWN)
+        // {
+        //     continue;
+        // }
 
         // std::cout<<"Saving "<<_registers[i]<<std::endl;
         saveToMemory(b, _registers[i], _addressRegister);
     }
 
+    //loads tables to registers
     for(size_t i = 0; i < _registers.size(); i++)
     {
         if (_registers[i].variableName == other._registers[i].variableName)
@@ -59,6 +66,7 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
         loadFromMemory(b, other._registers[i].variableName, _registers[i], _addressRegister);
     }
 
+    //loads variables to registers
     for(size_t i = 0; i < _registers.size(); i++)
     {
         if (_registers[i].variableName == other._registers[i].variableName)
@@ -76,6 +84,7 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
         loadFromMemory(b, other._registers[i].variableName, _registers[i], _addressRegister);
     }
 
+    //sets A register
     if (other._addressRegister.state != RegisterState::UNKNOWN)
     {
         // std::cout<<"change "<<_addressRegister<<std::endl;

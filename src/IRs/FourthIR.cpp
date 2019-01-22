@@ -341,6 +341,14 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
     registerB.variableName = l.one;
     registerB.needToSafe = true;
 
+    if (_symbolTable->isConst(l.two) && _symbolTable->getConstValue(l.two) == "2")
+    {
+        auto lines = MathOperations::generateModuloTwo(registerB.name, l);
+        b.insert(lines);
+        b.lines.push_back({"\t#end of performing DIV operation"});    
+        return;
+    }
+
     Register& registerC = rb.getRegister(l.two, b, {registerB}, false, true);
     updateRegisterState(b, rb, registerC, l.two);
     registerC.variableName = l.two;

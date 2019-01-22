@@ -1,0 +1,8 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l;
+IN
+  a := 123124;
+  a := a % 2;
+  WRITE a;
+
+END

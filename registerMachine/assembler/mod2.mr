@@ -1,0 +1,8 @@
+GET B       #a
+JODD B 4
+SUB B B
+JUMP 6
+SUB B B
+INC B
+PUT B
+HALT 

@@ -14,10 +14,7 @@ void SecondIR::optimize()
     searchForMulAndDiv();
 
     //TODO: constant propagation
-    //TODO: loop unrolling
-    //TODO: ADD X 1 -> inc etc
     //TODO: removed unused values
-    //TODO: reorder of constant generation inside blocks
 }
 
 void SecondIR::addSimpleJumps(std::vector<Block> b)
@@ -264,7 +261,11 @@ void SecondIR::searchForMulAndDiv()
             if (b.lines[i].operation == "DIV")
             {
                 checkPowerOfTwoDiv(b.lines[i], b, i);
-            }            
+            }       
+            if (b.lines[i].operation == "MOD")
+            {
+                checkTwoMod(b.lines[i], b, i);
+            }     
         }
     }
 }
@@ -340,4 +341,28 @@ void SecondIR::checkPowerOfTwoDiv(Line& l, Block& b, size_t i)
         b.lines.insert(b.lines.begin() + i - 1, addLine);
         number = number / 2;
     }
+}
+
+void SecondIR::checkTwoMod(Line& l, Block& b, size_t i)
+{
+    if (!_symbolTable->isConst(l.two))
+    {
+        return;
+    }
+    std::string value = _symbolTable->getConstValue(l.two);
+    if (value == "0")
+    {
+        l.operation = "CONST";
+        std::string arg = l.two;
+        l.two = "0";
+        stripVariable(arg, b);
+        return;
+    }
+    if (value != "2")
+    {
+        return;
+    }
+    Line copy = l;
+    stripVariable(l.two, b);
+    b.lines.insert(b.lines.begin() + i - 1, copy);
 }

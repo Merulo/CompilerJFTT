@@ -27,4 +27,5 @@ class SecondIR : public IRBase
         void searchForMulAndDiv();
             void checkPowerOfTwoMul(Line& l, Block& b, size_t i);
             void checkPowerOfTwoDiv(Line& l, Block& b, size_t i);
+            void checkTwoMod(Line& l, Block& b, size_t i);
 };

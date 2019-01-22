@@ -189,6 +189,26 @@ std::vector<Line> MathOperations::generateModulo(
     return lines;
 }
 
+std::vector<Line> MathOperations::generateModuloTwo(
+    std::string registerB, Line l
+)
+{
+    std::vector<Line> lines;
+    std::string label4 = generateLabel();
+    lines.push_back({"JODD", registerB, label4});
+    lines.push_back({"SUB", registerB, registerB});
+    std::string label6 = generateLabel();
+
+    lines.push_back({"JUMP", "", label6}); 
+
+    lines.push_back({label4});  
+    lines.push_back({"SUB", registerB, registerB});
+    lines.push_back({"INC", registerB});
+    lines.push_back({label6});
+
+    return lines;
+}
+
 std::string MathOperations::generateLabel()
 {
     std::string label = labelName + std::to_string(labelCounter);

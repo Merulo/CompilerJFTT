@@ -10,7 +10,6 @@
 #ifFalse Block_Condition_0_ifFalse
 #end of Block_1
 #Block_Condition_0_ifTrue
-	CONST variable_1 2
 	COPY b a
 	MOD b variable_1
 	HALF a 

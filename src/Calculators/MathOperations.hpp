@@ -16,6 +16,10 @@ class MathOperations
         std::string registerB, std::string registerC,
         std::string registerE, std::string registerG, Line l
     );
+    static std::vector<Line> generateModuloTwo(
+        std::string registerB, Line l
+    );
+
     static std::string getLabelName();
 
     private:
