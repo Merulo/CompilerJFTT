@@ -1,0 +1,20 @@
+DECLARE
+  a; b; c; d; e; f; g; h; i; j; k; l;
+IN
+  a := 1;
+  b := 0;
+
+  IF a < 0 THEN
+    WRITE 6661;
+  ENDIF
+  IF b < 0 THEN
+    WRITE 9992;
+  ENDIF 
+  IF 0 < a THEN
+    WRITE 6663;
+  ENDIF
+  IF 0 < b THEN
+    WRITE 9994;
+  ENDIF 
+
+END

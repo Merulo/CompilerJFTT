@@ -160,6 +160,18 @@ void ThirdIR::insertJumps(Block&b, std::string var)
 
 void ThirdIR::legalizeJLS(Block& b, bool inc)
 {
+    if (checkZeroJump(b) && !inc)
+    {
+        std::swap(b.lines.back().one, b.lines.back().two);
+        legalizeJumpWithZero(b);
+        return;
+    }
+    if (checkZeroJump(b) && inc)
+    {
+        std::swap(b.lines.back().one, b.lines.back().two);
+        legalizeJumpWithEqualZero(b);
+        return;
+    }
     Line lastLine = b.lines.back();
     b.lines.pop_back();
 
@@ -171,7 +183,12 @@ void ThirdIR::legalizeJMR(Block& b, bool inc)
 {
     if (checkZeroJump(b) && !inc)
     {
-        legalizeZeroJMR(b);
+        legalizeJumpWithZero(b);
+        return;
+    }
+    if (checkZeroJump(b) && inc)
+    {
+        legalizeJumpWithEqualZero(b);
         return;
     }
 
@@ -200,11 +217,11 @@ void ThirdIR::legalizeEquality(Block& b)
 bool ThirdIR::checkZeroJump(Block& b)
 {
     Line lastLine = b.lines.back();
-    if (_symbolTable->isConst(lastLine.one) && _symbolTable->getConstValue(lastLine.one) == "0")
+    if (_symbolTable->isConst(lastLine.one) && _symbolTable->getConstValue(lastLine.one) == "0" && !_symbolTable->isConst(lastLine.two))
     {
         return true;
     }
-    if (_symbolTable->isConst(lastLine.two) && _symbolTable->getConstValue(lastLine.two) == "0")
+    if (_symbolTable->isConst(lastLine.two) && _symbolTable->getConstValue(lastLine.two) == "0" && !_symbolTable->isConst(lastLine.one))
     {
         return true;
     }    
@@ -233,7 +250,7 @@ void ThirdIR::legalizeZeroJump(Block& b)
     b.lines.push_back(l2);
 }
 
-void ThirdIR::legalizeZeroJMR(Block& b)
+void ThirdIR::legalizeJumpWithZero(Block& b)
 {
     Line lastLine = b.lines.back();
     b.lines.clear();
@@ -258,5 +275,34 @@ void ThirdIR::legalizeZeroJMR(Block& b)
     Line l2;
     l2.operation = "JUMP";
     l2.two = "#" + b.blockIfFalse;
+    b.lines.push_back(l2);
+}
+
+void ThirdIR::legalizeJumpWithEqualZero(Block& b)
+{
+    Line lastLine = b.lines.back();
+    b.lines.clear();
+
+    std::swap(b.blockIfFalse, b.blockIfTrue);
+    std::string argument = lastLine.one;
+    if (!_symbolTable->isConst(argument))
+    {
+        Line l;
+        l.operation = "JUMP";
+        l.two = "#" + b.blockIfFalse;
+        b.lines.push_back(l);
+        return;
+    }
+    argument = lastLine.two;
+    
+    Line l;
+    l.operation = "JZERO";
+    l.one = argument;
+    l.two = "#" + b.blockIfFalse;
+    b.lines.push_back(l);
+
+    Line l2;
+    l2.operation = "JUMP";
+    l2.two = "#" + b.blockIfTrue;
     b.lines.push_back(l2);
 }
