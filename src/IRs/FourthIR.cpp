@@ -318,8 +318,13 @@ void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
 
     b.lines.insert(b.lines.end(), lines.begin(), lines.end());
 
-    updateRegisterState(b, rb, registerB, l.one);
-    registerB.variableName = l.one;
+    updateRegisterState(b, rb, registerD, l.one);
+    registerD.variableName = l.one;
+    registerD.needToSafe = true;
+
+    registerB.state = RegisterState::UNKNOWN;
+    registerB.variableName = "";
+    registerB.needToSafe = false;
 
     b.lines.push_back({"\t#end of performing DIV operation"});    
 }

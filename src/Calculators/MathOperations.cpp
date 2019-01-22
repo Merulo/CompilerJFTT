@@ -128,7 +128,7 @@ std::vector<Line> MathOperations::generateDivision(
 
     lines.push_back({label32});    
 
-    lines.push_back({"COPY", registerB, registerD});
+    // lines.push_back({"COPY", registerB, registerD});
 
     return lines;
 }
