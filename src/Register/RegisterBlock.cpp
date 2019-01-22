@@ -344,6 +344,10 @@ void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
     }
     else if (r.state == RegisterState::TABLE)
     {
+        if(!r.needToSafe)
+        {
+            return;
+        }
         std::string rest = r.variableName.substr(r.variableName.find("(") + 1, std::string::npos);
         rest.pop_back();
         std::cout<<"SAVE array to memory "<<rest<< std::endl;
