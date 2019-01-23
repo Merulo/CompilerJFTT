@@ -383,7 +383,57 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
 
 
 
+bool FourthIR::isThisVariableUsed(std::string name, Block& block)
+{
+    std::cout<<name<<" in block "<<block.blockName<<std::endl;
+    Block& nextBlock = getPairByName(block.blockJump).block;
+    resetBlocks();
+    restPairBlocks();
+    return recursiveUsageTest(name , nextBlock);
+}
 
+bool FourthIR::recursiveUsageTest(std::string name, Block& b)
+{
+    if (b.visited)
+    {
+        return true;
+    }
+    b.visited = true;
+
+    for(auto& l : b.lines)
+    {
+        if (l.one == name)
+        {
+            if (l.operation == "COPY")
+            {
+                return true;
+            }
+            if (l.operation == "CONST")
+            {
+                return true;
+            }
+            if (l.operation == "READ")
+            {
+                return true;
+            }
+            return false;
+        }
+    }
+    if (!b.blockJump.empty())
+    {
+        Block& nextBlock = getPairByName(b.blockJump).block;
+        return recursiveUsageTest(name, nextBlock);
+    }
+    else if (!b.blockIfFalse.empty())
+    {
+        Block& blockTrue = getPairByName(b.blockIfTrue).block;
+        bool r1 = recursiveUsageTest(name, blockTrue);  
+        Block& blockFalse = getPairByName(b.blockIfTrue).block;
+        bool r2 = recursiveUsageTest(name, blockFalse);  
+        return r1 && r2;
+    }
+    return true;
+}
 
 
 
@@ -454,8 +504,8 @@ void FourthIR::alignRegisters(Pair& pair, Pair& next, RegisterBlock& rb, std::st
     Block handle = generateBlock();
     std::cout<<"USING "<<handle.blockName<<std::endl;
     RegisterBlock copy(pair.endRegisterBlock);
-    copy.exitBlock(handle, next.startRegisterBlock);
     handle.blockJump = next.block.blockName;
+    copy.exitBlock(handle, next.startRegisterBlock, *this);
 
     Block& grr = getBlockByName(pair.block.blockName, _blocks);
 

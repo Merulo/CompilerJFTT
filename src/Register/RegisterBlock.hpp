@@ -7,6 +7,7 @@
 #include "Register.hpp"
 #include "SymbolTable.hpp"
 #include "DataTypes/Block.hpp"
+#include "IRs/IRBase.hpp"
 
 #include "Calculators/NumberGenerator.hpp"
 
@@ -18,7 +19,7 @@ class RegisterBlock
     RegisterBlock(const RegisterBlock &rb);
 
     void createRegisters();
-    void exitBlock(Block& b, RegisterBlock& other);
+    void exitBlock(Block& b, RegisterBlock& other, IRBase& irBase);
 
     Register& getRegistersForOperation(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r);
     Register& getRegister(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> r, 

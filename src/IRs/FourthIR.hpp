@@ -8,12 +8,14 @@ class FourthIR : public IRBase
     public:
     FourthIR() : IRBase("FourthIR") {};
     void parse(std::vector<Block> b, std::string fileName, bool useEmulator);
+    bool isThisVariableUsed(std::string name, Block& block);
 
     private:
     std::vector<Pair> _notYetConvertedBlocks;
     bool _removeConsts = true;
 
     bool isDeterministic();
+    bool recursiveUsageTest(std::string name, Block& b);
 
     //converts to assembler
     void convertToAssembler();
@@ -46,7 +48,15 @@ class FourthIR : public IRBase
                 return pair;
             }
         }
-        std::cout<<"PROBLEM"<<std::endl;
+        std::cout<<"PROBLEM asking for "<< name <<std::endl;
         return _notYetConvertedBlocks.front();
+    }
+
+    void restPairBlocks()
+    {
+        for(auto& p : _notYetConvertedBlocks)
+        {
+            p.block.visited = false;
+        }
     }
 };

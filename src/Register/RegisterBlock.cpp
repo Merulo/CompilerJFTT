@@ -1,5 +1,7 @@
 #include "RegisterBlock.hpp"
 
+#include "IRs/FourthIR.hpp"
+
 RegisterBlock::RegisterBlock(std::shared_ptr<SymbolTable> symbolTable)
 {
     _symbolTable = symbolTable;
@@ -28,7 +30,7 @@ void RegisterBlock::createRegisters()
     }
 }
 
-void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
+void RegisterBlock::exitBlock(Block& b, RegisterBlock& other, IRBase& irBase)
 {
     //saves to memory
     for(size_t i = 0; i < _registers.size(); i++)
@@ -38,11 +40,17 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other)
             // std::cout<<"SKIPPING SAVING "<<_registers[i]<<std::endl;
             continue;
         }
-        //TODO: check if this value is used on right side, if no then continue
-        // if (other._registers[i].state == RegisterState::UNKNOWN)
-        // {
-        //     continue;
-        // }
+        // TODO: check if this value is used on right side, if no then continue
+        if (other._registers[i].state == RegisterState::UNKNOWN)
+        {
+            FourthIR& fourthIR = static_cast<FourthIR&>(irBase);
+
+            bool result = fourthIR.isThisVariableUsed(_registers[i].variableName, b);
+            if (result)
+            {
+                continue;
+            }
+        }
 
         // std::cout<<"Saving "<<_registers[i]<<std::endl;
         saveToMemory(b, _registers[i], _addressRegister);
