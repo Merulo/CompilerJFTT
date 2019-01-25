@@ -1,0 +1,29 @@
+DECLARE
+	a; b; c; tab(0:100000); d; e; f; tabb(1000:10000); g; h; i; j; k; l; m; n; o; p; z; x;
+IN
+	x := 100;
+	a := 101;
+	b := 909;
+	d := 10;
+
+	c := 888;
+	o := 1010;
+	tab(a) := 0;
+
+	WHILE d > 0 DO
+		IF x > x THEN
+			x := x + 1;
+		ELSE
+			a := a + x;
+		ENDIF
+		IF x < x THEN
+			x := x + 1;
+		ELSE
+			a := a + x;
+		ENDIF
+		d := d - 1;
+	ENDWHILE
+
+	WRITE a;
+	WRITE x;
+END 

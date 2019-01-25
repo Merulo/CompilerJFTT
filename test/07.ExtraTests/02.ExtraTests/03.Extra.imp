@@ -19,14 +19,14 @@ IN
 			tab(a) := tab(a) + 1;
 		ENDIF
 		tab(a) := tab(a) - b;
-		tabb(1010) := a;
+		tabb(1010) := tab(a);
 		WRITE tabb(o);
 		d := d - 1;
 		z := tab(a) % 2;
 		IF z = 0 THEN
-			tabb(1010) := tabb(1010) * tab(1010);
-			e := tab(1010) / 2;
-			tabb(1010) := tab(1010) % e;
+			tabb(1010) := tabb(1010) * tabb(1010);
+			e := tabb(1010) / 59;
+			tabb(1010) := tabb(1010) % e;
 		ENDIF
 		WRITE tabb(o);
 	ENDWHILE
