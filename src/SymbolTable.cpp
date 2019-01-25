@@ -60,7 +60,6 @@ void SymbolTable::assignMemory()
     {
         if (!v.second.isInitialized)
         {
-            std::cout<<"Removing "<<v.first<<std::endl;
             _variables.erase(v.first);
         }
     }

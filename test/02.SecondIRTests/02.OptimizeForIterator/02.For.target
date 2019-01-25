@@ -1,6 +1,5 @@
 #SecondIR:
 #Block_0
-	CONST a 10
 #jump to ForBlock_0_initialForControl
 #end of Block_0
 #ForBlock_0_initialForControl

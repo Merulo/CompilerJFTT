@@ -1,5 +1,6 @@
 #include "SecondIR.hpp"
 
+
 void SecondIR::parse(std::vector<Block> b)
 {
     addSimpleJumps(b);
@@ -374,6 +375,10 @@ void SecondIR::removeUnusedCalculations()
             if (_symbolTable->isItVariable(line->one))
             {
                 checkOperations(line, b);
+                // if (b.lines.empty())
+                // {
+                //     break;
+                // }
             }
         }
     }
@@ -383,10 +388,29 @@ void SecondIR::removeUnusedCalculations()
 
 void SecondIR::checkOperations(std::vector<Line>::iterator& line, Block& b)
 {
+    if (line == b.lines.end())
+    {
+        return;
+    }
+    if (_banned.find(line->operation) != _banned.end())
+    {
+        return;
+    } 
+    std::cout<<"Checking removal of "<<line->one<<std::endl;
     std::cout<<*line<<std::endl;
+    resetBlocks();
     if (canRemove(line, b, line->one))
     {
-        std::cout<<"Removing "<<line->one<<std::endl;
+        std::cout<<"\t\tRemovingByCheckingOperations "<<*line<<std::endl;
+        if (line->operation != "READ")
+        {
+            line = b.lines.erase(line);
+            line--;
+        }
+        else
+        {
+            line->one = _symbolTable->getExtraVariable();
+        }
     }
 
 
@@ -395,16 +419,90 @@ void SecondIR::checkOperations(std::vector<Line>::iterator& line, Block& b)
 
 bool SecondIR::canRemove(std::vector<Line>::iterator line, Block& b, std::string name)
 {
+    line++;
     for (; line != b.lines.end(); line++)
     {
-        
+        std::cout<<"Checking currently "<<*line<<std::endl;
+        if(line->two == name)
+        {
+            return false;
+        }
+        if (line->two.find("(" + name + ")") != std::string::npos)
+        {
+            return false;
+        }
+        if (line->one.find("(" + name + ")") != std::string::npos)
+        {
+            return false;
+        }  
+        if (line->one == name)
+        {
+            if (_banned.find(line->operation) != _banned.end())
+            {
+                return false;
+            } 
+            return true;
+        }       
     }
-
-
+    if (!b.blockJump.empty())
+    {
+        Block& nextBlock = getBlockByName(b.blockJump, _blocks);
+        return canRemoveRecursive(nextBlock, name);
+    }
+    else if (!b.blockIfFalse.empty())
+    {
+        Block& blockTrue = getBlockByName(b.blockIfFalse, _blocks);
+        bool r1 = canRemoveRecursive(blockTrue, name);  
+        Block& blockFalse = getBlockByName(b.blockIfTrue, _blocks);
+        bool r2 = canRemoveRecursive(blockFalse, name);  
+        return r1 && r2;
+    }
     return true;
 }
 bool SecondIR::canRemoveRecursive(Block& b, std::string name)
 {
-
-    return false;
+    std::cout<<"We are in "<<b.blockName<<std::endl;
+    if (b.visited)
+    {
+        return true;
+    }
+    b.visited = true;
+    for (auto line = b.lines.begin(); line != b.lines.end(); line++)
+    {
+        std::cout<<"Checking currently2 "<<*line<<std::endl;
+        if(line->two == name)
+        {
+            return false;
+        }
+        if (line->two.find("(" + name + ")") != std::string::npos)
+        {
+            return false;
+        }
+        if (line->one.find("(" + name + ")") != std::string::npos)
+        {
+            return false;
+        }  
+        if (line->one == name)
+        {
+            if (_banned.find(line->operation) != _banned.end())
+            {
+                return false;
+            } 
+            return true;
+        }       
+    }
+    if (!b.blockJump.empty())
+    {
+        Block& nextBlock = getBlockByName(b.blockJump, _blocks);
+        return canRemoveRecursive(nextBlock, name);
+    }
+    else if (!b.blockIfFalse.empty())
+    {
+        Block& blockTrue = getBlockByName(b.blockIfFalse, _blocks);
+        bool r1 = canRemoveRecursive(blockTrue, name);  
+        Block& blockFalse = getBlockByName(b.blockIfTrue, _blocks);
+        bool r2 = canRemoveRecursive(blockFalse, name);  
+        return r1 && r2;
+    }
+    return true;
 }

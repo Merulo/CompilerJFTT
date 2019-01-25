@@ -1,0 +1,23 @@
+DECLARE
+  a; b; c; d; e; f; g; h; j; k; l; m; n; o; p; r;
+IN
+  a := 10;
+  FOR i FROM 0 TO 10 DO
+    WRITE i;
+    b:= 10;
+    c:= 10;
+    d:= 10;
+    e:= 10;
+    f:= 10;
+    g:= 10;
+    h:= 10;
+    j:= 10;
+    k:= 10;
+    l:= 10;
+    m:= 10;
+    n:= 10;
+    o:= 10;
+    p:= 10;
+    r:= 10;    
+  ENDFOR
+END

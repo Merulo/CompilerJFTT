@@ -1,0 +1,15 @@
+DECLARE
+  a; b; c; d; e; f; g; h; j; k; l; m; n; o; p; r;
+IN
+  a:= 11;
+  b:= 12;
+  c:= 13;
+
+  a := 50 / c;
+
+  b := b / 2;
+  
+  WRITE a;
+  WRITE b;
+  WRITE c;
+END

@@ -8,21 +8,10 @@
 	CONST array(5) 105
 	CONST array(6) 106
 	CONST array(100) 200
-	CONST a 1
-	CONST b 2
-	CONST c 3
-	CONST d 4
-	CONST e 5
-	CONST f 6
 	CONST variable_0 10
 	CONST variable_1 20
 	COPY a variable_0
 	ADD a variable_1
-	CONST g 7
-	CONST h 8
-	CONST i 9
-	CONST j 10
-	CONST k 11
 	COPY variable_2 array(100)
 	COPY array(1) variable_2
 	WRITE array(1) 

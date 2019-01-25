@@ -1,3 +1,5 @@
+#include <set>
+
 #include "IRBase.hpp"
 
 class SecondIR : public IRBase
@@ -8,6 +10,14 @@ class SecondIR : public IRBase
     void parse(std::vector<Block> b);
 
     private:
+    std::set<std::string> _banned = {
+        "INC", "DEC", "JZERO", 
+        "JODD", "JLS", "JMR", 
+        "JLE", "JME", "JNE", 
+        "JEQ", "WRITE", "MUL", 
+        "ADD", "SUB", "DIV", 
+        "MOD", "HALF"};
+
     void addSimpleJumps(std::vector<Block> b);
     void removeEmptyBlocks();
 
