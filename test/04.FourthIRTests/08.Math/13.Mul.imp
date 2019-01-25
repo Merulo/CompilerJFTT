@@ -1,0 +1,7 @@
+DECLARE
+	a; b; c; tab(0:100000); d; e; f; tabb(1000:10000); g; h; i; j; k; l; m; n; o; p; z;
+IN
+	tabb(1010) := 101;
+	tabb(1010) := tabb(1010) * tab(1010);
+	WRITE tabb(1010);
+END 

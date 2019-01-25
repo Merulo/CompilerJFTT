@@ -385,11 +385,16 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
 
 bool FourthIR::isThisVariableUsed(std::string name, Block& block)
 {
-    std::cout<<name<<" in block "<<block.blockName<<std::endl;
+    // std::cout<<name<<" in block "<<block.blockName<<std::endl;
     Block& nextBlock = getPairByName(block.blockJump).block;
     resetBlocks();
     restPairBlocks();
-    return recursiveUsageTest(name , nextBlock);
+    bool result = recursiveUsageTest(name , nextBlock);
+    if (result)
+    {
+        std::cout<<"Skipping saving variable named "<<name<<std::endl;
+    }
+    return result;
 }
 
 bool FourthIR::recursiveUsageTest(std::string name, Block& b)
@@ -402,6 +407,18 @@ bool FourthIR::recursiveUsageTest(std::string name, Block& b)
 
     for(auto& l : b.lines)
     {
+        if(l.two == name)
+        {
+            return false;
+        }
+        if (l.two.find("(" + name + ")") != std::string::npos)
+        {
+            return false;
+        }
+        if (l.one.find("(" + name + ")") != std::string::npos)
+        {
+            return false;
+        }  
         if (l.one == name)
         {
             if (l.operation == "COPY")
@@ -428,7 +445,7 @@ bool FourthIR::recursiveUsageTest(std::string name, Block& b)
     {
         Block& blockTrue = getPairByName(b.blockIfTrue).block;
         bool r1 = recursiveUsageTest(name, blockTrue);  
-        Block& blockFalse = getPairByName(b.blockIfTrue).block;
+        Block& blockFalse = getPairByName(b.blockIfFalse).block;
         bool r2 = recursiveUsageTest(name, blockFalse);  
         return r1 && r2;
     }
@@ -471,7 +488,7 @@ void FourthIR::convertNextBlock(Pair& pair, RegisterBlock& rb, std::string name)
     Pair& next = getPairByName(name);
     if (!next.registerBlockIsSet)
     {
-        std::cout<<"just converting "<<std::endl;
+        // std::cout<<"just converting "<<std::endl;
         RegisterBlock copy(rb);
         convertBlockToAssembler(next, copy);   
         return;         
@@ -484,7 +501,7 @@ void FourthIR::convertSplitBlock(Pair& pair, RegisterBlock& rb, std::string name
     Pair& next = getPairByName(name);
     if (!next.registerBlockIsSet)
     {
-        std::cout<<"just converting "<<std::endl;
+        // std::cout<<"just converting "<<std::endl;
         RegisterBlock copy(rb);
         convertBlockToAssembler(next, copy);   
         return;         
@@ -494,15 +511,15 @@ void FourthIR::convertSplitBlock(Pair& pair, RegisterBlock& rb, std::string name
 
 void FourthIR::alignRegisters(Pair& pair, Pair& next, RegisterBlock& rb, std::string name)
 {
-    std::cout<<"ADJUSTING BLOCK "<< pair.block.blockName<< " when entering "<< next.block.blockName<<std::endl;
+    // std::cout<<"ADJUSTING BLOCK "<< pair.block.blockName<< " when entering "<< next.block.blockName<<std::endl;
     
-    std::cout<<"CHANGE: "<<std::endl;
-    pair.endRegisterBlock.print();
-    std::cout<<"TO: "<<std::endl;
-    next.startRegisterBlock.print();
+    // std::cout<<"CHANGE: "<<std::endl;
+    // pair.endRegisterBlock.print();
+    // std::cout<<"TO: "<<std::endl;
+    // next.startRegisterBlock.print();
 
     Block handle = generateBlock();
-    std::cout<<"USING "<<handle.blockName<<std::endl;
+    // std::cout<<"USING "<<handle.blockName<<std::endl;
     RegisterBlock copy(pair.endRegisterBlock);
     handle.blockJump = next.block.blockName;
     copy.exitBlock(handle, next.startRegisterBlock, *this);

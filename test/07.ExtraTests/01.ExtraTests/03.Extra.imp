@@ -1,0 +1,44 @@
+DECLARE
+  temp; a; n; j; tab(0:10); x; y;
+IN
+tab(0):=43;
+tab(1):=3;
+tab(2):=8;
+tab(3):=16;
+tab(4):=15;
+tab(5):=3;
+tab(6):=5;
+tab(7):=40;
+tab(8):=24;
+tab(9):=19;
+
+x := 100;
+y := 101;
+
+n:=8;
+
+WHILE n > 1 DO
+    FOR i FROM 0 TO n DO
+        j:=i+1;
+        IF tab(i) > tab(j) THEN
+            temp:=tab(j);
+            tab(j) := tab(i);
+            tab(i) := temp;
+	    temp := x;
+	    x := y;
+	    y := temp;
+        ENDIF
+    ENDFOR
+    n:=n-1;
+ENDWHILE
+
+n:=9;
+FOR i FROM 0 TO n DO
+    WRITE tab(i);
+ENDFOR
+
+WRITE x;
+WRITE y;
+
+
+END

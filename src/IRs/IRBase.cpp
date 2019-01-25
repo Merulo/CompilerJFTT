@@ -14,7 +14,7 @@ IRBase::IRBase(std::string IRName) : _IRName(IRName)
 
 std::string IRBase::getVariable(std::string value)
 {
-    std::cerr<<"generating variable with "<<value<<std::endl;
+    // std::cerr<<"generating variable with "<<value<<std::endl;
     std::string result = "variable_" + std::to_string(_nextGeneratedVariableSuffix);
     _nextGeneratedVariableSuffix++;
     if (!_symbolTable)

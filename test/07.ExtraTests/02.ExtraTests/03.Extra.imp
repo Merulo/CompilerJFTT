@@ -1,0 +1,33 @@
+DECLARE
+	a; b; c; tab(0:100000); d; e; f; tabb(1000:10000); g; h; i; j; k; l; m; n; o; p; z;
+IN
+	a := 101;
+	b := 909;
+	c := 888;
+	d := 42;
+	o := 1010;
+	tab(a) := 0;
+
+	WHILE d > 0 DO
+		p := d % 2;
+		tab(a) := tab(a) + b;
+		IF p = 0 THEN
+			p := p + 1;
+			tabb(p) := tab(101);
+			tab(a) := tab(a) + 1;
+			tab(a) := tab(a) - 1;
+			tab(a) := tab(a) + 1;
+		ENDIF
+		tab(a) := tab(a) - b;
+		tabb(1010) := a;
+		WRITE tabb(o);
+		d := d - 1;
+		z := tab(a) % 2;
+		IF z = 0 THEN
+			tabb(1010) := tabb(1010) * tab(1010);
+			e := tab(1010) / 2;
+			tabb(1010) := tab(1010) % e;
+		ENDIF
+		WRITE tabb(o);
+	ENDWHILE
+END 

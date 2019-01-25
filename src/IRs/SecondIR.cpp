@@ -12,9 +12,6 @@ void SecondIR::optimize()
     removeUnusedIterators();
     removeAddSubSmallConst();
     searchForMulAndDiv();
-
-    //TODO: constant propagation
-    //TODO: removed unused values
 }
 
 void SecondIR::addSimpleJumps(std::vector<Block> b)

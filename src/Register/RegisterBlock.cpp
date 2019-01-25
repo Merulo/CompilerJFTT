@@ -361,13 +361,8 @@ void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
     }
     else if (r.state == RegisterState::TABLE)
     {
-        if(!r.needToSafe)
-        {
-            return;
-        }
         std::string rest = r.variableName.substr(r.variableName.find("(") + 1, std::string::npos);
         rest.pop_back();
-        std::cout<<"SAVE array to memory "<<rest<< std::endl;
         if (isDigits(rest))
         {
             saveConstTableToMemory(b, r, freeRegister, std::stoull(rest));
@@ -461,7 +456,6 @@ void RegisterBlock::loadFromMemory(Block& b, std::string name, Register& r, Regi
     {
         std::string rest = name.substr(name.find("(") + 1, std::string::npos);
         rest.pop_back();
-        std::cout<<"LOAD array to memory "<<rest<< std::endl;
         if (isDigits(rest))
         {
             loadConstTableFromMemory(b, name, r, freeRegister, std::stoull(rest));
@@ -478,7 +472,7 @@ void RegisterBlock::loadVarTableFromMemory(Block& b, std::string name, Register&
     std::string array = name.substr(0, name.find("("));
     unsigned long memoryCell = _symbolTable->getMemoryCell(array);
     unsigned long long shift = _symbolTable->getTableShift(array);
-    std::cout<<array<<" "<<shift<<" "<<memoryCell<<std::endl;
+    // std::cout<<array<<" "<<shift<<" "<<memoryCell<<std::endl;
 
     Register& regToSub = getRegister("", b, {r, freeRegister}, false, true);
     loadVariableFromMemory(b, addresVariableName, freeRegister, r);
@@ -533,7 +527,7 @@ void RegisterBlock::loadVariableFromMemory(Block& b, std::string name, Register&
 void RegisterBlock::loadConstTableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister, unsigned long long diff)
 {
     std::string array = name.substr(0, name.find("("));
-    std::cout<<array<<std::endl;        
+    // std::cout<<array<<std::endl;        
     unsigned long memoryCell = _symbolTable->getMemoryCell(array);
     unsigned long long shift = _symbolTable->getTableShift(array);
     memoryCell = memoryCell + diff - shift;

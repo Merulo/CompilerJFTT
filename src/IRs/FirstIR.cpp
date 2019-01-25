@@ -8,7 +8,7 @@ void FirstIR::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
     line.one = one;
     line.two = two;
     _currentBlock.top().lines.push_back(line);
-    std::cerr<<line<<std::endl;
+    // std::cerr<<line<<std::endl;
     if (operation == "HALT")
     {
         _blocks.push_back(_currentBlock.top());
@@ -17,8 +17,7 @@ void FirstIR::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 
 void FirstIR::handleMathOperation(cStrRef resultName)
 {
-    std::cerr<<"Math="<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
-    
+    // std::cerr<<"Math="<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
     if (_firstExtraParameter == _secondExtraParameter && _symbolTable->isItTable(_firstExtraParameter))
     {
         std::string res = _firstExtraParameter.substr(_firstExtraParameter.find("(") + 1, std::string::npos);
@@ -120,6 +119,7 @@ void FirstIR::endIf()
     endOfTrueBlock.blockJump = _currentBlock.top().blockName;
     _blocks.push_back(endOfTrueBlock);
     _conditionBlocks.pop();
+    _conditionBlocks.pop();
 }
 
 void FirstIR::closeConditionBlock()
@@ -136,11 +136,10 @@ void FirstIR::endWhileDo()
 {
     Block endOfTrueBlock = _currentBlock.top();
     _currentBlock.pop();
-    std::cerr<<"Setting "<<endOfTrueBlock.blockName<<" to "<<_conditionBlocks.top().blockName<<std::endl;
-    _conditionBlocks.pop();
     endOfTrueBlock.blockJump = _conditionBlocks.top().blockName;
     _conditionBlocks.pop();
     _blocks.push_back(endOfTrueBlock);  
+    _conditionBlocks.pop();
 }
 
 void FirstIR::endDoWhile()

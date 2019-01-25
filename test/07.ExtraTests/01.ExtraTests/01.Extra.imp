@@ -1,0 +1,58 @@
+DECLARE
+	a; b; c; tab(0:100000); d; e; f;
+IN
+	a := 123;
+	a := a * a;
+	tab(a) := 13;
+	b := 2;
+	WHILE b > 0 DO
+		tab(a) := tab(a) + 1;
+		tab(a) := 1 + tab(a);
+		b := b - 1;
+	ENDWHILE
+	WHILE b < 10 DO
+		tab(a) := tab(a) + 1;
+		tab(a) := 1 + tab(a);
+		b := b + 1;
+	ENDWHILE
+	tab(a) := tab(a) % 10000;
+	b := tab(a) % 2;
+	IF b = 0 THEN
+		WRITE 1;
+	ELSE
+		WRITE 2;
+	ENDIF
+	b := b;
+	IF b != tab(a) THEN
+		WRITE tab(a);
+	ENDIF
+	b := tab(a) % 13;
+	c := 2 + b;
+	FOR i FROM b TO c DO
+		WRITE i;
+	ENDFOR
+	FOR i FROM c DOWNTO b DO
+		WRITE i;
+	ENDFOR
+	d := 0;
+	FOR i FROM 0 TO 1 DO FOR j FROM 0 TO 1 DO FOR k FROM 0 TO 1 DO
+	FOR l FROM 0 TO 1 DO FOR m FROM 0 TO 1 DO FOR n FROM 0 TO 1 DO
+	FOR o FROM 0 TO 1 DO FOR p FROM 0 TO 1 DO FOR r FROM 0 TO 1 DO
+	FOR s FROM 0 TO 1 DO FOR t FROM 0 TO 1 DO FOR w FROM 0 TO 1 DO
+
+	FOR _a FROM 0 TO 0 DO FOR _b FROM 0 TO 0 DO FOR _c FROM 0 TO 0 DO
+	FOR _d FROM 0 TO 0 DO FOR _e FROM 0 TO 0 DO FOR _f FROM 0 TO 0 DO
+	FOR _g FROM 0 TO 0 DO FOR _h FROM 0 TO 0 DO FOR _i FROM 0 TO 0 DO
+	FOR _j FROM 0 TO 0 DO FOR _k FROM 0 TO 0 DO
+		d := d + 1;
+	ENDFOR ENDFOR ENDFOR
+	ENDFOR ENDFOR ENDFOR
+	ENDFOR ENDFOR ENDFOR
+	ENDFOR ENDFOR
+
+	ENDFOR ENDFOR ENDFOR
+	ENDFOR ENDFOR ENDFOR
+	ENDFOR ENDFOR ENDFOR
+	ENDFOR ENDFOR ENDFOR
+	WRITE d;
+END 

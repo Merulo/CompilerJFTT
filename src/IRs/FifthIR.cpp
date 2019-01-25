@@ -8,7 +8,7 @@ void FifthIR::parse(std::vector<Block> b)
 {
     std::cout<<"FifthIR WORKING"<<std::endl;
     _blocks = b;
-    removeJumps();
+    removeJumps();   
     calculateJumps();
 }
 

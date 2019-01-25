@@ -1,0 +1,18 @@
+DECLARE
+	a; b; c; tab(0:100000); d; e; f; tabb(1000:10000); g; h; i; j; k; l; m; n; o; p; z;
+IN
+	d := 42;
+	p := 1;
+	z := 1;
+
+	DO
+		IF p = 0 THEN
+			p := p + 1;
+		ENDIF
+		d := d - 1;
+		IF z = 0 THEN
+			z := z + 1;
+		ENDIF
+		WRITE d;
+	WHILE d > 0 ENDDO
+END 

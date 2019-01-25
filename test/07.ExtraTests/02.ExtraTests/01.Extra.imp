@@ -1,0 +1,20 @@
+DECLARE
+	a; b; c; tab(0:100000); d; e; f; tabb(1000:10000); g; h; i; j; k; l; m; n; o; p;
+IN
+	a := 101;
+	b := 909;
+	c := 888;
+	d := 42;
+	
+	WHILE d > 0 DO
+		p := d % 2;
+		tab(a) := b;
+		IF p = 0 THEN
+			p := p + 1;
+			tab(p) := tab(101);
+		ENDIF
+		tab(0) := tab(1) + tab(1);
+		WRITE tab(0);
+		d := d - 1;
+	ENDWHILE
+END 
