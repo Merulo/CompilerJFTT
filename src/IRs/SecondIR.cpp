@@ -12,6 +12,7 @@ void SecondIR::optimize()
     removeUnusedIterators();
     removeAddSubSmallConst();
     searchForMulAndDiv();
+    removeUnusedCalculations();
 }
 
 void SecondIR::addSimpleJumps(std::vector<Block> b)
@@ -362,4 +363,48 @@ void SecondIR::checkTwoMod(Line& l, Block& b, size_t i)
     Line copy = l;
     stripVariable(l.two, b);
     b.lines.insert(b.lines.begin() + i - 1, copy);
+}
+
+void SecondIR::removeUnusedCalculations()
+{
+    for(auto& b : _blocks)
+    {
+        for(auto line = b.lines.begin(); line != b.lines.end(); line++)
+        {
+            if (_symbolTable->isItVariable(line->one))
+            {
+                checkOperations(line, b);
+            }
+        }
+    }
+
+
+}
+
+void SecondIR::checkOperations(std::vector<Line>::iterator& line, Block& b)
+{
+    std::cout<<*line<<std::endl;
+    if (canRemove(line, b, line->one))
+    {
+        std::cout<<"Removing "<<line->one<<std::endl;
+    }
+
+
+
+}
+
+bool SecondIR::canRemove(std::vector<Line>::iterator line, Block& b, std::string name)
+{
+    for (; line != b.lines.end(); line++)
+    {
+        
+    }
+
+
+    return true;
+}
+bool SecondIR::canRemoveRecursive(Block& b, std::string name)
+{
+
+    return false;
 }

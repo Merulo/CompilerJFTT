@@ -28,4 +28,9 @@ class SecondIR : public IRBase
             void checkPowerOfTwoMul(Line& l, Block& b, size_t i);
             void checkPowerOfTwoDiv(Line& l, Block& b, size_t i);
             void checkTwoMod(Line& l, Block& b, size_t i);
+        //removing unused calculations
+        void removeUnusedCalculations();
+            void checkOperations(std::vector<Line>::iterator& line, Block& b);
+            bool canRemove(std::vector<Line>::iterator line, Block& b, std::string name);
+            bool canRemoveRecursive(Block& b, std::string name);
 };

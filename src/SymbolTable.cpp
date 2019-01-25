@@ -56,8 +56,15 @@ unsigned long long SymbolTable::getMemoryCell(std::string name)
 
 void SymbolTable::assignMemory()
 {
+    for(auto& v : _variables)
+    {
+        if (!v.second.isInitialized)
+        {
+            std::cout<<"Removing "<<v.first<<std::endl;
+            _variables.erase(v.first);
+        }
+    }
     ull index = 0;
-    
     //variables
     for (auto& v : _variables)
     {
