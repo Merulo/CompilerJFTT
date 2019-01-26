@@ -2,6 +2,8 @@
 Created by as part of JFTT (J&#281;zyki Formalne i Teoria Translacji). Compiles programs written in simple imperative language for Register Machine.
 
 ## General Information
+Compiler is written in C++ with small parts of C. Tests are run using python.
+
 Tools and their version used in compiling:
 * Linux!
 * make 4.1
