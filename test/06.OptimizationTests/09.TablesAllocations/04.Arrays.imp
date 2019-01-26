@@ -1,0 +1,19 @@
+DECLARE
+  a; b; c; d; tab_a(0:1); tab_b(0:1); tab_c(0:1);
+IN
+  a := 0;
+  tab_a(a) := 1;
+  tab_b(a) := 2;
+  tab_c(a) := 3;
+  a := a + 1;
+  tab_a(a) := 4;
+  tab_b(a) := 5;
+  tab_c(a) := 6;  
+
+  WRITE tab_a(0);
+  WRITE tab_b(0);
+  WRITE tab_c(0);
+  WRITE tab_a(1);
+  WRITE tab_b(1);
+  WRITE tab_c(1);
+END

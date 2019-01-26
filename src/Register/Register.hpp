@@ -61,7 +61,7 @@ struct Register
             }
             case RegisterState::CONSTVARIABLE:
             {
-                std::cout<<"constvalue"<<r.variableName<<" with value "<<r.constValue;
+                os <<"constvalue"<<r.variableName<<" with value "<<r.constValue;
             }
         }
         return os;

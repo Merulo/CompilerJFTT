@@ -6,7 +6,7 @@
 
 void FifthIR::parse(std::vector<Block> b)
 {
-    std::cout<<"FifthIR WORKING"<<std::endl;
+    // std::cout<<"FifthIR WORKING"<<std::endl;
     _blocks = b;
     removeJumps();   
     calculateJumps();
@@ -92,12 +92,12 @@ void FifthIR::removeJumps()
     {
         if (onlyComments(*b))
         {
-            std::cout<<"Remove "<<(*b).blockName<<std::endl;
+            // std::cout<<"Remove "<<(*b).blockName<<std::endl;
             if ((*b).lines.back().operation == "JUMP")
             {
                 std::string arg = (*b).lines.back().two;
                 arg.erase(0, 1);
-                std::cout<<arg<<std::endl;
+                // std::cout<<arg<<std::endl;
                 Block& current = getBlockByName(arg, _blocks);
                 replaceJump((*b), current);  
                 b = _blocks.erase(b);
@@ -111,7 +111,7 @@ void FifthIR::removeJumps()
         Block& current = *it;
         if(previous.lines.back().two == "#" + current.blockName)
         {
-            std::cout<<"Removing jump from "<< previous.blockName<<" to "<<current.blockName<<std::endl;
+            // std::cout<<"Removing jump from "<< previous.blockName<<" to "<<current.blockName<<std::endl;
             previous.lines.erase(previous.lines.end() - 1);
             if (onlyComments(previous))
             {

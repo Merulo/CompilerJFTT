@@ -8,7 +8,6 @@
 
 void FourthIR::parse(std::vector<Block> bs, std::string fileName, bool useEmulator)
 {
-    std::cout<<std::endl<<std::endl;
     for(auto& b : bs)
     {
         Pair p;
@@ -410,10 +409,10 @@ bool FourthIR::isThisVariableUsed(std::string name, Block& block)
     resetBlocks();
     restPairBlocks();
     bool result = recursiveUsageTest(name , nextBlock);
-    if (result)
-    {
-        std::cout<<"Skipping saving variable named "<<name<<std::endl;
-    }
+    // if (result)
+    // {
+        // std::cout<<"Skipping saving variable named "<<name<<std::endl;
+    // }
     return result;
 }
 

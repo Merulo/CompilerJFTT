@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <climits>
 
 typedef unsigned long long ull;
 
@@ -17,6 +18,8 @@ struct Table
     ull memoryCellStart = 0;  
     ull beginIndex;
     ull endIndex;
+    bool isVariableAccessed = false;
+    bool alreadyAllocated = false;
 };
 
 struct Iterator 

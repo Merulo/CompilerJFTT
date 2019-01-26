@@ -1,0 +1,26 @@
+DECLARE
+  a; b; c; d; tab_a(100:5000); tab_b(100:5000); tab_c(100:5000);
+IN
+  a := 101;
+  b := 1101;
+  c := 2101;
+
+  tab_a(a) := 99;
+  tab_b(b) := tab_a(a);
+  tab_c(c) := tab_b(b);
+
+  a := a + 1;
+  b := b + 1;
+  c := c + 1;
+
+  tab_a(a) := 100;
+  tab_b(b) := tab_a(a);
+  tab_c(c) := tab_b(b);  
+
+  WRITE tab_a(101);
+  WRITE tab_b(1101);
+  WRITE tab_c(2101);
+  WRITE tab_a(102);
+  WRITE tab_b(1102);
+  WRITE tab_c(2102);
+END
