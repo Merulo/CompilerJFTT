@@ -180,13 +180,7 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
     std::vector<std::pair<std::string, unsigned long long>> options = {{r.name, 0}};
     for(auto& reg : regs)
     {
-        if (l.one != _symbolTable->getExtraVariable()
-            && !_symbolTable->isItVariable(l.one) 
-            && !_symbolTable->isItTable(l.one))
-        {
-            break;
-        }
-        if (_symbolTable->isItIterator(l.one))
+        if (b.blockName != "Block_0")
         {
             break;
         }

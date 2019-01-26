@@ -1,0 +1,22 @@
+DECLARE
+  a; b; c; d; e;
+IN
+  a := 123456789;
+  b := 123456799;
+  c := 123456799;
+
+  FOR i FROM 0 TO 10 DO
+    WRITE i;
+    a := a + 1;
+    e := 123456789;
+    c := c + 1;
+    b := b + 1;
+  ENDFOR
+  d := 123456789;
+
+  WRITE a;
+  WRITE b;
+  WRITE c;
+  WRITE d;
+  WRITE e;
+END
