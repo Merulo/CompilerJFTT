@@ -15,24 +15,19 @@ void FourthIR::parse(std::vector<Block> bs, std::string fileName, bool useEmulat
         _notYetConvertedBlocks.push_back(p);
     }
 
-    // if (isDeterministic() && useEmulator && false)
-    // {
-    //     std::cout<<"RUN EMULATOR"<<std::endl;
-    //     _blocks = _notYetConvertedBlocks;
-    //     std::string tmpFile = "tmp.ir";
-    //     print(tmpFile);
-    //     EmulatorRunner er;
-    //     bool value = er.emulate(tmpFile, fileName);
-    //     _blocks = {};
-    //     if (value)
-    //     {
-    //         exit(0);
-    //     }
-    // }
-    // else
-    // {
-    //     std::cout<<"DONT RUN EMULATOR"<<std::endl;
-    // }
+    if (isDeterministic() && useEmulator)
+    {
+        _blocks = bs;
+        std::string tmpFile = "tmp.ir";
+        print(tmpFile);
+        EmulatorRunner er;
+        bool value = er.emulate(tmpFile, fileName);
+        _blocks = {};
+        if (value)
+        {
+            exit(0);
+        }
+    }
 
     _symbolTable->assignMemory();
     convertToAssembler();
@@ -48,16 +43,16 @@ void FourthIR::convertToAssembler()
 
 bool FourthIR::isDeterministic()
 {
-    // for (auto& b : _notYetConvertedBlocks)
-    // {
-    //     for(auto& l : b.lines)
-    //     {
-    //         if (l.operation == "READ")
-    //         {
-    //             return false;
-    //         }
-    //     }
-    // }
+    for (auto& p : _notYetConvertedBlocks)
+    {
+        for(auto& l : p.block.lines)
+        {
+            if (l.operation == "READ")
+            {
+                return false;
+            }
+        }
+    }
     return true;
 }
 
@@ -79,7 +74,7 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
     {
         // std::cout<<"TEST="<<l<<std::endl;
         // registerBlock.print();
-        resultBlock.lines.push_back({"\t#performing " + l.toString()});     
+        // resultBlock.lines.push_back({"\t#performing " + l.toString()});     
         if (l.operation == "CONST")
         {
             handleConst(registerBlock, resultBlock, l);
@@ -151,7 +146,7 @@ void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
         r.state = RegisterState::UNKNOWN;
     }
 
-    b.lines.push_back({"\t#end of performing write"});    
+    // b.lines.push_back({"\t#end of performing write"});    
 }
 
 
@@ -164,7 +159,7 @@ void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"GET", r.name});    
     updateRegisterState(b, rb, r, l.one);
 
-    b.lines.push_back({"\t#end of performing write"});    
+    // b.lines.push_back({"\t#end of performing write"});    
 }
 
 void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
@@ -173,7 +168,7 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
     r.variableName = l.one;
     r.needToSafe = true;
 
-    b.lines.push_back({"\t#generating number"});
+    // b.lines.push_back({"\t#generating number"});
 
     auto regs = rb.getRegisters();
     std::vector<std::pair<std::string, unsigned long long>> options = {{r.name, 0}};
@@ -191,7 +186,7 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 
     auto lines = NumberGenerator::generateConstFrom(std::stoull(l.two), options);
     b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 
-    b.lines.push_back({"\t#end of generating number"});
+    // b.lines.push_back({"\t#end of generating number"});
 
     updateRegisterState(b, rb, r, l.one);
     r.constValue = std::stoull(l.two);
@@ -222,7 +217,7 @@ void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"COPY", regOne.name, regTwo.name});  
 
     regOne.constValue = regTwo.constValue;
-    b.lines.push_back({"\t#end of performing copy"});   
+    // b.lines.push_back({"\t#end of performing copy"});   
 }
 
 void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
@@ -250,7 +245,7 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
         regTwo.state = RegisterState::UNKNOWN;
     }
 
-    b.lines.push_back({"\t#end of performing operation"});   
+    // b.lines.push_back({"\t#end of performing operation"});   
 }
 
 void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
@@ -265,7 +260,7 @@ void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 
     updateRegisterState(b, rb, r, l.one);
     r.variableName = l.one;
-    b.lines.push_back({"\t#end of performing simple operation"});    
+    // b.lines.push_back({"\t#end of performing simple operation"});    
 }
 
 void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
@@ -294,7 +289,7 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
     registerD.state = RegisterState::UNKNOWN;
     registerD.variableName = "";
 
-    b.lines.push_back({"#using: " + registerB.name + " " + registerC.name + " " + registerD.name});
+    // b.lines.push_back({"#using: " + registerB.name + " " + registerC.name + " " + registerD.name});
 
     auto lines = MathOperations::generateMultiplication(registerB.name, registerC.name, registerD.name, l);
     b.lines.insert(b.lines.end(), lines.begin(), lines.end());
@@ -307,7 +302,7 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
     registerB.variableName = "";
     registerB.needToSafe = false;
 
-    b.lines.push_back({"\t#end of performing MUL operation"});    
+    // b.lines.push_back({"\t#end of performing MUL operation"});    
 }
 
 void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
@@ -333,7 +328,7 @@ void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
     registerF.state = RegisterState::UNKNOWN;
     registerF.variableName = "";    
 
-    b.lines.push_back({"#using: " + registerB.name + " " + registerC.name + " " + registerD.name + " " + registerE.name + " " + registerF.name});
+    // b.lines.push_back({"#using: " + registerB.name + " " + registerC.name + " " + registerD.name + " " + registerE.name + " " + registerF.name});
 
     auto lines = MathOperations::generateDivision(
         registerB.name, registerC.name, 
@@ -350,7 +345,7 @@ void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
     registerB.variableName = "";
     registerB.needToSafe = false;
 
-    b.lines.push_back({"\t#end of performing DIV operation"});    
+    // b.lines.push_back({"\t#end of performing DIV operation"});    
 }
 
 void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
@@ -364,7 +359,7 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
     {
         auto lines = MathOperations::generateModuloTwo(registerB.name, l);
         b.insert(lines);
-        b.lines.push_back({"\t#end of performing DIV operation"});    
+        // b.lines.push_back({"\t#end of performing DIV operation"});    
         return;
     }
 
@@ -385,7 +380,7 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
         registerE.name, registerF.name, l);
 
     b.lines.insert(b.lines.end(), lines.begin(), lines.end());
-    b.lines.push_back({"\t#end of performing DIV operation"});    
+    // b.lines.push_back({"\t#end of performing DIV operation"});    
 }
 
 

@@ -19,7 +19,7 @@ void FifthIR::calculateJumps()
     {
         for(auto& line : b.lines)
         {
-            if (line.operation.find("#") == std::string::npos)
+            if (line.operation.find("#") == std::string::npos && !line.operation.empty())
             {
                 line.operationNumber = instructionCounter;
                 // line.two = line.two + " #" + std::to_string(instructionCounter);
@@ -59,7 +59,7 @@ int FifthIR::getFirstInstructionInBlock(Block& b)
 {
     for(auto& line : b.lines)
     {
-        if (line.operation.find("#") == std::string::npos)
+        if (line.operation.find("#") == std::string::npos && !line.operation.empty())
         {
             return line.operationNumber;
         }
@@ -77,7 +77,7 @@ int FifthIR::getFirstInstructionAfter(Block& b, std::string name)
             found = true;
         }
 
-        if (found && line.operation.find("#") == std::string::npos)
+        if (found && line.operation.find("#") == std::string::npos && !line.operation.empty())
         {
             return line.operationNumber;
         }

@@ -109,10 +109,10 @@ void RegisterBlock::exitBlock(Block& b, RegisterBlock& other, IRBase& irBase)
             _addressRegister.constValue = 0;
         }
 
-        b.lines.push_back({"#START OF SETTING MEMORY REGISTER"});
+        // b.lines.push_back({"#START OF SETTING MEMORY REGISTER"});
         auto lines = generateNumberFrom(_addressRegister.constValue, other._addressRegister.constValue, _addressRegister);
         b.insert(lines);
-        b.lines.push_back({"#END OF SETTING MEMORY REGISTER"});
+        // b.lines.push_back({"#END OF SETTING MEMORY REGISTER"});
     }
 }
 
@@ -127,7 +127,7 @@ void RegisterBlock::print()
 
 Register& RegisterBlock::getRegistersForOperation(std::string name, Block& b, std::vector<std::reference_wrapper<Register>> usedRegisters)
 {
-    b.lines.push_back({"#SEARCHING FOR " + name});
+    // b.lines.push_back({"#SEARCHING FOR " + name});
     for(auto& reg : _registers)
     {
         if (std::find_if(usedRegisters.begin(), usedRegisters.end(), [reg](auto i)
@@ -295,7 +295,8 @@ std::vector<Line> RegisterBlock::generateNumber(unsigned long long& firstNumber,
             return generateNumberShift(second - firstNumber, usedRegister, "ADD"); 
         }
     }
-    return {{"#No need to generate number"}};
+    return {{}};
+    // return {{"#No need to generate number"}};
 }
 
 std::vector<Line> RegisterBlock::generateNumberFrom(unsigned long long& firstNumber, unsigned long long second, Register& usedRegister)
@@ -336,7 +337,7 @@ std::vector<Line> RegisterBlock::generateNumberFrom(unsigned long long& firstNum
             return NumberGenerator::generateConstFrom(second, {{"A", 0}});   
         }
     }
-    return {{"#No need to generate number"}};
+    return {{}};
 }
 
 
@@ -388,7 +389,7 @@ void RegisterBlock::saveVarTableToMemory(Block& b, Register& r, Register& freeRe
     Register& regToSub = getRegister("", b, {r, freeRegister}, false, true);
 
     loadVariableFromMemory(b, name, freeRegister, r);
-    b.lines.push_back("\t#SAVING var array " + r.variableName + " from " + r.name + " using " + freeRegister.name);    
+    // b.lines.push_back("\t#SAVING var array " + r.variableName + " from " + r.name + " using " + freeRegister.name);    
     regToSub.variableName = "";
     regToSub.state = RegisterState::UNKNOWN;
 
@@ -397,14 +398,14 @@ void RegisterBlock::saveVarTableToMemory(Block& b, Register& r, Register& freeRe
     b.insert(linesToAdd);
 
     b.lines.push_back({"STORE", r.name});    
-    b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+    // b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
 }
 
  void RegisterBlock::saveVariableToMemory(Block& b, Register& r, Register& freeRegister)
  {
     unsigned long long memoryCell = _symbolTable->getMemoryCell(r.variableName);
     
-    b.lines.push_back("\t#SAVING var " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+    // b.lines.push_back("\t#SAVING var " + r.variableName + " from " + r.name + " using " + freeRegister.name);
 
     if (_addressRegister.state == RegisterState::UNKNOWN)
     {
@@ -416,7 +417,7 @@ void RegisterBlock::saveVarTableToMemory(Block& b, Register& r, Register& freeRe
 
     lines.push_back({"STORE", r.name});
     b.insert(lines);
-    b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+    // b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);
  }
 
 void RegisterBlock::saveConstTableToMemory(Block& b, Register& r, Register& freeRegister, unsigned long long diff)
@@ -426,7 +427,7 @@ void RegisterBlock::saveConstTableToMemory(Block& b, Register& r, Register& free
     unsigned long long shift = _symbolTable->getTableShift(array);
     memoryCell = memoryCell + diff - shift;
 
-    b.lines.push_back("\t#SAVING const table " + r.variableName + " from " + r.name + " using " + freeRegister.name);
+    // b.lines.push_back("\t#SAVING const table " + r.variableName + " from " + r.name + " using " + freeRegister.name);
     
     if (_addressRegister.state == RegisterState::UNKNOWN)
     {
@@ -438,7 +439,7 @@ void RegisterBlock::saveConstTableToMemory(Block& b, Register& r, Register& free
 
     lines.push_back({"STORE", r.name});
     b.insert(lines);
-    b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);   
+    // b.lines.push_back("\t#END OF SAVING " + r.variableName + " from " + r.name + " using " + freeRegister.name);   
 }
 
 /***************************************/
@@ -454,7 +455,7 @@ void RegisterBlock::loadFromMemory(Block& b, std::string name, Register& r, Regi
         {
             return;
         }        
-        b.lines.push_back("\t#THIS IS A VARIABLE " + name);
+        // b.lines.push_back("\t#THIS IS A VARIABLE " + name);
         loadVariableFromMemory(b, name, r, freeRegister);
     }
     else if (_symbolTable->isItTable(name))
@@ -481,7 +482,7 @@ void RegisterBlock::loadVarTableFromMemory(Block& b, std::string name, Register&
 
     Register& regToSub = getRegister("", b, {r, freeRegister}, false, true);
     loadVariableFromMemory(b, addresVariableName, freeRegister, r);
-    b.lines.push_back("\t#LOADING var array " + name + " to " + r.name + " using " + freeRegister.name);  
+    // b.lines.push_back("\t#LOADING var array " + name + " to " + r.name + " using " + freeRegister.name);  
 
     auto linesToAdd = generateNumber(shift, memoryCell, regToSub);
     regToSub.variableName = "";
@@ -492,14 +493,14 @@ void RegisterBlock::loadVarTableFromMemory(Block& b, std::string name, Register&
 
     // b.lines.push_back({"PUT", "A"});
     b.lines.push_back({"LOAD", r.name});    
-    b.lines.push_back("\t#END OF LOADING " + name + " from " + r.name + " using " + freeRegister.name);
+    // b.lines.push_back("\t#END OF LOADING " + name + " from " + r.name + " using " + freeRegister.name);
 }
 
 void RegisterBlock::loadVariableFromMemory(Block& b, std::string name, Register& r, Register& freeRegister)
 {
     unsigned long long memoryCell = _symbolTable->getMemoryCell(name);
 
-    b.lines.push_back("\t#LOADING var " + name + " to " + r.name);
+    // b.lines.push_back("\t#LOADING var " + name + " to " + r.name);
 
     bool found = false;
     for (auto& regs : _registers)
@@ -525,7 +526,7 @@ void RegisterBlock::loadVariableFromMemory(Block& b, std::string name, Register&
         b.insert(lines);
     }
 
-    b.lines.push_back("\t#END OF LOADING " + name + " to " + r.name);
+    // b.lines.push_back("\t#END OF LOADING " + name + " to " + r.name);
 }
 
 
@@ -537,7 +538,7 @@ void RegisterBlock::loadConstTableFromMemory(Block& b, std::string name, Registe
     unsigned long long shift = _symbolTable->getTableShift(array);
     memoryCell = memoryCell + diff - shift;
 
-    b.lines.push_back("\t#LOADING const table " + name + " to " + r.name + " using " + freeRegister.name);
+    // b.lines.push_back("\t#LOADING const table " + name + " to " + r.name + " using " + freeRegister.name);
     
     if (_addressRegister.state == RegisterState::UNKNOWN)
     {
@@ -549,5 +550,5 @@ void RegisterBlock::loadConstTableFromMemory(Block& b, std::string name, Registe
 
     lines.push_back({"LOAD", r.name});
     b.insert(lines);
-    b.lines.push_back("\t#END OF LOADING " + name + " to " + r.name + " using " + freeRegister.name);
+    // b.lines.push_back("\t#END OF LOADING " + name + " to " + r.name + " using " + freeRegister.name);
 }

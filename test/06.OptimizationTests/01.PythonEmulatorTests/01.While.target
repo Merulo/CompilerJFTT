@@ -1,7 +1,5 @@
 #FifthIR:
 #Block_0
-		#performing CONST a 10  
-		#generating number  
 	SUB B B
 	INC B 
 	INC B 
@@ -13,12 +11,8 @@
 	INC B 
 	INC B 
 	INC B 
-		#end of generating number  
-		#performing JUMP  #Block_1  
 #end of Block_0
 #Block_1
-		#performing CONST variable_0 20  
-		#generating number  
 	SUB C C
 	INC C 
 	INC C 
@@ -31,27 +25,15 @@
 	INC C 
 	INC C 
 	ADD C C
-		#end of generating number  
-		#performing COPY IF_CONTROL_VARIABLE variable_0  
 	COPY D C
-		#end of performing copy  
-		#performing SUB IF_CONTROL_VARIABLE a  
 	SUB D B
-		#end of performing operation  
-		#performing JZERO IF_CONTROL_VARIABLE #Block_Condition_0_ifFalse  
 	JZERO D 27 #Block_Condition_0_ifFalse
-		#end of performing simple operation  
-		#performing JUMP  #Block_Condition_0_ifTrue  
 	JUMP  28 #Block_Condition_0_ifTrue
 #end of Block_1
 #Block_Condition_0_ifFalse
-		#performing HALT    
 	HALT  
 #end of Block_Condition_0_ifFalse
 #Block_Condition_0_ifTrue
-		#performing WRITE a   
 	PUT B 
-		#end of performing write  
-		#performing JUMP  #Block_1  
 	JUMP  11 #Block_1
 #end of Block_Condition_0_ifTrue

@@ -65,6 +65,9 @@ while 1:
     elif (values[0] == "INC"):
         variables[getTab(values[1], variables)]+= 1
         currentLine+=1
+    elif (values[0] == "HALF"):
+        variables[getTab(values[1], variables)] = variables[getTab(values[1], variables)] // 2
+        currentLine+=1        
     elif (values[0] == "DEC"):
         option = getTab(values[1], variables)
         variables[option] -= 1
