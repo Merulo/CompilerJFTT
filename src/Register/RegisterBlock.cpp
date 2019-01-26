@@ -8,6 +8,11 @@ RegisterBlock::RegisterBlock(std::shared_ptr<SymbolTable> symbolTable)
     _currentRegister = 0;
 }
 
+std::vector<Register> RegisterBlock::getRegisters()
+{
+    return _registers;
+}
+
 RegisterBlock::RegisterBlock(const RegisterBlock &rb){
     for(auto r : rb._registers)
     {
@@ -348,7 +353,7 @@ std::vector<Line> RegisterBlock::generateNumberShift(unsigned long long value, R
 
 void RegisterBlock::saveToMemory(Block& b, Register& r, Register& freeRegister)
 {
-    if (r.state == RegisterState::VARIABLE && !r.variableName.empty())
+    if ((r.state == RegisterState::VARIABLE || r.state == RegisterState::CONSTVARIABLE) && !r.variableName.empty())
     {
         if (r.variableName == "IF_CONTROL_VARIABLE")
         {
@@ -499,7 +504,7 @@ void RegisterBlock::loadVariableFromMemory(Block& b, std::string name, Register&
     bool found = false;
     for (auto& regs : _registers)
     {
-        if (regs.state == RegisterState::VARIABLE && regs.variableName == name)
+        if ((regs.state == RegisterState::VARIABLE || regs.state == RegisterState::CONSTVARIABLE) && regs.variableName == name)
         {
             found = true;
             b.lines.push_back({"COPY", r.name, regs.name});

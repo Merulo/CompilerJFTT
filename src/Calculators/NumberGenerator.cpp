@@ -7,8 +7,43 @@ std::vector<Line> NumberGenerator::generateConstFrom(
     std::vector<std::pair<std::string, unsigned long long>> values)
 {
     _result.clear();
-    getCostWithIncAndAdd(target); //c1
-    //if c1 is min;
+    
+    for(auto option = values.begin() + 1; option != values.end(); option++)
+    {
+        if(target > option->second)
+        {
+            unsigned long long diff = target - option->second;
+            if (diff < 15)
+            {
+                _result.push_back({"#PERFORMING COPY TO REACH " + std::to_string(target)});
+                _result.push_back({"COPY", values.front().first, option->first});
+                while(diff > 0)
+                {
+                    _result.push_back({"INC", values.front().first});
+                    diff --;
+                }
+                return _result;
+            }
+        }
+        else if (target <= option->second)
+        {
+            unsigned long long diff = option->second - target;
+            if (diff < 15)
+            {
+                _result.push_back({"#PERFORMING COPY TO REACH " + std::to_string(target)});                
+                _result.push_back({"COPY", values.front().first, option->first});
+                while(diff > 0)
+                {
+                    _result.push_back({"DEC", values.front().first});
+                    diff --;
+                }
+                return _result;
+            }
+        }
+    }
+
+
+    getCostWithIncAndAdd(target);
     generateWithIncAndAdd(target, values[0].first);
 
     return _result;

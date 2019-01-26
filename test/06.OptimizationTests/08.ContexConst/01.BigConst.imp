@@ -1,0 +1,14 @@
+DECLARE
+  a; b; c; d;
+IN
+  a := 123456789;
+  b := 123456790;
+  c := 123456791;
+  a := a + 1;
+  d := 123456789;
+
+  WRITE a;
+  WRITE b;
+  WRITE c;
+  WRITE d;
+END

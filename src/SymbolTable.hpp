@@ -47,6 +47,7 @@ class SymbolTable
     std::string getForControl();
     void removeIterator(std::string name);
     bool isItTable(std::string var);
+    bool isItIterator(std::string var);
     bool isItVariable(std::string var);
     unsigned long long getTableShift(std::string var);
     std::string getExtraVariable();

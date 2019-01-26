@@ -10,6 +10,7 @@ enum class RegisterState
     VARIABLE = 1,
     CONST = 2,
     TABLE = 3,
+    CONSTVARIABLE = 4,
 };
 
 struct Register
@@ -57,6 +58,10 @@ struct Register
             {
                 os << "table="<<r.variableName;
                 break;
+            }
+            case RegisterState::CONSTVARIABLE:
+            {
+                std::cout<<"constvalue"<<r.variableName<<" with value "<<r.constValue;
             }
         }
         return os;

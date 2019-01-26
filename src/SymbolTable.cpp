@@ -252,6 +252,15 @@ bool SymbolTable::isItTable(std::string var)
     return _tables.find(table) != _tables.end();
 }
 
+bool SymbolTable::isItIterator(std::string var)
+{
+    if (_allIterators.find(var) != _allIterators.end())
+    {
+        return true;
+    }
+    return false;
+}
+
 bool SymbolTable::isItVariable(std::string var)
 {
     if (var == extraVariable)

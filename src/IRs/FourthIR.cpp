@@ -175,12 +175,38 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
     r.needToSafe = true;
 
     b.lines.push_back({"\t#generating number"});
-    auto lines = NumberGenerator::generateConstFrom(std::stoull(l.two), {{r.name, 0}});
+
+    auto regs = rb.getRegisters();
+    std::vector<std::pair<std::string, unsigned long long>> options = {{r.name, 0}};
+    for(auto& reg : regs)
+    {
+        if (l.one != _symbolTable->getExtraVariable()
+            && !_symbolTable->isItVariable(l.one) 
+            && !_symbolTable->isItTable(l.one))
+        {
+            break;
+        }
+        if (_symbolTable->isItIterator(l.one))
+        {
+            break;
+        }
+        if (reg.state == RegisterState::CONSTVARIABLE)
+        {
+            options.push_back({reg.name, reg.constValue});
+        }
+    }
+
+    auto lines = NumberGenerator::generateConstFrom(std::stoull(l.two), options);
     b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 
     b.lines.push_back({"\t#end of generating number"});
 
     updateRegisterState(b, rb, r, l.one);
     r.constValue = std::stoull(l.two);
+    if (r.state == RegisterState::VARIABLE)
+    {
+        r.state = RegisterState::CONSTVARIABLE;
+        r.constValue = std::stoull(l.two);
+    }
 }
 
 void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)

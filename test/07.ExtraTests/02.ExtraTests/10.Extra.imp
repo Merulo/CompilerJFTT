@@ -1,0 +1,21 @@
+DECLARE
+	a; b; c; tab(0:100000); d; e; f; tabb(1000:10000); g; h; i; j; k; l; m; n; o; p; z;
+IN
+	d := 10;
+	a := 4;
+	b := 3;
+	DO
+		DO
+			a:= a- 1;
+			WRITE a;
+		WHILE a> 0 ENDDO
+		DO
+			b:= b- 1;
+			WRITE b;
+		WHILE b> 0 ENDDO	
+		d := d - 1;
+		WRITE d;
+		a := 4;
+		b := 3;
+	WHILE d > 0 ENDDO
+END 
