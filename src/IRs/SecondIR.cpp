@@ -10,6 +10,7 @@ void SecondIR::parse(std::vector<Block> b)
 
 void SecondIR::optimize()
 {
+    removeDivAndMod();
     removeUnusedIterators();
     removeAddSubSmallConst();
     searchForMulAndDiv();
@@ -503,4 +504,43 @@ bool SecondIR::canRemoveRecursive(Block& b, std::string name)
         return r1 && r2;
     }
     return true;
+}
+
+void SecondIR::removeDivAndMod()
+{
+    for(auto& b : _blocks)
+    {
+        for(auto l = b.lines.begin(); l != b.lines.end(); l++)
+        {
+            if (l->operation == "DIV" || l->operation == "MOD")
+            {
+                std::string arg1 = l->one;
+                std::string arg2 = l->two;
+                std::string operation = l->operation;
+                auto prev = l - 1;
+                if (prev->operation == "COPY" && prev->one == arg1 && prev->two == arg1)
+                {
+                    auto prevprev = prev - 1;
+                    if (prevprev == b.lines.begin())
+                    {
+                        continue;
+                    }
+                    if (prevprev->operation == "COPY" && prevprev->one == arg2 && prevprev->two == arg1)
+                    {
+                        l = b.lines.erase(l);
+                        l--;
+                        l = b.lines.erase(l);
+                        l--;
+                        l = b.lines.erase(l);
+                        Line line{"CONST", arg1, "1"};
+                        if (operation == "MOD")
+                        {
+                            line.two = "0";
+                        }
+                        b.lines.insert(l, line);
+                    }
+                }
+            }
+        }
+    }
 }

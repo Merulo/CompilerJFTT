@@ -43,4 +43,6 @@ class SecondIR : public IRBase
             void checkOperations(std::vector<Line>::iterator& line, Block& b);
             bool canRemove(std::vector<Line>::iterator line, Block& b, std::string name);
             bool canRemoveRecursive(Block& b, std::string name);
+        //remove a / a and a % a
+        void removeDivAndMod();
 };
