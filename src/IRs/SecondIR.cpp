@@ -93,7 +93,6 @@ void SecondIR::removeUnusedIterators()
             iteratorName = iteratorName.substr(0, iteratorName.find(_symbolTable->getForControl()));
 
             Block& nextBlock = getBlockByName(b.blockIfFalse, _blocks);
-
             std::string name = b.blockName;
             name = name.substr(0, name.find_last_of("_"));
             name = name + "_exitFor";
@@ -132,11 +131,21 @@ void SecondIR::stripForIterator(std::string variable, Block& b)
 
     if (firstLine.operation == "CONST")
     {
-        std::string var = getVariable(firstLine.two);
-        Line newLine = {"CONST", var, firstLine.two};
-        lineToChange = b.lines.insert(lineToChange, newLine);
-        lineToChange++;
-        lineToChange->two = var;
+        auto nextLine = b.lines.begin() + 1;
+        if (nextLine->operation == "COPY")
+        {
+            nextLine->operation = "CONST";
+            nextLine->two = firstLine.two;
+        }
+        auto prevprev = b.lines.end() - 2;
+        if (prevprev->operation == "SUB" && prevprev->two == firstLine.one)
+        {
+            std::string var = getVariable(firstLine.two);
+            Line line = {"CONST", var, firstLine.two};
+            prevprev = b.lines.insert(prevprev, line);
+            prevprev++;
+            prevprev->two = var;
+        }
         b.lines.erase(b.lines.begin());
     }
     else

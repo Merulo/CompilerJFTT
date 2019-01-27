@@ -38,9 +38,9 @@ start:
 
 main.exe: $(MAIN) $(OBJECTS)
 	$(LD) $(LD_FLAGS) $(OBJECTS) $(MAIN) -o $@
-	echo $(ALL_TESTS) | xargs -n 1 cp main.exe
 	(cd $(REGISTER_MACHINE_DIR) && make maszyna-rejestrowa)
 	(mv $(REGISTER_MACHINE_DIR)/maszyna-rejestrowa emulator.exe)
+	echo $(ALL_TESTS) | xargs -n 1 cp main.exe
 	echo $(ALL_TESTS) | xargs -n 1 cp emulator.exe
 	echo $(ALL_TESTS) | xargs -n 1 cp emulator.py
 
