@@ -29,18 +29,18 @@ SOURCES = $(filter-out $(MAIN), $(ALL_SOURCES))
 OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
 OBJECTS := $(patsubst $(SOURCE_DIR)/%,$(BINARY_DIR)/%,$(OBJECTS))
 
-all: start main.exe
-.PHONY : main.exe
+all: start kompilator
+.PHONY : kompilator
 
 start:
 	flex -o $(EXTERNAL_DIR)/Scanner.cpp $(EXTERNAL_DIR)/scanner.l
 	bison -d -o $(EXTERNAL_DIR)/Parser.cpp $(EXTERNAL_DIR)/parser.y
 
-main.exe: $(MAIN) $(OBJECTS)
+kompilator: $(MAIN) $(OBJECTS)
 	$(LD) $(LD_FLAGS) $(OBJECTS) $(MAIN) -o $@
 	(cd $(REGISTER_MACHINE_DIR) && make maszyna-rejestrowa)
 	(mv $(REGISTER_MACHINE_DIR)/maszyna-rejestrowa emulator.exe)
-	echo $(ALL_TESTS) | xargs -n 1 cp main.exe
+	echo $(ALL_TESTS) | xargs -n 1 cp kompilator
 	echo $(ALL_TESTS) | xargs -n 1 cp emulator.exe
 	echo $(ALL_TESTS) | xargs -n 1 cp emulator.py
 
