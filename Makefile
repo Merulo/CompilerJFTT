@@ -51,6 +51,7 @@ $(BINARY_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(dir $@)
 clear:
 	rm -rf $(BINARY_DIR)/
 	rm kompilator
+	rm *.exe
 
 
 -include $(OBJECTS:%.o=%.d)
