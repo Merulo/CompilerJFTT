@@ -12,7 +12,7 @@ bool EmulatorRunner::emulate(std::string tmpFileName, std::string resultFileName
         return false;
     }
 
-    std::string command = "python emulator.py " + tmpFileName + " " + resultFileName;
+    std::string command = "python3 emulator.py " + tmpFileName + " " + resultFileName + "> /dev/null 2> /dev/null";
     int v = system(command.c_str());
     return v == 0;
 }
