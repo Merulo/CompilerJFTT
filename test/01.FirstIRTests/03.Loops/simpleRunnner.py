@@ -38,8 +38,8 @@ for i in filtered:
 	
 	# print("\tTesting: ", i, COLORS.END)
 	# assuming main is in the same directory
-	# ./main.exe
-	cmd = ['./main.exe', i, "dummyArgument", "-FIR", result]
+	# ./kompilator
+	cmd = ['./kompilator', i, "dummyArgument", "-FIR", result]
 	# redirect stdout to somefile.result
 	process = subprocess.Popen(cmd, stdout=fNull, stderr=fNull)
 	process.wait()

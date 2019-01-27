@@ -50,10 +50,8 @@ while 1:
     line = content[currentLine]
     values = line.split()
     simulatedInstructions+=1
-    print(simulatedInstructions)
     if (simulatedInstructions > 20000):
         sys.exit(1)
-    # print(values)
     if (values[0] == "HALT"):
         break
     elif (values[0] == "CONST"):
@@ -139,7 +137,7 @@ f.write("END\n")
 f.close()
 
 fNull = open(os.devnull, 'w')	
-cmd = ['./main.exe', tmpFileName, sys.argv[2], "-em"]
+cmd = ['./kompilator', tmpFileName, sys.argv[2], "-em"]
 # print(cmd)
 process = subprocess.Popen(cmd)
 process.wait()    

@@ -51,8 +51,8 @@ for i in filtered:
 	
 	print("Testing: ", i, COLORS.END)
 	# assuming main is in the same directory
-	# ./main.exe
-	cmd = ['./main.exe']
+	# ./kompilator
+	cmd = ['./kompilator']
 	# redirect stdout to somefile.result
 	process = subprocess.Popen(cmd, stdin=fIn, stdout=fOut)
 	process.wait()

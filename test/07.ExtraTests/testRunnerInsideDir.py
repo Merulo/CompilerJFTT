@@ -20,7 +20,7 @@ def checkDirectory (currentPath):
 		sys.stdout.write(COLORS.OK_BLUE)
 		print("\tDirectory: ", path, COLORS.END)
 		for file in files:
-			cmd = ['python', file]
+			cmd = ['python3', file]
 			process = subprocess.Popen(cmd, stdout=subprocess.PIPE)
 			sync_output, sync_error = process.communicate()
 			process.wait()
