@@ -50,7 +50,7 @@ while 1:
     line = content[currentLine]
     values = line.split()
     simulatedInstructions+=1
-    if (simulatedInstructions > 20000):
+    if (simulatedInstructions > 2000000):
         sys.exit(1)
     if (values[0] == "HALT"):
         break
@@ -90,10 +90,13 @@ while 1:
         currentLine+=1
     elif (values[0] == "MOD"):
         option = getTab(values[1], variables)
-        if (variables[getTab(values[2], variables)] == 0):
-            variables[option] = 0
-        else:        
-            variables[option] = variables[option] % variables[getTab(values[2], variables)]
+        if getTab(values[2], variables) in variables:
+            if (variables[getTab(values[2], variables)] == 0):
+                variables[option] = 0
+            else:        
+                variables[option] = variables[option] % variables[getTab(values[2], variables)]
+        else:
+            variables[option] = variables[option] % 2
         currentLine+=1                    
     elif (values[0] == "SUB"):
         option = getTab(values[1], variables)
