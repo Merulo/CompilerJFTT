@@ -19,8 +19,6 @@ struct Block
     inline bool operator==(const Block& rhs){ return blockName == rhs.blockName; }
     inline bool operator!=(const Block& rhs){ return !(*this == rhs); }
 
-    // std::optional<RegisterBlock> rb;
-
     void insert(std::vector<Line>& ls)
     {
         lines.insert(lines.end(), ls.begin(), ls.end());

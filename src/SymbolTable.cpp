@@ -79,7 +79,6 @@ void SymbolTable::assignMemory()
     }
 
     //tables
-    //TODO: use heuristic
     for(auto& t : _tables)
     {
         std::cout<<t.first<<" allocated at "<<index<<std::endl;

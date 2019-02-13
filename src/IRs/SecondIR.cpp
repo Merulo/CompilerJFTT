@@ -87,7 +87,6 @@ void SecondIR::removeUnusedIterators()
     {
         if (b.blockName.find("_initialForControl") != std::string::npos)
         {
-            // std::cout<<b.blockName<<" is for control block"<<std::endl; 
             auto lastLine = b.lines.back();
             std::string iteratorName = lastLine.one;
             iteratorName = iteratorName.substr(0, iteratorName.find(_symbolTable->getForControl()));
@@ -384,10 +383,6 @@ void SecondIR::removeUnusedCalculations()
             if (_symbolTable->isItVariable(line->one))
             {
                 checkOperations(line, b);
-                // if (b.lines.empty())
-                // {
-                //     break;
-                // }
             }
         }
     }
@@ -405,8 +400,6 @@ void SecondIR::checkOperations(std::vector<Line>::iterator& line, Block& b)
     {
         return;
     } 
-    // std::cout<<"Checking removal of "<<line->one<<std::endl;
-    // std::cout<<*line<<std::endl;
     resetBlocks();
     if (canRemove(line, b, line->one))
     {
@@ -430,7 +423,6 @@ bool SecondIR::canRemove(std::vector<Line>::iterator line, Block& b, std::string
     line++;
     for (; line != b.lines.end(); line++)
     {
-        // std::cout<<"Checking currently "<<*line<<std::endl;
         if(line->two == name)
         {
             return false;
@@ -469,7 +461,6 @@ bool SecondIR::canRemove(std::vector<Line>::iterator line, Block& b, std::string
 }
 bool SecondIR::canRemoveRecursive(Block& b, std::string name)
 {
-    // std::cout<<"We are in "<<b.blockName<<std::endl;
     if (b.visited)
     {
         return true;
@@ -477,7 +468,6 @@ bool SecondIR::canRemoveRecursive(Block& b, std::string name)
     b.visited = true;
     for (auto line = b.lines.begin(); line != b.lines.end(); line++)
     {
-        // std::cout<<"Checking currently2 "<<*line<<std::endl;
         if(line->two == name)
         {
             return false;

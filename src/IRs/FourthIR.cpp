@@ -62,9 +62,6 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
     {
         return;
     }
-
-    // std::cout<<"ENTERING "<<pair.block.blockName<<std::endl;
-    // registerBlock.print();
     pair.startRegisterBlock = registerBlock;
     pair.registerBlockIsSet = true;
 
@@ -72,9 +69,6 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
     resultBlock.blockName = pair.block.blockName;
     for(auto& l : pair.block.lines)
     {
-        // std::cout<<"TEST="<<l<<std::endl;
-        // registerBlock.print();
-        // resultBlock.lines.push_back({"\t#performing " + l.toString()});     
         if (l.operation == "CONST")
         {
             handleConst(registerBlock, resultBlock, l);
@@ -124,9 +118,6 @@ void FourthIR::convertBlockToAssembler(Pair& pair, RegisterBlock& registerBlock)
             _removeConsts = false;
         }    
     }
-    // std::cout<<"LEAVING "<<pair.block.blockName<<std::endl;
-    // registerBlock.print();
-
     pair.endRegisterBlock = registerBlock; 
     _blocks.push_back(resultBlock);
     continueConverting(pair, registerBlock);
@@ -145,8 +136,6 @@ void FourthIR::handleWrite(RegisterBlock& rb, Block& b, Line& l)
         r.variableName = "";
         r.state = RegisterState::UNKNOWN;
     }
-
-    // b.lines.push_back({"\t#end of performing write"});    
 }
 
 
@@ -158,8 +147,6 @@ void FourthIR::handleRead(RegisterBlock& rb, Block& b, Line& l)
 
     b.lines.push_back({"GET", r.name});    
     updateRegisterState(b, rb, r, l.one);
-
-    // b.lines.push_back({"\t#end of performing write"});    
 }
 
 void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
@@ -167,8 +154,6 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
     Register& r = rb.getRegister(l.one, b, {}, true, false);
     r.variableName = l.one;
     r.needToSafe = true;
-
-    // b.lines.push_back({"\t#generating number"});
 
     auto regs = rb.getRegisters();
     std::vector<std::pair<std::string, unsigned long long>> options = {{r.name, 0}};
@@ -186,7 +171,6 @@ void FourthIR::handleConst(RegisterBlock& rb, Block& b, Line& l)
 
     auto lines = NumberGenerator::generateConstFrom(std::stoull(l.two), options);
     b.lines.insert(b.lines.end(), lines.begin(), lines.end()); 
-    // b.lines.push_back({"\t#end of generating number"});
 
     updateRegisterState(b, rb, r, l.one);
     r.constValue = std::stoull(l.two);
@@ -217,7 +201,6 @@ void FourthIR::handleCopy(RegisterBlock& rb, Block& b, Line& l)
     b.lines.push_back({"COPY", regOne.name, regTwo.name});  
 
     regOne.constValue = regTwo.constValue;
-    // b.lines.push_back({"\t#end of performing copy"});   
 }
 
 void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
@@ -244,8 +227,6 @@ void FourthIR::handleDirectTranslation(RegisterBlock& rb, Block& b, Line& l)
         regTwo.variableName = "";
         regTwo.state = RegisterState::UNKNOWN;
     }
-
-    // b.lines.push_back({"\t#end of performing operation"});   
 }
 
 void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
@@ -260,7 +241,6 @@ void FourthIR::handleSimpleOperation(RegisterBlock& rb, Block& b, Line& l)
 
     updateRegisterState(b, rb, r, l.one);
     r.variableName = l.one;
-    // b.lines.push_back({"\t#end of performing simple operation"});    
 }
 
 void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
@@ -289,8 +269,6 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
     registerD.state = RegisterState::UNKNOWN;
     registerD.variableName = "";
 
-    // b.lines.push_back({"#using: " + registerB.name + " " + registerC.name + " " + registerD.name});
-
     auto lines = MathOperations::generateMultiplication(registerB.name, registerC.name, registerD.name, l);
     b.lines.insert(b.lines.end(), lines.begin(), lines.end());
 
@@ -301,8 +279,6 @@ void FourthIR::handleMul(RegisterBlock& rb, Block& b, Line& l)
     registerB.state = RegisterState::UNKNOWN;
     registerB.variableName = "";
     registerB.needToSafe = false;
-
-    // b.lines.push_back({"\t#end of performing MUL operation"});    
 }
 
 void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
@@ -328,8 +304,6 @@ void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
     registerF.state = RegisterState::UNKNOWN;
     registerF.variableName = "";    
 
-    // b.lines.push_back({"#using: " + registerB.name + " " + registerC.name + " " + registerD.name + " " + registerE.name + " " + registerF.name});
-
     auto lines = MathOperations::generateDivision(
         registerB.name, registerC.name, 
         registerD.name, registerE.name,
@@ -344,8 +318,6 @@ void FourthIR::handleDiv(RegisterBlock& rb, Block& b, Line& l)
     registerB.state = RegisterState::UNKNOWN;
     registerB.variableName = "";
     registerB.needToSafe = false;
-
-    // b.lines.push_back({"\t#end of performing DIV operation"});    
 }
 
 void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
@@ -359,7 +331,6 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
     {
         auto lines = MathOperations::generateModuloTwo(registerB.name, l);
         b.insert(lines);
-        // b.lines.push_back({"\t#end of performing DIV operation"});    
         return;
     }
 
@@ -380,7 +351,6 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
         registerE.name, registerF.name, l);
 
     b.lines.insert(b.lines.end(), lines.begin(), lines.end());
-    // b.lines.push_back({"\t#end of performing DIV operation"});    
 }
 
 
@@ -399,15 +369,10 @@ void FourthIR::handleMod(RegisterBlock& rb, Block& b, Line& l)
 
 bool FourthIR::isThisVariableUsed(std::string name, Block& block)
 {
-    // std::cout<<name<<" in block "<<block.blockName<<std::endl;
     Block& nextBlock = getPairByName(block.blockJump).block;
     resetBlocks();
     restPairBlocks();
     bool result = recursiveUsageTest(name , nextBlock);
-    // if (result)
-    // {
-        // std::cout<<"Skipping saving variable named "<<name<<std::endl;
-    // }
     return result;
 }
 
@@ -502,7 +467,6 @@ void FourthIR::convertNextBlock(Pair& pair, RegisterBlock& rb, std::string name)
     Pair& next = getPairByName(name);
     if (!next.registerBlockIsSet)
     {
-        // std::cout<<"just converting "<<std::endl;
         RegisterBlock copy(rb);
         convertBlockToAssembler(next, copy);   
         return;         
@@ -515,7 +479,6 @@ void FourthIR::convertSplitBlock(Pair& pair, RegisterBlock& rb, std::string name
     Pair& next = getPairByName(name);
     if (!next.registerBlockIsSet)
     {
-        // std::cout<<"just converting "<<std::endl;
         RegisterBlock copy(rb);
         convertBlockToAssembler(next, copy);   
         return;         
@@ -525,15 +488,7 @@ void FourthIR::convertSplitBlock(Pair& pair, RegisterBlock& rb, std::string name
 
 void FourthIR::alignRegisters(Pair& pair, Pair& next, RegisterBlock& rb, std::string name)
 {
-    // std::cout<<"ADJUSTING BLOCK "<< pair.block.blockName<< " when entering "<< next.block.blockName<<std::endl;
-    
-    // std::cout<<"CHANGE: "<<std::endl;
-    // pair.endRegisterBlock.print();
-    // std::cout<<"TO: "<<std::endl;
-    // next.startRegisterBlock.print();
-
     Block handle = generateBlock();
-    // std::cout<<"USING "<<handle.blockName<<std::endl;
     RegisterBlock copy(pair.endRegisterBlock);
     handle.blockJump = next.block.blockName;
     copy.exitBlock(handle, next.startRegisterBlock, *this);

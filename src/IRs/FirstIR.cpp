@@ -2,13 +2,11 @@
 
 void FirstIR::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 {
-    // std::cerr<<"OP="<<operation<<" one="<<one<<" two="<<two<<std::endl;
     Line line;
     line.operation = operation;
     line.one = one;
     line.two = two;
     _currentBlock.top().lines.push_back(line);
-    // std::cerr<<line<<std::endl;
     if (operation == "HALT")
     {
         _blocks.push_back(_currentBlock.top());
@@ -17,7 +15,6 @@ void FirstIR::addNewCode(cStrRef operation, cStrRef one, cStrRef two)
 
 void FirstIR::handleMathOperation(cStrRef resultName)
 {
-    // std::cerr<<"Math="<<resultName<<" "<<_operation<<" "<<_firstExtraParameter<<" "<<_secondExtraParameter<<std::endl;
     if (_firstExtraParameter == _secondExtraParameter && _symbolTable->isItTable(_firstExtraParameter))
     {
         std::string res = _firstExtraParameter.substr(_firstExtraParameter.find("(") + 1, std::string::npos);
@@ -286,7 +283,6 @@ Block FirstIR::createSecondControlBlock(std::string iterator, bool isForTo, std:
 
     b.lines.push_back(incLine);
     b.lines.push_back(decLine);
-    // b.lines.push_back(writeLine);
     b.lines.push_back(line);    
 
     return b;
