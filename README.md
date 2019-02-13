@@ -1,5 +1,5 @@
 # Compiler
-Created by as part of JFTT (J&#281;zyki Formalne i Teoria Translacji). Compiles programs written in simple imperative language for Register Machine.
+Created by as part of JFTT (Języki Formalne i Teoria Translacji). It compiles programs written in simple imperative language for Register Machine. Specification can be found in specification.pdf, beware it is written in polish.
 
 ## General Information
 Compiler is written in C++ with small parts of C. Tests are run using python.
@@ -13,6 +13,20 @@ Tools and their version used in compiling:
 
 To run tests:
 * python 3.6.7
+
+## Results
+* Test0 - 1st place
+* Test1 - 10th place
+* Test2 - 1st place
+* Test3 - 1st place
+* Test4 - 5th place
+* Test5 - 200th place
+* Test6 - 9th place
+
+Final place: 17th.
+Final mark: 5.5.
+Some optimizations (probable due to an undetected bug) resulted in returning wrong value in Test5. I am unable to reproduce the results, because the implementation of this test is secret.
+Still, the compiler got best possible mark (4.5 from 17th place and +1 by winning first place in one test[the bonus does not stack]).
 
 ## Project structure
 ### registerMachine/
@@ -50,6 +64,7 @@ If a block ends with a condition-like instruction:
 ```
 #blockName2
     <Instructions>
+    <Condition>
 #ifTrue blockNameIfConditionTrue
 #ifFalse blockNameIfConditionFalse
 #end of blockName2
@@ -91,11 +106,11 @@ Sometimes block with no instruction lines can appear. This is to help navigate j
 
 ### SecondIR
 Second IR eliminates the problems created by FirstIR by removing implicit jumps and empty blocks.
-Each block (except the last... there is nowhere to jump) ends with either conditional jumps or direct jump to other block.
+Each block (except the last, there is nowhere to jump) ends with either conditional jumps or direct jump to other block.
 This can be easily translated to a directed cycle graph.
 Used optimizations:
 * removing unused iterators
-* removing add/sub for small consts
+* removing add/sub when dealing with small constants and using inc/dec
 * fast mult/div by powers of 2
 * fast mod by 2
 * removing unused calculations
@@ -103,7 +118,7 @@ Used optimizations:
 * replacing a%a by 0
 
 ### ThirdIR
-Optimizes futher and replaces illegal jump instruction with more legal ones. Main optimizations used here: removing copy X X and replacing jumps with zeros to simpler constructions.
+Optimizes further and replaces illegal jump instruction with more legal ones. Main optimizations used here: removing copy X X and replacing jumps with zeros to simpler constructions.
 
 ### FourthIR + RegisterBlock
 Replaces calculations done in virtual registers to one done in real registers.
@@ -111,4 +126,4 @@ Adds loading and storing from memory to registers.
 
 
 ### Fifth
-Final IR replacing labels with proper jumps. Removs jumps when they are unnecessary.
+Final IR replacing labels with proper jumps. Removes jumps when they are unnecessary. Shuffles blocks a bit to minimize jumping.
