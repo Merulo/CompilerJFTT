@@ -1,5 +1,5 @@
 # Compiler
-Created by as part of JFTT (Języki Formalne i Teoria Translacji). It compiles programs written in simple imperative language for Register Machine. Specification can be found in specification.pdf, beware it is written in polish.
+Created as part of JFTT (Języki Formalne i Teoria Translacji). It compiles programs written in simple imperative language for Register Machine. Specification can be found in specification.pdf, beware it is written in polish.
 
 ## General Information
 Compiler is written in C++ with small parts of C. Tests are run using python.
