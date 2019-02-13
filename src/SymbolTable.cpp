@@ -81,7 +81,6 @@ void SymbolTable::assignMemory()
     //tables
     for(auto& t : _tables)
     {
-        std::cout<<t.first<<" allocated at "<<index<<std::endl;
         t.second.memoryCellStart = index;
         index += t.second.endIndex - t.second.beginIndex + 1;
     }
