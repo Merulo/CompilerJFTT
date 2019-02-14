@@ -30,7 +30,7 @@ Still, the compiler got best possible mark (4.5 from 17th place and +1 by winnin
 
 ## Project structure
 ### registerMachine/
-Contains code for Register Machine and couple of assembler programs, including fast mult, mul and div.
+Contains code for Register Machine and couple of assembler programs, including fast mul div and mod.
 ### src/
 #### Calculators/ 
 General directory for static classes generating code for complex math operations and sub optimal const generation.
