@@ -25,7 +25,7 @@ To run tests:
 
 Final place: 17th.
 Final mark: 5.5.
-Some optimizations (probable due to an undetected bug) resulted in returning wrong value in Test5. I am unable to reproduce the results, because the implementation of this test is secret.
+Some optimizations (probable due to an undetected bug) resulted in returning wrong value in Test5. I am unable to reproduce the results, the implementations of tests are secret.
 Still, the compiler got best possible mark (4.5 from 17th place and +1 by winning first place in one test[the bonus does not stack]).
 
 ## Project structure
@@ -37,19 +37,19 @@ General directory for static classes generating code for complex math operations
 #### DataTypes/
 Simple directory with commonly used structs.
 #### External/
-The bison and flex code is in this directory. Also contains static class for running simple python emulator.
+The bison and flex code directory. Contains static class for running simple python emulator.
 #### IRs/
 All intermediate representations are written in this directory. More about them below.
 #### Register/
-Class representation of register and all of them. Registers know their state and value (if it's const). RegisterBlock handles register allocation and memory operations. 
+Class representation of register and register machine (basically a couple of registers). Registers know their state and value (if it's const). RegisterBlock handles register allocation and memory operations. 
 ### standalone/
-Couple of small programs written in C++ used for debugging programs or concept testing of ideas.
+Couple of small programs written in C++ used for debugging programs or concept testing ideas.
 ### tests/
 Directory containing tests. They can be run by entering this directory and typing:
 ```
 python testRunner.py
 ```
-Directories 01-03 contain IR specific tests so they are probably useless outside of this projects. Director 04 contains tests for basic scenarios. Directory 05 contains tests necessary for passing the course. Directories 06. and 07. are extra tests for testing implemented optimizations and general stuff.
+Directories 01-03 contain IR specific tests so they are probably useless outside of this projects. Director 04 contains tests for basic scenarios. Directory 05 contains tests necessary for passing the course. Directories 06. and 07. are extra tests for testing implemented optimizations and general programs.
 
 ##  Intermediate representations
 ### BaseIR
@@ -108,10 +108,11 @@ Sometimes block with no instruction lines can appear. This is to help navigate j
 Second IR eliminates the problems created by FirstIR by removing implicit jumps and empty blocks.
 Each block (except the last, there is nowhere to jump) ends with either conditional jumps or direct jump to other block.
 This can be easily translated to a directed cycle graph.
+Which is easily translated to directed acyclic graph.
 Used optimizations:
 * removing unused iterators
 * removing add/sub when dealing with small constants and using inc/dec
-* fast mult/div by powers of 2
+* fast mul/div by powers of 2
 * fast mod by 2
 * removing unused calculations
 * replacing a/a by 1
@@ -123,7 +124,6 @@ Optimizes further and replaces illegal jump instruction with more legal ones. Ma
 ### FourthIR + RegisterBlock
 Replaces calculations done in virtual registers to one done in real registers.
 Adds loading and storing from memory to registers.
-
 
 ### Fifth
 Final IR replacing labels with proper jumps. Removes jumps when they are unnecessary. Shuffles blocks a bit to minimize jumping.
